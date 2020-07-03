@@ -13,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,28 +24,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 @Entity
-@Table(name = "posts")
-public class Post {
+@Table(name = "comments")
+public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "post_id")
+	@Column(name = "comment_id")
 	private Long id;
 	
-	@Column(length = 666)
+	@Column(length = 200)
 	private String content;
-	private String imageKey;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User author;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "post_id")
+	private Post post;
+	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(
-			name = "post_likes",
-			joinColumns = @JoinColumn(name = "post_id"),
+			name = "comment_likes",
+			joinColumns = @JoinColumn(name = "comment_id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private Set<User> likes = new HashSet<>();
-	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
-	private Set<Comment> comments = new HashSet<>();
 }

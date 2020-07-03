@@ -1,9 +1,10 @@
 package main.model.notifications;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public abstract class Notification {
-	private NotificationType type;
-	
-	public NotificationType getType() {
-		return this.type;
-	}
+	private final NotificationType type;
 }
