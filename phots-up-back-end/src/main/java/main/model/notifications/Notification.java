@@ -7,4 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public abstract class Notification {
 	private final NotificationType type;
+	
+	public abstract String turnIntoJsonString();
 }
