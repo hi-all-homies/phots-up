@@ -1,4 +1,4 @@
-package main.dao.user;
+package main.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Collections;
@@ -6,12 +6,13 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import main.dao.user.UserDaoImpl;
 import main.model.entities.User;
 import main.model.entities.UserRole;
 
 @SpringBootTest
 public class UserDaoImplTest {
-	@Autowired UserDao userDao;
+	@Autowired UserDaoImpl userDao;
 	
 	@Test
 	void shouldSaveAndRetrieveUserJustFine() {

@@ -1,14 +1,13 @@
 package main.model.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import main.model.entities.Post;
 
-@Getter
-@Builder
+@Data
 public class PostSummary {
-	private final byte[] image;
 	private final Post post;
-	private final long likes;
-	private final long comments;
+	private final int likes;
+	private final int comments;
+	private final boolean meLiked;
+	private byte[] image;
 }
