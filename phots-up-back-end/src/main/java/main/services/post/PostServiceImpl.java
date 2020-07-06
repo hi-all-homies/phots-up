@@ -1,11 +1,14 @@
 package main.services.post;
 
+import java.util.Collection;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import main.dao.post.PostDao;
 import main.model.dto.PostSummary;
+import main.model.entities.Post;
 import main.model.entities.User;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 @Service
@@ -24,13 +27,30 @@ public class PostServiceImpl implements PostService{
 		
 		return Flux.defer(() -> Flux.fromIterable(this.postDao.findAll(pageReq)))
 				.subscribeOn(Schedulers.elastic())
-				.map(post -> {
-					var meLiked = post.getLikes().stream()
-							.map(User::getId)
-							.anyMatch(id -> id.equals(currUserId));
-					
-					return new PostSummary(post, post.getLikes().size(), post.getComments().size(), meLiked);
-				});
+				.map(post -> convert(post, currUserId));
+	}
+
+	@Override
+	public Mono<PostSummary> getPostById(Long postId) {
+		Long currUserId = 1l;
+		
+		return Mono.defer(
+						() -> Mono.justOrEmpty(this.postDao.findById(postId)))
+				.subscribeOn(Schedulers.elastic())
+				.map(post -> convert(post, currUserId));
+	}
+	
+	private PostSummary convert(Post post, Long currentUserId) {
+		var meLiked = this.getMeLiked(post.getLikes(), currentUserId);
+		
+		return new PostSummary(
+				post, post.getLikes().size(), post.getComments().size(), meLiked);
+	}
+	
+	private boolean getMeLiked(Collection<User> likes, Long currentUserId) {
+		return likes.parallelStream()
+				.map(user -> user.getId())
+				.anyMatch(id -> id.equals(currentUserId));
 	}
 	
 }

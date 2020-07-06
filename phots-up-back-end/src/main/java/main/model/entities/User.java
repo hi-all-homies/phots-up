@@ -12,9 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,7 +29,6 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private Long id;
-	
 	private String username;
 	
 	@JsonIgnore
@@ -42,4 +39,10 @@ public class User {
 	@ElementCollection(fetch = FetchType.LAZY)
 	@Column(name = "role")
 	private Set<UserRole> roles = new HashSet<>();
+	
+	public User (Long id, String username, String password) {
+		this.id = id;
+		this.username= username;
+		this.password = password;
+	}
 }

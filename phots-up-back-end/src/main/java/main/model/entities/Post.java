@@ -53,4 +53,11 @@ public class Post {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
 	private Set<Comment> comments = new HashSet<>();
+
+	public Post(Long id, String content, String imageKey, User author) {
+		this.id = id;
+		this.content = content;
+		this.imageKey = imageKey;
+		this.author = author;
+	}
 }

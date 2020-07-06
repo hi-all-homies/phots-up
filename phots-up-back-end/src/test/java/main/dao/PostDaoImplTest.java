@@ -9,6 +9,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+
 import main.dao.comment.CommentDao;
 import main.dao.post.PostDaoImpl;
 import main.dao.user.UserDao;
@@ -37,6 +39,18 @@ public class PostDaoImplTest {
 		
 		var comment = new Comment(null, "hey you're a nice dancer", user, post);
 		commentDao.saveComment(comment);
+	}
+	
+	@Test
+	void shouldRetriveAllPosts() {
+		System.out.println("---- getting all posts----");
+		
+		var posts = postDaoImpl.findAll(PageRequest.of(0, 7));
+		posts.stream().forEach(p -> {
+			var str = String.format("author: %s, img key: %s, comment count: %d, like count: %d",
+					p.getAuthor().getUsername(), p.getImageKey(), p.getComments().size(), p.getLikes().size());
+			System.out.println(str);
+		});
 	}
 	
 	@Test
