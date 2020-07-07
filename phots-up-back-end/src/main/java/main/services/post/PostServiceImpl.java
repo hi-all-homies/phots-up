@@ -40,6 +40,27 @@ public class PostServiceImpl implements PostService{
 				.map(post -> convert(post, currUserId));
 	}
 	
+	
+	@Override
+	public Mono<Post> savePost(Post post) {
+		return Mono.defer(
+						() -> Mono.just(this.postDao.savePost(post)))
+				.subscribeOn(Schedulers.elastic());
+	}
+
+	@Override
+	public Mono<Integer> updatePost(Post post) {
+		return Mono.defer(
+						() -> Mono.just(this.postDao.updatePost(post)))
+				.subscribeOn(Schedulers.elastic());
+	}
+
+	@Override
+	public Mono<Void> deletePost(Post post) {
+		return Mono.fromRunnable(
+				() -> this.postDao.deletePost(post.getId()));
+	}
+
 	private PostSummary convert(Post post, Long currentUserId) {
 		var meLiked = this.getMeLiked(post.getLikes(), currentUserId);
 		
