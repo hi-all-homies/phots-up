@@ -14,7 +14,7 @@ public class PostLikedNotification extends Notification {
 	
 	@Builder
 	public PostLikedNotification(NotificationType type, String whoLiked, Post whichPost) {
-		super(type);
+		super(type, whichPost.getAuthor().getUsername());
 		this.whoLiked = whoLiked;
 		this.whichPost = whichPost;
 	}

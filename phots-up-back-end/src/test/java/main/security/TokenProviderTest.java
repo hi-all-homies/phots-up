@@ -1,0 +1,30 @@
+package main.security;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import main.model.entities.User;
+import main.model.entities.UserRole;
+import reactor.test.StepVerifier;
+
+@SpringBootTest
+public class TokenProviderTest {
+	@Autowired TokenProvider tokenProvider;
+	
+	@Test
+	void shouldGenerateValidToken() {
+		var user = new User(134l, "token", "provider");
+		user.getRoles().add(UserRole.ROLE_ADMIN);
+		user.getRoles().add(UserRole.ROLE_USER);
+		
+		var monoToken = this.tokenProvider.generateToken(user)
+				.map(tokenResp -> {
+					var auth = this.tokenProvider.verifyToken(tokenResp.getToken());
+					return auth.getName();
+				});
+		
+		StepVerifier.create(monoToken)
+			.expectNext("token")
+			.verifyComplete();
+	}
+}

@@ -1,5 +1,6 @@
 package main.websocket;
 
+import java.util.function.Predicate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketSession;
@@ -16,11 +17,19 @@ public class NotificationHandler implements WebSocketHandler {
 
 	@Override
 	public Mono<Void> handle(WebSocketSession session) {
-		var noti = source.map(notific -> notific.turnIntoJsonString())
-			.map(session::textMessage);
+		var username = session.getHandshakeInfo()
+				.getHeaders()
+				.getFirst("username");
 		
-		return session.send(noti);
+		var notifications = this.source
+				.filter(filterNotifications(username))
+				.map(item -> item.turnIntoJsonString())
+				.map(session::textMessage);
+		
+		return session.send(notifications);
 	}
 	
-	
+	private Predicate<Notification> filterNotifications(String username){ 
+			return item -> item.getReceiver().equals(username);
+	}
 }

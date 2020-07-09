@@ -12,13 +12,23 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 public class RouterConfig {
 	
 	@Bean
-	public RouterFunction<ServerResponse> route(PostHandler postHandler){
+	public RouterFunction<ServerResponse> route(
+			PostHandler postHandler,
+			LikeHandler likeHandler){
+		
 		return RouterFunctions.route()
 				.GET("/phots/up/api/posts", postHandler::getAllPosts)
 				.GET("/phots/up/api/posts/{postid}", postHandler::getPostById)
 				.POST("/phots/up/api/posts", accept(MULTIPART_FORM_DATA), postHandler::savePost)
 				.DELETE("/phots/up/api/posts/{postid}", accept(APPLICATION_JSON), postHandler::deletePost)
 				.PUT("/phots/up/api/posts/{postid}", accept(MULTIPART_FORM_DATA), postHandler::updatePost)
+				.add(likeRouting(likeHandler))
+				.build();
+	}
+	
+	public RouterFunction<ServerResponse> likeRouting(LikeHandler likeHandler){
+		return RouterFunctions.route()
+				.POST("/phots/up/api/{postid}/likes", accept(APPLICATION_JSON), likeHandler::handleLikeRequest)
 				.build();
 	}
 }

@@ -24,7 +24,7 @@ public class NotificationTest {
 		
 		var result = notification.turnIntoJsonString();
 		
-		assertEquals("{\"type\":\"POST_WAS_LIKED\",\"whoLiked\":\"TEST_USER\",\"whichPost\":{\"id\":null,\"content\":\"hello world...\",\"imageKey\":null,\"author\":{\"id\":123,\"username\":\"jimbo\"},\"likes\":[],\"comments\":[]}}",
+		assertEquals("{\"type\":\"POST_WAS_LIKED\",\"receiver\":\"jimbo\",\"whoLiked\":\"TEST_USER\",\"whichPost\":{\"id\":null,\"content\":\"hello world...\",\"imageKey\":null,\"author\":{\"id\":123,\"username\":\"jimbo\"},\"likes\":[],\"comments\":[]}}",
 				result);
 	}
 }
