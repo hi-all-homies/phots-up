@@ -7,4 +7,6 @@ public interface ImageService {
 	public String storeImage(FilePart image);
 	
 	public byte[] retrieveImageByKey(String imageKey);
+	
+	public void deleteImage(String imageKey);
 }

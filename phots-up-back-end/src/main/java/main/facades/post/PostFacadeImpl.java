@@ -42,12 +42,37 @@ public class PostFacadeImpl implements PostFacade{
 		return this.postService.getAllPosts(page)
 				.map(this::setImage);
 	}
+	
 	@Override
 	public Mono<PostSummary> getPostById(Long postId) {
 		return this.postService.getPostById(postId)
 				.map(this::setImage);
 	}
 	
+	@Override
+	public Mono<Integer> updatePost(MultiValueMap<String,Part> data){
+		var jsonPost = (FormFieldPart) data.getFirst("post");
+		Post updatedPost = jsonToPost(jsonPost.value());
+		
+		var image = (FilePart) data.getFirst("image");
+		if (image != null) {
+			var imageKey = this.imageService.storeImage(image);
+			var oldKey = updatedPost.getImageKey();
+			updatedPost.setImageKey(imageKey);
+			this.imageService.deleteImage(oldKey);
+		}
+		
+		return this.postService.updatePost(updatedPost);
+	}
+	
+	
+	@Override
+	public Mono<Void> deletePost(Post post) {
+		return this.postService.deletePost(post)
+				.doOnSuccess(v -> this.imageService.deleteImage(post.getImageKey()));
+	}
+
+
 	private PostSummary setImage(PostSummary post) {
 		var image = this.imageService.retrieveImageByKey(post.getPost().getImageKey());
 		post.setImage(image);

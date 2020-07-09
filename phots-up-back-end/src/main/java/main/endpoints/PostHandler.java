@@ -6,6 +6,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import main.facades.post.PostFacade;
 import main.model.dto.PostSummary;
+import main.model.entities.Post;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -21,13 +22,13 @@ public class PostHandler {
 		var fluxPosts = this.postFacade.getPosts(Integer.valueOf(page));
 		
 		return ServerResponse.ok()
-				.contentType(MediaType.TEXT_EVENT_STREAM)
+				.contentType(MediaType.APPLICATION_STREAM_JSON)
 				.body(fluxPosts, PostSummary.class);
 	}
 	
 	public Mono<ServerResponse> savePost(ServerRequest req){
 		return req.multipartData()
-				.flatMap(data -> this.postFacade.storePost(data))
+				.flatMap(postFacade::storePost)
 				.flatMap(post -> ServerResponse.ok()
 						.contentType(MediaType.TEXT_PLAIN)
 						.bodyValue("saved with id " + post.getId()));
@@ -40,5 +41,17 @@ public class PostHandler {
 						.contentType(MediaType.APPLICATION_JSON)
 						.bodyValue(post))
 				.switchIfEmpty(ServerResponse.notFound().build());
+	}
+	
+	public Mono<ServerResponse> updatePost(ServerRequest req){
+		return req.multipartData()
+				.flatMap(postFacade::updatePost)
+				.then(ServerResponse.ok().build());
+	}
+	
+	public Mono<ServerResponse>  deletePost(ServerRequest req){
+		return req.bodyToMono(Post.class)
+				.flatMap(postFacade::deletePost)
+				.then(ServerResponse.ok().build());
 	}
 }

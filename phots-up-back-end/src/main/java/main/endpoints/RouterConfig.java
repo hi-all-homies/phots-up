@@ -16,7 +16,9 @@ public class RouterConfig {
 		return RouterFunctions.route()
 				.GET("/phots/up/api/posts", postHandler::getAllPosts)
 				.GET("/phots/up/api/posts/{postid}", postHandler::getPostById)
-				.POST("/phots/up/api/posts", accept(APPLICATION_JSON), postHandler::savePost)
+				.POST("/phots/up/api/posts", accept(MULTIPART_FORM_DATA), postHandler::savePost)
+				.DELETE("/phots/up/api/posts/{postid}", accept(APPLICATION_JSON), postHandler::deletePost)
+				.PUT("/phots/up/api/posts/{postid}", accept(MULTIPART_FORM_DATA), postHandler::updatePost)
 				.build();
 	}
 }

@@ -32,6 +32,11 @@ public class ImageServiceImpl implements ImageService{
 		}
 		return filename;
 	}
+	
+	@Override
+	public void deleteImage(String imageKey) {
+		this.amazonS3.deleteObject(BUCKET_NAME, imageKey);
+	}
 
 	@Override
 	public byte[] retrieveImageByKey(String imageKey) {

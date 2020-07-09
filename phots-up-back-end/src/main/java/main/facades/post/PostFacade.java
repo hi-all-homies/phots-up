@@ -14,4 +14,8 @@ public interface PostFacade {
 	public Flux<PostSummary>  getPosts(int page);
 	
 	public Mono<PostSummary> getPostById(Long postId);
+	
+	public Mono<Integer> updatePost(MultiValueMap<String,Part> data);
+	
+	public Mono<Void> deletePost(Post post);
 }
