@@ -14,7 +14,8 @@ public class RouterConfig {
 	@Bean
 	public RouterFunction<ServerResponse> route(
 			PostHandler postHandler,
-			LikeHandler likeHandler){
+			LikeHandler likeHandler,
+			LoginHandler loginHandler){
 		
 		return RouterFunctions.route()
 				.GET("/phots/up/api/posts", postHandler::getAllPosts)
@@ -22,7 +23,14 @@ public class RouterConfig {
 				.POST("/phots/up/api/posts", accept(MULTIPART_FORM_DATA), postHandler::savePost)
 				.DELETE("/phots/up/api/posts/{postid}", accept(APPLICATION_JSON), postHandler::deletePost)
 				.PUT("/phots/up/api/posts/{postid}", accept(MULTIPART_FORM_DATA), postHandler::updatePost)
+				.add(loginRouting(loginHandler))
 				.add(likeRouting(likeHandler))
+				.build();
+	}
+	
+	public RouterFunction<ServerResponse> loginRouting(LoginHandler loginHandler){
+		return RouterFunctions.route()
+				.POST("/phots/up/api/login", accept(APPLICATION_JSON), loginHandler::handleLogin)
 				.build();
 	}
 	

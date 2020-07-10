@@ -54,7 +54,7 @@ public class PostServiceImplTest {
 		var page = PageRequest.of(0, 7);
 		Mockito.when(postDao.findAll(page)).thenReturn(posts);
 		
-		var result = this.postService.getAllPosts(0);
+		var result = this.postService.getAllPosts(0, 1l);
 		StepVerifier.create(result)
 			.expectNextCount(3l)
 			.verifyComplete();
@@ -66,7 +66,7 @@ public class PostServiceImplTest {
 					.filter(p -> p.getId().equals(1l))
 					.findFirst());
 		
-		var result = this.postService.getPostById(1l);
+		var result = this.postService.getPostById(1l, 1l);
 		StepVerifier.create(result)
 			.assertNext(ps -> {
 				assertEquals(2, ps.getLikes());

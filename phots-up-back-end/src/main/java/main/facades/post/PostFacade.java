@@ -11,9 +11,9 @@ public interface PostFacade {
 	
 	public Mono<Post> storePost(MultiValueMap<String, Part> data);
 	
-	public Flux<PostSummary>  getPosts(int page);
+	public Flux<PostSummary>  getPosts(int page, String token);
 	
-	public Mono<PostSummary> getPostById(Long postId);
+	public Mono<PostSummary> getPostById(Long postId, String token);
 	
 	public Mono<Integer> updatePost(MultiValueMap<String,Part> data);
 	

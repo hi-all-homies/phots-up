@@ -7,9 +7,9 @@ import reactor.core.publisher.Mono;
 
 public interface PostService {
 	
-	public Flux<PostSummary> getAllPosts(int page);
+	public Flux<PostSummary> getAllPosts(int page, long currUserId);
 	
-	public Mono<PostSummary> getPostById(Long postId);
+	public Mono<PostSummary> getPostById(Long postId, long currUserId);
 	
 	public Mono<Post> savePost(Post post);
 	

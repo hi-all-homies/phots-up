@@ -21,9 +21,8 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public Flux<PostSummary> getAllPosts(int page) {
+	public Flux<PostSummary> getAllPosts(int page, long currUserId) {
 		var pageReq = PageRequest.of(page, PAGE_SIZE);
-		Long currUserId = 1l;
 		
 		return Flux.defer(() -> Flux.fromIterable(this.postDao.findAll(pageReq)))
 				.subscribeOn(Schedulers.elastic())
@@ -31,9 +30,7 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public Mono<PostSummary> getPostById(Long postId) {
-		Long currUserId = 1l;
-		
+	public Mono<PostSummary> getPostById(Long postId, long currUserId) {
 		return Mono.defer(
 						() -> Mono.justOrEmpty(this.postDao.findById(postId)))
 				.subscribeOn(Schedulers.elastic())

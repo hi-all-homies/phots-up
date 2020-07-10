@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import main.model.dto.PostSummary;
 import main.model.entities.Post;
+import main.security.TokenProvider;
 import main.services.image.ImageService;
 import main.services.post.PostService;
 import reactor.core.publisher.Flux;
@@ -18,12 +19,13 @@ import reactor.core.publisher.Mono;
 public class PostFacadeImpl implements PostFacade{
 	private final PostService postService;
 	private final ImageService imageService;
+	private final TokenProvider tokenProvider;
 	private final ObjectMapper mapper = new ObjectMapper();
 	
-	public PostFacadeImpl(PostService postService, ImageService imageService) {
-		super();
+	public PostFacadeImpl(PostService postService, ImageService imageService, TokenProvider tokenProvider) {
 		this.postService = postService;
 		this.imageService = imageService;
+		this.tokenProvider = tokenProvider;
 	}
 	
 	
@@ -38,14 +40,16 @@ public class PostFacadeImpl implements PostFacade{
 	}
 
 	@Override
-	public Flux<PostSummary> getPosts(int page) {
-		return this.postService.getAllPosts(page)
+	public Flux<PostSummary> getPosts(int page, String token) {
+		var currUserId = this.tokenProvider.getUserIdFromToken(token);
+		return this.postService.getAllPosts(page, currUserId)
 				.map(this::setImage);
 	}
 	
 	@Override
-	public Mono<PostSummary> getPostById(Long postId) {
-		return this.postService.getPostById(postId)
+	public Mono<PostSummary> getPostById(Long postId, String token) {
+		var currUserId = this.tokenProvider.getUserIdFromToken(token);
+		return this.postService.getPostById(postId, currUserId)
 				.map(this::setImage);
 	}
 	

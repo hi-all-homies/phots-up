@@ -20,7 +20,7 @@ public class Main {
 	public void setUser(ApplicationReadyEvent event) {
 		var user = new User(null, "anime-love" , "hello");
 		
-		this.userService.registerUser(user);
+		this.userService.registerUser(user).subscribe();
 	}
 
 }

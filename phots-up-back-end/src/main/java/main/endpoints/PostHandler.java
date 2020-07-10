@@ -1,5 +1,6 @@
 package main.endpoints;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -19,7 +20,8 @@ public class PostHandler {
 	
 	public Mono<ServerResponse> getAllPosts(ServerRequest req){
 		var page = req.queryParam("page").get();
-		var fluxPosts = this.postFacade.getPosts(Integer.valueOf(page));
+		var token = req.headers().firstHeader(AUTHORIZATION);
+		var fluxPosts = this.postFacade.getPosts(Integer.valueOf(page), token);
 		
 		return ServerResponse.ok()
 				.contentType(MediaType.APPLICATION_STREAM_JSON)
@@ -36,7 +38,9 @@ public class PostHandler {
 	
 	public Mono<ServerResponse> getPostById(ServerRequest req){
 		var postId = Long.valueOf(req.pathVariable("postid"));
-		return this.postFacade.getPostById(postId)
+		var token = req.headers().firstHeader(AUTHORIZATION);
+		
+		return this.postFacade.getPostById(postId, token)
 				.flatMap(post -> ServerResponse.ok()
 						.contentType(MediaType.APPLICATION_JSON)
 						.bodyValue(post))

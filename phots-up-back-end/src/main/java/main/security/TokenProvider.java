@@ -72,6 +72,9 @@ public class TokenProvider {
 		return new UsernamePasswordAuthenticationToken(username, null, authorities);
 	}
 	
+	public long getUserIdFromToken(String token) {
+		return (Long) extractClaims(token).get("userId");
+	}
 	
 	public String getUsernameFromToken(String token) {
 		return extractClaims(token).getSubject();
