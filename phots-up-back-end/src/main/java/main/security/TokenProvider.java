@@ -53,9 +53,7 @@ public class TokenProvider {
 				.compact();
 		
 		return Mono.just(
-				TokenResponse.builder().
-					token(this.prefix + token).
-					build());
+				new TokenResponse(this.prefix + token));
 	}
 	
 	

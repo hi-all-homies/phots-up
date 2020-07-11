@@ -1,10 +1,17 @@
 package main.model.dto;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-@Builder
+@Setter
 public class TokenResponse {
-	private final String token;
+	private String token;
+	
+	public TokenResponse() {}
+
+	public TokenResponse(String token) {
+		this();
+		this.token = token;
+	}
 }

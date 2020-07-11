@@ -2,6 +2,7 @@ package main.endpoints;
 
 import static org.springframework.util.StringUtils.hasText;
 import java.util.function.Predicate;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,7 @@ public class LoginHandler {
 				.flatMap(loginReq -> verifyCredentials(loginReq))
 				.onErrorResume(err -> Mono.empty())
 				.flatMap(user -> ServerResponse.ok()
+						.contentType(APPLICATION_JSON)
 						.body(this.tokenProvider.generateToken(user), TokenResponse.class))
 				.switchIfEmpty(ServerResponse.badRequest().build());
 	}

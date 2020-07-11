@@ -11,32 +11,44 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 @Configuration
 public class RouterConfig {
 	
+	public final static String BASE_URL = "/phots/up/api/";
+	
 	@Bean
 	public RouterFunction<ServerResponse> route(
 			PostHandler postHandler,
 			LikeHandler likeHandler,
-			LoginHandler loginHandler){
+			LoginHandler loginHandler,
+			CommentHandler commentHandler){
 		
 		return RouterFunctions.route()
-				.GET("/phots/up/api/posts", postHandler::getAllPosts)
-				.GET("/phots/up/api/posts/{postid}", postHandler::getPostById)
-				.POST("/phots/up/api/posts", accept(MULTIPART_FORM_DATA), postHandler::savePost)
-				.DELETE("/phots/up/api/posts/{postid}", accept(APPLICATION_JSON), postHandler::deletePost)
-				.PUT("/phots/up/api/posts/{postid}", accept(MULTIPART_FORM_DATA), postHandler::updatePost)
+				.GET(BASE_URL+"posts", postHandler::getAllPosts)
+				.GET(BASE_URL+"posts/{postid}", postHandler::getPostById)
+				.POST(BASE_URL+"posts", accept(MULTIPART_FORM_DATA), postHandler::savePost)
+				.DELETE(BASE_URL+"posts/{postid}", accept(APPLICATION_JSON), postHandler::deletePost)
+				.PUT(BASE_URL+"posts/{postid}", accept(MULTIPART_FORM_DATA), postHandler::updatePost)
 				.add(loginRouting(loginHandler))
+				.add(commentsRouting(commentHandler))
 				.add(likeRouting(likeHandler))
 				.build();
 	}
 	
 	public RouterFunction<ServerResponse> loginRouting(LoginHandler loginHandler){
 		return RouterFunctions.route()
-				.POST("/phots/up/api/login", accept(APPLICATION_JSON), loginHandler::handleLogin)
+				.POST(BASE_URL+"login", accept(APPLICATION_JSON), loginHandler::handleLogin)
+				.build();
+	}
+	
+	public RouterFunction<ServerResponse> commentsRouting(CommentHandler commentHandler){
+		return RouterFunctions.route()
+				.POST(BASE_URL+"{postid}/comments", accept(APPLICATION_JSON), commentHandler::saveComment)
+				.PUT(BASE_URL+"{postid}/comments", accept(APPLICATION_JSON), commentHandler::updateComment)
+				.DELETE(BASE_URL+"{postid}/comments/{id}", commentHandler::deleteComment)
 				.build();
 	}
 	
 	public RouterFunction<ServerResponse> likeRouting(LikeHandler likeHandler){
 		return RouterFunctions.route()
-				.POST("/phots/up/api/{postid}/likes", accept(APPLICATION_JSON), likeHandler::handleLikeRequest)
+				.POST(BASE_URL+"{postid}/likes", accept(APPLICATION_JSON), likeHandler::handleLikeRequest)
 				.build();
 	}
 }
