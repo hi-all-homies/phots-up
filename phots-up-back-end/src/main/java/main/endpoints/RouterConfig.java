@@ -18,7 +18,8 @@ public class RouterConfig {
 			PostHandler postHandler,
 			LikeHandler likeHandler,
 			LoginHandler loginHandler,
-			CommentHandler commentHandler){
+			CommentHandler commentHandler,
+			RegistrationHandler regHandler){
 		
 		return RouterFunctions.route()
 				.GET(BASE_URL+"posts", postHandler::getAllPosts)
@@ -29,6 +30,7 @@ public class RouterConfig {
 				.add(loginRouting(loginHandler))
 				.add(commentsRouting(commentHandler))
 				.add(likeRouting(likeHandler))
+				.add(registrationRouting(regHandler))
 				.build();
 	}
 	
@@ -49,6 +51,12 @@ public class RouterConfig {
 	public RouterFunction<ServerResponse> likeRouting(LikeHandler likeHandler){
 		return RouterFunctions.route()
 				.POST(BASE_URL+"{postid}/likes", accept(APPLICATION_JSON), likeHandler::handleLikeRequest)
+				.build();
+	}
+	
+	public RouterFunction<ServerResponse> registrationRouting(RegistrationHandler regHandler){
+		return RouterFunctions.route()
+				.POST(BASE_URL+"signup", accept(APPLICATION_JSON), regHandler::handleRegistration)
 				.build();
 	}
 }
