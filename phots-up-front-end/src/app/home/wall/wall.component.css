@@ -1,0 +1,22 @@
+.post-container
+{
+    align-content: center;
+}
+.one-post
+{
+    max-width: 40%;
+    margin: 1% auto;
+}
+.comment
+{
+    margin-left: 30%;
+}
+.more
+{
+    max-width: 40%;
+    margin: 1% auto;
+}
+.more>button
+{
+    margin-left: 90%;
+}

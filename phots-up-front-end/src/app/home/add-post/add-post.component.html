@@ -1,0 +1,33 @@
+<div class='dialog'>
+    <button mat-icon-button (click)='onClose()' class='close-button'>
+        <mat-icon>close</mat-icon>
+    </button>
+
+    <div class='form-div'>
+        <input type='file' #imageInput style='display: none'
+                    (change)='imageChoosen($event)'>
+
+        <form (ngSubmit)='onSubmit()' [formGroup]='post'>
+
+            <mat-form-field>
+                <textarea cdkTextareaAutosize='true' matInput
+                    placeholder='share your thoughts' formControlName='content'>
+                </textarea>
+            </mat-form-field>
+
+            <div class='preview' *ngIf='imagePreview'>
+                <img [src]='imagePreview' height='300'>
+            </div>
+
+            <div class='buttons'>
+                <button mat-icon-button (click)='chooseImage()' color='primary'>
+                    <mat-icon>add_a_photo</mat-icon>
+                </button> 
+                <button mat-raised-button color='primary' type='submit'
+                    class='send-button' [disabled]='post.invalid'>
+                    Send
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

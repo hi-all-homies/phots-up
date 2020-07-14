@@ -1,0 +1,22 @@
+.form-login
+{
+    display: block;
+    text-align: center;
+    margin-top: 10%;
+}
+form
+{
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+mat-form-field
+{
+    width: 99%;
+}
+button
+{
+    position: relative;
+    left: 45%;
+}

@@ -6,14 +6,25 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HeaderComponent } from './header/header/header.component';
-import { HomeComponent } from './home/home/home.component';
+import { HeaderComponent } from './header/header.component';
+import { HomeComponent } from './home/home.component';
+import { WallComponent } from './home/wall/wall.component';
+import { LoginComponent } from './login/login.component';
+import { SignInComponent } from './login/sign-in/sign-in.component';
+import { SignUpComponent } from './login/sign-up/sign-up.component';
+import { AddPostComponent } from './home/add-post/add-post.component';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    HomeComponent
+    HomeComponent,
+    WallComponent,
+    LoginComponent,
+    SignInComponent,
+    SignUpComponent,
+    AddPostComponent
   ],
   imports: [
     BrowserModule,
@@ -24,8 +35,10 @@ import { HomeComponent } from './home/home/home.component';
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [],
-  entryComponents: [],
+  providers: [
+    {provide: MatDialogRef, useValue: {}}
+  ],
+  entryComponents: [AddPostComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
