@@ -18,6 +18,7 @@ public class TokenProviderTest {
 		user.getRoles().add(UserRole.ROLE_USER);
 		
 		var monoToken = this.tokenProvider.generateToken(user)
+				.doOnNext(tokenResp -> System.out.println(tokenResp.getToken()))
 				.map(tokenResp -> {
 					var auth = this.tokenProvider.verifyToken(tokenResp.getToken());
 					return auth.getName();

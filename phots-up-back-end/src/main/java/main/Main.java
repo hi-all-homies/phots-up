@@ -10,18 +10,18 @@ import main.services.user.UserService;
 
 @SpringBootApplication
 public class Main {
-	//@Autowired UserService userService;
+	@Autowired UserService userService;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class, args);
 	}
 	
-	/*
+	
 	@EventListener
 	public void setUser(ApplicationReadyEvent event) {
 		var user = new User(null, "anime-love" , "hello");
 		
 		this.userService.registerUser(user).subscribe();
 	}
-	 */
+	 
 }

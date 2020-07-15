@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -9,17 +9,23 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class AddPostComponent implements OnInit {
   @ViewChild('imageInput') imageInput;
-  post: FormGroup;
   imageData: File;
   imagePreview: string;
 
-  constructor(private ref: MatDialogRef<AddPostComponent>) { }
+  post: FormGroup = new FormGroup({
+    content: new FormControl('', Validators.required),
+    image: new FormControl(null, Validators.required)
+  });
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private data: any,
+    private ref: MatDialogRef<AddPostComponent>
+    ) { }
 
   ngOnInit(): void {
-    this.post = new FormGroup({
-      content: new FormControl('',Validators.required),
-      image: new FormControl(null,Validators.required)
-    });
+    if (this.data){
+      this.post.get('content').patchValue(`post id is ${this.data.postId}`)
+    }
   }
 
   chooseImage(){
@@ -46,10 +52,6 @@ export class AddPostComponent implements OnInit {
   }
 
   onSubmit(){
-    console.log(this.post.controls)
-  }
-
-  onClose(){
-    this.ref.close();
+    
   }
 }

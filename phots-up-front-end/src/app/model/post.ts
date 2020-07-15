@@ -1,0 +1,11 @@
+import { User } from './user';
+import { Comment } from './comment';
+
+export class Post{
+    id:number;
+    content: string;
+    imageKey: string;
+    author: User;
+    likes: User[];
+    comments: Comment[];
+}

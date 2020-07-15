@@ -71,7 +71,8 @@ public class TokenProvider {
 	}
 	
 	public long getUserIdFromToken(String token) {
-		return (Long) extractClaims(token).get("userId");
+		var id = (int) extractClaims(token).get("userId");
+		return id;
 	}
 	
 	public String getUsernameFromToken(String token) {

@@ -19,6 +19,5 @@ export class HomeComponent implements OnInit {
     config.width = '40%';
     
     let dialogRef = this.dialog.open(AddPostComponent,config);
-    dialogRef.beforeClosed().subscribe(obs => console.log("closing..."));
   }
 }

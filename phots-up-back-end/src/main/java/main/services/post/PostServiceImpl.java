@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService{
 		return Mono.defer(
 						() -> Mono.justOrEmpty(this.postDao.findById(postId)))
 				.subscribeOn(Schedulers.elastic())
-				.map(post -> convert(post, currUserId));
+				.map(post -> convertWhenFetchById(post, currUserId));
 	}
 	
 	
@@ -59,6 +59,17 @@ public class PostServiceImpl implements PostService{
 	}
 
 	private PostSummary convert(Post post, Long currentUserId) {
+		var meLiked = this.getMeLiked(post.getLikes(), currentUserId);
+		
+		var postSummary = new PostSummary(
+				post, post.getLikes().size(), post.getComments().size(), meLiked);
+		post.setLikes(null);
+		post.setComments(null);
+		
+		return postSummary;
+	}
+	
+	private PostSummary convertWhenFetchById(Post post, Long currentUserId) {
 		var meLiked = this.getMeLiked(post.getLikes(), currentUserId);
 		
 		return new PostSummary(
