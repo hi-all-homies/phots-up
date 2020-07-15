@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { AuthService } from 'src/app/shared/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-in',
@@ -10,7 +12,10 @@ export class SignInComponent implements OnInit {
   hide: boolean = true;
   loginForm: FormGroup;
 
-  constructor() { }
+  constructor(
+    private auth: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -20,6 +25,20 @@ export class SignInComponent implements OnInit {
   }
 
   onSubmit(){
+    const loginRequest = {
+      username: this.loginForm.get('username').value,
+      password: this.loginForm.get('password').value
+    };
 
+    this.auth.login(loginRequest)
+      .subscribe(
+        ans =>{
+          if (ans)
+            this.onSuccesLogin()},
+        err => console.log('wrong pass or whatever'));
+  }
+
+  private onSuccesLogin(){
+    this.router.navigate(['/home']);
   }
 }

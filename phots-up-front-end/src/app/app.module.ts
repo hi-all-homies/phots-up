@@ -14,6 +14,8 @@ import { SignInComponent } from './login/sign-in/sign-in.component';
 import { SignUpComponent } from './login/sign-up/sign-up.component';
 import { AddPostComponent } from './home/add-post/add-post.component';
 import { MatDialogRef } from '@angular/material/dialog';
+import { CookieService } from 'ngx-cookie-service';
+import { AuthService } from './shared/auth.service';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { MatDialogRef } from '@angular/material/dialog';
     FormsModule
   ],
   providers: [
+    CookieService,
+    AuthService,
     {provide: MatDialogRef, useValue: {}}
   ],
   entryComponents: [AddPostComponent],
