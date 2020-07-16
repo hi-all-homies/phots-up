@@ -1,6 +1,8 @@
 package main.security;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
@@ -10,6 +12,8 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class CustomContextRepo implements ServerSecurityContextRepository{
+	@Value(value = "${token.param.name}")
+	private String JWT_PARAM_NAME;
 	private final TokenProvider tokenProvider;
 	
 	public CustomContextRepo(TokenProvider tokenProvider) {
@@ -26,7 +30,7 @@ public class CustomContextRepo implements ServerSecurityContextRepository{
 		return Mono.justOrEmpty(
 						exchange.getRequest().getHeaders().getFirst(AUTHORIZATION))
 				.switchIfEmpty(
-						Mono.justOrEmpty(exchange.getRequest().getQueryParams().getFirst("jwt")))
+						Mono.justOrEmpty(exchange.getRequest().getQueryParams().getFirst(JWT_PARAM_NAME)))
 				.filter(token -> token.startsWith(tokenProvider.getPrefix()))
 				.map(tokenProvider::verifyToken)
 				.onErrorResume(err -> Mono.empty())

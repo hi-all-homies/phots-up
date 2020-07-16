@@ -5,5 +5,5 @@ export class PostSummary{
     likes: number;
     comments: number;
     meLiked: boolean;
-    image: any;
+    image: string;
 }

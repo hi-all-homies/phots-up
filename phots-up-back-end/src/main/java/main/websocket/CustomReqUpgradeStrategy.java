@@ -2,11 +2,13 @@ package main.websocket;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.buffer.NettyDataBufferFactory;
 import org.springframework.http.server.reactive.AbstractServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.HandshakeInfo;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.adapter.NettyWebSocketSessionSupport;
@@ -20,7 +22,10 @@ import reactor.netty.http.server.WebsocketServerSpec;
 import reactor.netty.http.websocket.WebsocketInbound;
 import reactor.netty.http.websocket.WebsocketOutbound;
 
+@Component
 public class CustomReqUpgradeStrategy implements RequestUpgradeStrategy {
+	@Value(value = "${token.param.name}")
+	private String JWT_PARAM_NAME;
 	private final TokenProvider tokenProvider;
 
 	public CustomReqUpgradeStrategy(TokenProvider tokenProvider) {
@@ -39,7 +44,7 @@ public class CustomReqUpgradeStrategy implements RequestUpgradeStrategy {
         HandshakeInfo handshakeInfo = handshakeInfoFactory.get();
         NettyDataBufferFactory bufferFactory = (NettyDataBufferFactory) response.bufferFactory();
         
-        var token = exchange.getRequest().getQueryParams().getFirst("jwt");
+        var token = exchange.getRequest().getQueryParams().getFirst(JWT_PARAM_NAME);
         var username = tokenProvider.getUsernameFromToken(token);
         handshakeInfo.getHeaders().add("username", username);
         

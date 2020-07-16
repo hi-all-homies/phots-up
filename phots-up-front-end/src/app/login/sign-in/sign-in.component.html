@@ -13,7 +13,7 @@
             </button>
         </mat-form-field>
     
-        <button mat-raised-button color="warn" type="submit">
+        <button mat-raised-button color="warn" type="submit" [disabled]='loginForm.invalid'>
             log in
         </button>
     </form>

@@ -16,7 +16,6 @@ import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.server.support.HandshakeWebSocketService;
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
 import main.model.notifications.Notification;
-import main.security.TokenProvider;
 import reactor.core.publisher.Flux;
 
 @Configuration
@@ -26,7 +25,7 @@ public class WebSocketConfig {
 	private Flux<Notification> source;
 	
 	@Autowired
-	private TokenProvider tokenProvider;
+	private CustomReqUpgradeStrategy upgradeStrategy;
 	
 	@Bean
 	public HandlerMapping webSocketMapping() {
@@ -43,8 +42,7 @@ public class WebSocketConfig {
 	
 	@Bean
 	public HandshakeWebSocketService handshakeService() {
-		return new HandshakeWebSocketService(
-				new CustomReqUpgradeStrategy(this.tokenProvider));
+		return new HandshakeWebSocketService(this.upgradeStrategy);
 	}
 	
 	@Bean

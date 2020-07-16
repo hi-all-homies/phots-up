@@ -1,6 +1,7 @@
 package main.endpoints;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -12,6 +13,8 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class PostHandler {
+	@Value(value = "${token.param.name}")
+	private String JWT_PARAM_NAME;
 	private final PostFacade postFacade;
 
 	public PostHandler(PostFacade postFacade) {
@@ -20,11 +23,11 @@ public class PostHandler {
 	
 	public Mono<ServerResponse> getAllPosts(ServerRequest req){
 		var page = req.queryParam("page").get();
-		var token = req.headers().firstHeader(AUTHORIZATION);
+		var token = req.queryParam(JWT_PARAM_NAME).get();
 		var fluxPosts = this.postFacade.getPosts(Integer.valueOf(page), token);
 		
 		return ServerResponse.ok()
-				.contentType(MediaType.APPLICATION_STREAM_JSON)
+				.contentType(MediaType.TEXT_EVENT_STREAM)
 				.body(fluxPosts, PostSummary.class);
 	}
 	

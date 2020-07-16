@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/shared/auth.service';
 import { Router } from '@angular/router';
 
@@ -19,8 +19,8 @@ export class SignInComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      username: new FormControl(''),
-      password: new FormControl('')
+      username: new FormControl('',[Validators.required, Validators.minLength(3)]),
+      password: new FormControl('',[Validators.required, Validators.minLength(5)])
     });
   }
 
@@ -35,7 +35,7 @@ export class SignInComponent implements OnInit {
         ans =>{
           if (ans)
             this.onSuccesLogin()},
-        err => console.log('wrong pass or whatever'));
+        err => console.log(err));
   }
 
   private onSuccesLogin(){

@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
@@ -16,6 +16,7 @@ import { AddPostComponent } from './home/add-post/add-post.component';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from './shared/auth.service';
+import { TokenAdder } from './shared/token-adder';
 
 @NgModule({
   declarations: [
@@ -40,9 +41,10 @@ import { AuthService } from './shared/auth.service';
   providers: [
     CookieService,
     AuthService,
-    {provide: MatDialogRef, useValue: {}}
+    {provide: MatDialogRef, useValue: {}},
+    {provide: HTTP_INTERCEPTORS, useClass: TokenAdder, multi:true}
   ],
   entryComponents: [AddPostComponent],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
