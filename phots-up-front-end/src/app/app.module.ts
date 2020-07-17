@@ -17,6 +17,9 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from './shared/auth.service';
 import { TokenAdder } from './shared/token-adder';
+import { EventSourceService } from './shared/event-source.service';
+import { PostService } from './shared/post.service';
+import { DataTransferService } from './shared/data-transfer.service';
 
 @NgModule({
   declarations: [
@@ -41,6 +44,9 @@ import { TokenAdder } from './shared/token-adder';
   providers: [
     CookieService,
     AuthService,
+    EventSourceService,
+    PostService,
+    DataTransferService,
     {provide: MatDialogRef, useValue: {}},
     {provide: HTTP_INTERCEPTORS, useClass: TokenAdder, multi:true}
   ],

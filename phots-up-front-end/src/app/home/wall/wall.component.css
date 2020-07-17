@@ -4,8 +4,12 @@
 }
 .one-post
 {
-    max-width: 40%;
+    width: 35%;
     margin: 1% auto;
+}
+.one-post>img
+{
+    max-height: 600px;
 }
 .comment
 {

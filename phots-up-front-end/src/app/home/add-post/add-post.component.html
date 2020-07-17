@@ -7,7 +7,7 @@
         <input type='file' #imageInput style='display: none'
                     (change)='imageChoosen($event)'>
 
-        <form (ngSubmit)='onSubmit()' [formGroup]='post'>
+        <form [formGroup]='post'>
 
             <mat-form-field>
                 <textarea cdkTextareaAutosize='true' matInput
@@ -20,10 +20,10 @@
             </div>
 
             <div class='buttons'>
-                <button mat-icon-button (click)='chooseImage()' color='primary'>
+                <button mat-icon-button (click)='chooseImage()' type='button' color='primary'>
                     <mat-icon>add_a_photo</mat-icon>
                 </button> 
-                <button mat-raised-button color='primary' type='submit'
+                <button mat-raised-button (click)='send()' color='primary' type='button'
                     class='send-button' [disabled]='post.invalid'>
                     Send
                 </button>

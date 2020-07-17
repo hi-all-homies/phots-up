@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddPostComponent } from './add-post/add-post.component';
+import { DataTransferService } from '../shared/data-transfer.service';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -8,7 +10,7 @@ import { AddPostComponent } from './add-post/add-post.component';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog, private dataService: DataTransferService) { }
 
   ngOnInit(): void {
   }
@@ -19,5 +21,6 @@ export class HomeComponent implements OnInit {
     config.width = '40%';
     
     let dialogRef = this.dialog.open(AddPostComponent,config);
+    dialogRef.afterClosed().subscribe(() => this.dataService.emit())
   }
 }

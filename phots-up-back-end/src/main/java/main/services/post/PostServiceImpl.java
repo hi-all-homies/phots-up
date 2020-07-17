@@ -26,6 +26,7 @@ public class PostServiceImpl implements PostService{
 		
 		return Flux.defer(() -> Flux.fromIterable(this.postDao.findAll(pageReq)))
 				.subscribeOn(Schedulers.elastic())
+				.sort((x,y) -> y.getId().compareTo(x.getId()))
 				.map(post -> convert(post, currUserId));
 	}
 

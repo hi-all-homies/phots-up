@@ -34,7 +34,6 @@ export class AuthService {
     if (response.ok){
       let jwt = <string>response.body.token;
       this.cookie.set('jwt', jwt);
-      this.setCurrUser(jwt);
     }
   }
 
@@ -46,6 +45,8 @@ export class AuthService {
   }
 
   public getCurrUser(){
+    this.setCurrUser(this.cookie.get('jwt'));
+
     return this.currentUser.asObservable();
   }
 

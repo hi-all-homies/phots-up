@@ -2,6 +2,7 @@ package main.endpoints;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -34,9 +35,8 @@ public class PostHandler {
 	public Mono<ServerResponse> savePost(ServerRequest req){
 		return req.multipartData()
 				.flatMap(postFacade::storePost)
-				.flatMap(post -> ServerResponse.ok()
-						.contentType(MediaType.TEXT_PLAIN)
-						.bodyValue("saved with id " + post.getId()));
+				.flatMap(post -> ServerResponse.status(HttpStatus.CREATED)
+						.build());
 	}
 	
 	public Mono<ServerResponse> getPostById(ServerRequest req){

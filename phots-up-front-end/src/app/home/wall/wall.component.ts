@@ -1,9 +1,9 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddPostComponent } from '../add-post/add-post.component';
-import { AuthService } from 'src/app/shared/auth.service';
-import { Url } from 'src/app/shared/base-url';
 import { PostSummary } from 'src/app/model/post-summary';
+import { PostService } from 'src/app/shared/post.service';
+import { DataTransferService } from 'src/app/shared/data-transfer.service';
 
 @Component({
   selector: 'app-wall',
@@ -15,42 +15,33 @@ export class WallComponent implements OnInit {
   liked: boolean = false;
 
   page: number = 0;
-  token: string;
-  isOpenOnce: boolean = false;
 
   constructor(
     private dialog: MatDialog,
-    private auth: AuthService,
-    private zone: NgZone
+    private postService: PostService,
+    private dataServ: DataTransferService
     ) { }
 
   ngOnInit(): void {
-    this.token = this.auth.getToken();
-    let source =
-      new EventSource(Url.BASE_URL + `posts?page=${this.page}&jwt=${this.token}`);
+    this.postService.getPostObs()
+      .subscribe(item => this.posts.unshift(item));
 
-    source.onopen = openEvent =>{
-      if (this.isOpenOnce)
-        source.close();
-      else
-        this.isOpenOnce = true;
-    }
+    this.postService.fetchPosts(this.page++);
 
-    source.onmessage = message =>{
-      let postSummary = <PostSummary>JSON.parse(message.data);
-      let ind = postSummary.post.imageKey.lastIndexOf('.');
-      let ext = postSummary.post.imageKey.substring(ind+1);
-      
-      postSummary.image = `data:image/${ext};base64,`+postSummary.image;
-      this.zone.run(() => this.posts.unshift(postSummary));
-    }
+    this.dataServ.getObs()
+      .subscribe(() => {
+        this.ngOnInit();
+      });
   }
 
-  edit(post: any){
+  edit(post: PostSummary){
     let config = new MatDialogConfig();
     config.disableClose = true;
     config.width = '40%';
-    config.data = {postId: post}
+    config.data = {
+      content: post.post.content,
+      image: post.image
+    };
     
     let dialogRef = this.dialog.open(AddPostComponent,config);
   }

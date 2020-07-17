@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { PostService } from 'src/app/shared/post.service';
+import { Post } from 'src/app/model/post';
+import { PostSummary } from 'src/app/model/post-summary';
 
 @Component({
   selector: 'app-add-post',
@@ -19,12 +22,14 @@ export class AddPostComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: any,
-    private ref: MatDialogRef<AddPostComponent>
+    private ref: MatDialogRef<AddPostComponent>,
+    private postService: PostService
     ) { }
 
   ngOnInit(): void {
     if (this.data){
-      this.post.get('content').patchValue(`post id is ${this.data.postId}`)
+      this.post.get('content').patchValue(this.data.content);
+      this.imagePreview = this.data.image;
     }
   }
 
@@ -51,7 +56,19 @@ export class AddPostComponent implements OnInit {
     };
   }
 
-  onSubmit(){
-    
+  send(){
+    let post = new Post();
+    post.content = this.post.get('content').value;
+    this.postService.publishPost(post, this.imageData)
+      .subscribe(p =>{
+        let postSummary = new PostSummary();
+        postSummary.post = p;
+        postSummary.meLiked = false;
+        postSummary.image = this.imagePreview;
+        postSummary.comments = 0;
+        postSummary.likes = 0;
+
+        this.ref.close();
+      });
   }
 }
