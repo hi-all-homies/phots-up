@@ -20,6 +20,8 @@ export class AddPostComponent implements OnInit {
     image: new FormControl(null, Validators.required)
   });
 
+  isEdit: boolean = false;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: any,
     private ref: MatDialogRef<AddPostComponent>,
@@ -27,10 +29,15 @@ export class AddPostComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    if (this.data){
-      this.post.get('content').patchValue(this.data.content);
-      this.imagePreview = this.data.image;
-    }
+    if (this.data)
+      this.initForEdit();
+  }
+
+  private initForEdit(){
+    this.post.get('content').patchValue(this.data.postSumm.post.content);
+    this.imagePreview = this.data.postSumm.image;
+    this.isEdit = this.data.isEdit;
+    this.post.get('image').patchValue(this.imagePreview.length);
   }
 
   chooseImage(){
@@ -56,19 +63,28 @@ export class AddPostComponent implements OnInit {
     };
   }
 
+  edit(){
+    this.data.postSumm.post.content = this.post.get('content').value;
+    this.data.postSumm.image = this.imagePreview;
+    this.postService.updatePost(this.data.postSumm.post, this.imageData)
+      .subscribe(resp => this.ref.close());
+  }
+
   send(){
     let post = new Post();
     post.content = this.post.get('content').value;
     this.postService.publishPost(post, this.imageData)
-      .subscribe(p =>{
-        let postSummary = new PostSummary();
-        postSummary.post = p;
-        postSummary.meLiked = false;
-        postSummary.image = this.imagePreview;
-        postSummary.comments = 0;
-        postSummary.likes = 0;
+      .subscribe(p =>
+        this.ref.close(this.gatherPostSummary(p)));
+  }
 
-        this.ref.close();
-      });
+  private gatherPostSummary(post: Post): PostSummary{
+    return {
+      post: post,
+      meLiked: false,
+      image: this.imagePreview,
+      comments: 0,
+      likes:0
+    };
   }
 }

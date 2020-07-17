@@ -10,7 +10,9 @@ import { DataTransferService } from '../shared/data-transfer.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private dialog: MatDialog, private dataService: DataTransferService) { }
+  constructor(
+    private dialog: MatDialog,
+    private transferService: DataTransferService) {}
 
   ngOnInit(): void {
   }
@@ -21,6 +23,9 @@ export class HomeComponent implements OnInit {
     config.width = '40%';
     
     let dialogRef = this.dialog.open(AddPostComponent,config);
-    dialogRef.afterClosed().subscribe(() => this.dataService.emit())
+    dialogRef.afterClosed()
+      .subscribe(postSummary =>{
+        if (postSummary)
+          this.transferService.onSuccessPublish(postSummary)});
   }
 }

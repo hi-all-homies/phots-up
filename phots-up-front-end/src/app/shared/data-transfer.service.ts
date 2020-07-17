@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { PostSummary } from '../model/post-summary';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataTransferService {
-  private emitter: Subject<void> = new Subject();
-  private obs = this.emitter.asObservable();
+  private publishedPostEmitter: Subject<PostSummary> = new Subject();
+  private publishedPostObs = this.publishedPostEmitter.asObservable();
 
   constructor() {}
 
-  public getObs(){
-    return this.obs;
+  public getPublishedPostObs(){
+    return this.publishedPostObs;
   }
 
-  public emit(){
-    this.emitter.next();
+  public onSuccessPublish(value: PostSummary){
+    this.publishedPostEmitter.next(value);
   }
 }

@@ -42,4 +42,15 @@ export class PostService {
           return post;
       }))
   }
+
+  public updatePost(post: Post, image?: File){
+    let formData = new FormData();
+    formData.append('post', JSON.stringify(post));
+    if (image)
+      formData.append('image', image);
+
+    console.log(JSON.stringify(post))
+    return this.http.put<any>(
+      Url.BASE_URL + `posts/${post.id}`, formData, {observe: 'response'});
+  }
 }

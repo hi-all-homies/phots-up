@@ -19,19 +19,17 @@ export class WallComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private postService: PostService,
-    private dataServ: DataTransferService
+    private transferService: DataTransferService
     ) { }
 
   ngOnInit(): void {
     this.postService.getPostObs()
-      .subscribe(item => this.posts.unshift(item));
+      .subscribe(item => this.posts.push(item));
 
     this.postService.fetchPosts(this.page++);
 
-    this.dataServ.getObs()
-      .subscribe(() => {
-        this.ngOnInit();
-      });
+    this.transferService.getPublishedPostObs()
+      .subscribe(publishedPost => this.posts.unshift(publishedPost));
   }
 
   edit(post: PostSummary){
@@ -39,8 +37,8 @@ export class WallComponent implements OnInit {
     config.disableClose = true;
     config.width = '40%';
     config.data = {
-      content: post.post.content,
-      image: post.image
+      postSumm: post,
+      isEdit: true
     };
     
     let dialogRef = this.dialog.open(AddPostComponent,config);

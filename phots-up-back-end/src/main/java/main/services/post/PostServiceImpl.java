@@ -2,6 +2,8 @@ package main.services.post;
 
 import java.util.Collection;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import main.dao.post.PostDao;
 import main.model.dto.PostSummary;
@@ -22,7 +24,8 @@ public class PostServiceImpl implements PostService{
 
 	@Override
 	public Flux<PostSummary> getAllPosts(int page, long currUserId) {
-		var pageReq = PageRequest.of(page, PAGE_SIZE);
+		var pageReq = PageRequest.of(
+				page, PAGE_SIZE, Sort.by(Direction.DESC, "id"));
 		
 		return Flux.defer(() -> Flux.fromIterable(this.postDao.findAll(pageReq)))
 				.subscribeOn(Schedulers.elastic())

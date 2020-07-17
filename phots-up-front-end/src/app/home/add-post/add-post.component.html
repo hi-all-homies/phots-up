@@ -23,9 +23,13 @@
                 <button mat-icon-button (click)='chooseImage()' type='button' color='primary'>
                     <mat-icon>add_a_photo</mat-icon>
                 </button> 
-                <button mat-raised-button (click)='send()' color='primary' type='button'
-                    class='send-button' [disabled]='post.invalid'>
+                <button mat-raised-button (click)='send()' *ngIf='!isEdit'
+                    color='primary' type='button' class='send-button' [disabled]='post.invalid'>
                     Send
+                </button>
+                <button mat-raised-button (click)='edit()' *ngIf='isEdit'
+                    color='primary' type='button' class='send-button' [disabled]='post.invalid'>
+                    Save
                 </button>
             </div>
         </form>
