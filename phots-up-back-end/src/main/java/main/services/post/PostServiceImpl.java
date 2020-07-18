@@ -57,9 +57,8 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public Mono<Void> deletePost(Post post) {
-		return Mono.fromRunnable(
-				() -> this.postDao.deletePost(post.getId()));
+	public Mono<Post> deletePost(Long postId) {
+		return Mono.justOrEmpty(this.postDao.deletePost(postId));
 	}
 
 	private PostSummary convert(Post post, Long currentUserId) {

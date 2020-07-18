@@ -9,7 +9,6 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import main.facades.post.PostFacade;
 import main.model.dto.PostSummary;
-import main.model.entities.Post;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -57,8 +56,8 @@ public class PostHandler {
 	}
 	
 	public Mono<ServerResponse>  deletePost(ServerRequest req){
-		return req.bodyToMono(Post.class)
-				.flatMap(postFacade::deletePost)
+		var postId = Long.valueOf(req.pathVariable("postid"));
+		return this.postFacade.deletePost(postId)
 				.then(ServerResponse.ok().build());
 	}
 }

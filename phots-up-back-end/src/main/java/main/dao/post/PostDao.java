@@ -13,7 +13,7 @@ public interface PostDao {
 	
 	public Optional<Post> findById(Long postId);
 	
-	public void deletePost(Long postId);
+	public Optional<Post> deletePost(Long postId);
 	
 	public int updatePost(Post post);
 	

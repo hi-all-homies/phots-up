@@ -25,7 +25,7 @@ public class RouterConfig {
 				.GET(BASE_URL+"posts", postHandler::getAllPosts)
 				.GET(BASE_URL+"posts/{postid}", postHandler::getPostById)
 				.POST(BASE_URL+"posts", accept(MULTIPART_FORM_DATA), postHandler::savePost)
-				.DELETE(BASE_URL+"posts/{postid}", accept(APPLICATION_JSON), postHandler::deletePost)
+				.DELETE(BASE_URL+"posts/{postid}", postHandler::deletePost)
 				.PUT(BASE_URL+"posts/{postid}", accept(MULTIPART_FORM_DATA), postHandler::updatePost)
 				.add(loginRouting(loginHandler))
 				.add(commentsRouting(commentHandler))

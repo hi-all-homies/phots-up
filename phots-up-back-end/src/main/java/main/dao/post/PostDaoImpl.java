@@ -39,9 +39,13 @@ public class PostDaoImpl implements PostDao {
 
 	@Override
 	@Transactional
-	public void deletePost(Long postId) {
-		this.commentRepo.deleteAllCommentsByPostId(postId);
-		this.postRepo.deleteById(postId);
+	public Optional<Post> deletePost(Long postId) {
+		var postToDelete = this.postRepo.findById(postId);
+		if (postToDelete.isPresent()) {
+			this.commentRepo.deleteAllCommentsByPostId(postId);
+			this.postRepo.deleteById(postId);
+		}
+		return postToDelete;
 	}
 	
 	@Override

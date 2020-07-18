@@ -71,9 +71,10 @@ public class PostFacadeImpl implements PostFacade{
 	
 	
 	@Override
-	public Mono<Void> deletePost(Post post) {
-		return this.postService.deletePost(post)
-				.doOnSuccess(v -> this.imageService.deleteImage(post.getImageKey()));
+	public Mono<Void> deletePost(Long postId) {
+		return this.postService.deletePost(postId)
+				.doOnNext(deleted -> this.imageService.deleteImage(deleted.getImageKey()))
+				.then();
 	}
 
 

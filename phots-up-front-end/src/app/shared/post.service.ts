@@ -53,4 +53,14 @@ export class PostService {
     return this.http.put<any>(
       Url.BASE_URL + `posts/${post.id}`, formData, {observe: 'response'});
   }
+
+  deletePost(post: Post) {
+    return this.http.delete<any>(
+      Url.BASE_URL + `posts/${post.id}`, {observe: 'response'});
+  }
+
+  addLike(likeReq: any){
+    return this.http.post<any>(
+      Url.BASE_URL + `${likeReq.post.id}/likes`, likeReq, {observe: 'response'});
+  }
 }

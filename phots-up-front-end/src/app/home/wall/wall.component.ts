@@ -4,6 +4,8 @@ import { AddPostComponent } from '../add-post/add-post.component';
 import { PostSummary } from 'src/app/model/post-summary';
 import { PostService } from 'src/app/shared/post.service';
 import { DataTransferService } from 'src/app/shared/data-transfer.service';
+import { AuthService } from 'src/app/shared/auth.service';
+import { User } from 'src/app/model/user';
 
 @Component({
   selector: 'app-wall',
@@ -12,19 +14,25 @@ import { DataTransferService } from 'src/app/shared/data-transfer.service';
 })
 export class WallComponent implements OnInit {
   posts: PostSummary[] =[];
-  liked: boolean = false;
+  currUser: User;
+  isMore: boolean = true;
 
   page: number = 0;
 
   constructor(
     private dialog: MatDialog,
     private postService: PostService,
-    private transferService: DataTransferService
+    private transferService: DataTransferService,
+    private auth: AuthService
     ) { }
 
   ngOnInit(): void {
+    this.auth.getCurrUser().subscribe(u => this.currUser = u);
+
     this.postService.getPostObs()
-      .subscribe(item => this.posts.push(item));
+      .subscribe(item =>{
+        this.posts.push(item);
+        this.isMore = true});
 
     this.postService.fetchPosts(this.page++);
 
@@ -44,8 +52,34 @@ export class WallComponent implements OnInit {
     let dialogRef = this.dialog.open(AddPostComponent,config);
   }
 
-  onLike(){
-    this.liked = !this.liked;
+  delete(postSummary: PostSummary){
+    this.postService.deletePost(postSummary.post)
+      .subscribe(resp =>{
+        let ind = this.posts.indexOf(postSummary);
+        this.posts.splice(ind, 1)},
+        
+        err => console.log(err));
+  }
+
+  onLike(postSumm: PostSummary){
+    let likeReq = {
+      post: postSumm.post,
+      user: this.currUser
+    };
+
+    this.postService.addLike(likeReq)
+      .subscribe(resp =>{
+        postSumm.meLiked = !postSumm.meLiked
+        if (postSumm.meLiked)
+          postSumm.likes++;
+        else
+          postSumm.likes--;
+      });
+  }
+
+  onMore(){
+    this.isMore = false;
+    this.postService.fetchPosts(this.page++);
   }
 
 }

@@ -15,5 +15,5 @@ public interface PostService {
 	
 	public Mono<Integer> updatePost(Post post);
 	
-	public Mono<Void> deletePost(Post post);
+	public Mono<Post> deletePost(Long postId);
 }

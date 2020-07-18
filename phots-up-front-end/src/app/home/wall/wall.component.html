@@ -1,41 +1,46 @@
 <div class='post-container'>
-    <mat-card class='one-post' *ngFor='let post of posts'>
+    <mat-card class='one-post' *ngFor='let item of posts'>
         <mat-card-header>
-            <mat-card-title>by {{post.post.author.username}}</mat-card-title>
+            <mat-card-title>by {{item.post.author.username}}</mat-card-title>
             <span class='spacer'></span>
             <button mat-icon-button [matMenuTriggerFor]='menu'>
                 <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)='edit(post)'>
+                <button mat-menu-item (click)='edit(item)'
+                    [disabled]="item.post.author.id == currUser.id ? 'false' : 'true'">
                     <mat-icon>create</mat-icon>
                     <span>edit</span>
                 </button>
-                <button mat-menu-item>
+                <button mat-menu-item (click)='delete(item)'
+                    [disabled]="item.post.author.id == currUser.id ? 'false' : 'true'">
                     <mat-icon>delete_forever</mat-icon>
                     <span>delete</span>
                 </button>
             </mat-menu>
         </mat-card-header>
-        <img mat-card-image src='{{post.image}}' alt='post photo'>
+        <img mat-card-image src='{{item.image}}' alt='post photo'>
         <mat-card-content>
             <p>
-                {{post.post.content}}
+                {{item.post.content}}
             </p>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-icon-button color='accent' (click)='onLike()'>
-              <mat-icon>{{post.meLiked ? 'favorite':'favorite_border'}}</mat-icon>
+          <button mat-icon-button color='accent' (click)='onLike(item)'>
+              <mat-icon>{{item.meLiked ? 'favorite':'favorite_border'}}</mat-icon>
           </button>
-          <span>{{post.likes}}</span>
+          <span>{{item.likes}}</span>
           <button mat-icon-button class='comment'>
               <mat-icon>comment</mat-icon>  
           </button>
-          <span>{{post.comments}}</span>
+          <span>{{item.comments}}</span>
         </mat-card-actions>
     </mat-card>
 
     <div class='more'>
-        <button mat-raised-button color='primary'>more</button>
+        <button mat-raised-button color='primary' (click)='onMore()'
+            [disabled]='!isMore'>
+            more
+        </button>
     </div>
 </div>
