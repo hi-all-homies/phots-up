@@ -1,7 +1,6 @@
 package main.endpoints;
 
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.MediaType.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -22,7 +21,6 @@ public class CommentHandler {
 		return req.bodyToMono(Comment.class)
 				.flatMap(commentFacade::saveComment)
 				.flatMap(commId -> ServerResponse.status(CREATED)
-						.contentType(TEXT_PLAIN)
 						.bodyValue(commId));
 	}
 	

@@ -6,6 +6,7 @@ import { PostService } from 'src/app/shared/post.service';
 import { DataTransferService } from 'src/app/shared/data-transfer.service';
 import { AuthService } from 'src/app/shared/auth.service';
 import { User } from 'src/app/model/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-wall',
@@ -23,7 +24,8 @@ export class WallComponent implements OnInit {
     private dialog: MatDialog,
     private postService: PostService,
     private transferService: DataTransferService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
     ) { }
 
   ngOnInit(): void {
@@ -40,6 +42,12 @@ export class WallComponent implements OnInit {
       .subscribe(publishedPost => this.posts.unshift(publishedPost));
   }
 
+
+  getDetails(postSummary: PostSummary){
+    this.router.navigate(['home/post'], {
+      queryParams: {id: postSummary.post.id}});
+  }
+
   edit(post: PostSummary){
     let config = new MatDialogConfig();
     config.disableClose = true;
@@ -49,7 +57,7 @@ export class WallComponent implements OnInit {
       isEdit: true
     };
     
-    let dialogRef = this.dialog.open(AddPostComponent,config);
+    this.dialog.open(AddPostComponent,config);
   }
 
   delete(postSummary: PostSummary){

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -10,10 +11,17 @@ export class HeaderComponent implements OnInit {
 
   loggedIn: boolean = false;
 
-  constructor() { }
+  constructor(
+    private dialog: MatDialog,
+    private router: Router
+    ) { }
 
   ngOnInit(): void {
     
+  }
+
+  home(){
+    this.router.navigate(['home']);
   }
 
 }

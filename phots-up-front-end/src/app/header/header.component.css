@@ -2,6 +2,7 @@
 img
 {   max-width: 62px;
     max-height: 62px;
+    cursor: pointer;
 }
 .title
 {

@@ -7,6 +7,7 @@ import { Post } from '../model/post';
 import { Url } from './base-url';
 import { AuthService } from './auth.service';
 import { map } from 'rxjs/operators';
+import { StringUtils } from './string-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -35,13 +36,19 @@ export class PostService {
     });
     formData.append('image',image);
 
-    return this.http.post<any>(
-        Url.BASE_URL + 'posts', formData, {observe: 'response'})
-      .pipe(map(resp =>{
-        if (resp.ok)
-          return post;
-      }))
+    return this.http.post<Post>(
+        Url.BASE_URL + 'posts', formData, {observe: 'body'})
   }
+
+
+  getPostById(id: string) {
+    return this.http.get<PostSummary>(
+        Url.BASE_URL + `posts/${id}`, {observe: 'body'})
+      .pipe(map(p =>{
+        p.image = StringUtils.getImageString64(p.post.imageKey, p.image);
+        return p}));
+  }
+
 
   public updatePost(post: Post, image?: File){
     let formData = new FormData();

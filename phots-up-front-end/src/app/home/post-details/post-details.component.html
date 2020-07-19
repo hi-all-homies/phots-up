@@ -1,0 +1,39 @@
+<mat-grid-list cols='3' rowHeight='4:3' gutterSize='7px' *ngIf='let post of postSummary | async'>
+    <mat-grid-tile colspan='2' rowspan='2'>
+        <div class='photo-container'>
+            <img [src]='post.image' alt='post photo'>
+        </div>
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan='1' rowspan='2'>
+        <mat-grid-tile-header>
+            <button mat-icon-button color='warn' tabindex='-1'>
+                <mat-icon>favorite</mat-icon>
+            </button>
+            {{post.likes}}
+            <span class="spacer"></span>
+            {{post.post.author.username}}
+        </mat-grid-tile-header>
+
+        <div class='comment-form'>
+            <mat-form-field>
+                <input matInput type='text' [(ngModel)]='comment'
+                    placeholder='leave a comment' tabindex='-1'>
+            </mat-form-field>
+            
+            <button mat-raised-button class='send-button' (click)='doComment()'>
+                Send
+            </button>
+        </div>
+
+        <div class='comments'>
+            <mat-list>
+                <mat-list-item *ngFor='let comment of post.post.comments'>
+                    <h4 matLine>{{comment.author.username}}</h4>
+                    <span matLine>{{comment.content}}</span>
+                    <mat-divider></mat-divider>
+                </mat-list-item>
+            </mat-list>
+        </div>
+    </mat-grid-tile>
+</mat-grid-list>

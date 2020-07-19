@@ -19,7 +19,7 @@
                 </button>
             </mat-menu>
         </mat-card-header>
-        <img mat-card-image src='{{item.image}}' alt='post photo'>
+        <img mat-card-image src='{{item.image}}' (click)='getDetails(item)' alt='post photo'>
         <mat-card-content>
             <p>
                 {{item.post.content}}

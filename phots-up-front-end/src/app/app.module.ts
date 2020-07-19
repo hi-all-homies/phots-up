@@ -20,6 +20,8 @@ import { TokenAdder } from './shared/token-adder';
 import { EventSourceService } from './shared/event-source.service';
 import { PostService } from './shared/post.service';
 import { DataTransferService } from './shared/data-transfer.service';
+import { PostDetailsComponent } from './home/post-details/post-details.component';
+import { CommentService } from './shared/comment.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { DataTransferService } from './shared/data-transfer.service';
     LoginComponent,
     SignInComponent,
     SignUpComponent,
-    AddPostComponent
+    AddPostComponent,
+    PostDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -46,6 +49,7 @@ import { DataTransferService } from './shared/data-transfer.service';
     AuthService,
     EventSourceService,
     PostService,
+    CommentService,
     DataTransferService,
     {provide: MatDialogRef, useValue: {}},
     {provide: HTTP_INTERCEPTORS, useClass: TokenAdder, multi:true}

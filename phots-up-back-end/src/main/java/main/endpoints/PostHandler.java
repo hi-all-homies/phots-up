@@ -3,7 +3,7 @@ package main.endpoints;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import static org.springframework.http.MediaType.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -27,7 +27,7 @@ public class PostHandler {
 		var fluxPosts = this.postFacade.getPosts(Integer.valueOf(page), token);
 		
 		return ServerResponse.ok()
-				.contentType(MediaType.TEXT_EVENT_STREAM)
+				.contentType(TEXT_EVENT_STREAM)
 				.body(fluxPosts, PostSummary.class);
 	}
 	
@@ -35,7 +35,8 @@ public class PostHandler {
 		return req.multipartData()
 				.flatMap(postFacade::storePost)
 				.flatMap(post -> ServerResponse.status(HttpStatus.CREATED)
-						.build());
+						.contentType(APPLICATION_JSON)
+						.bodyValue(post));
 	}
 	
 	public Mono<ServerResponse> getPostById(ServerRequest req){
@@ -44,7 +45,7 @@ public class PostHandler {
 		
 		return this.postFacade.getPostById(postId, token)
 				.flatMap(post -> ServerResponse.ok()
-						.contentType(MediaType.APPLICATION_JSON)
+						.contentType(APPLICATION_JSON)
 						.bodyValue(post))
 				.switchIfEmpty(ServerResponse.notFound().build());
 	}

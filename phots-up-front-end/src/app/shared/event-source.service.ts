@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { PostSummary } from '../model/post-summary';
 import { AuthService } from './auth.service';
 import { Url } from './base-url';
+import { StringUtils } from './string-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -35,10 +36,8 @@ export class EventSourceService {
 
   private onMessage = (event: MessageEvent) =>{
     let postSummary = <PostSummary>JSON.parse(event.data);
-      let ind = postSummary.post.imageKey.lastIndexOf('.');
-      let ext = postSummary.post.imageKey.substring(ind+1);
-
-      postSummary.image = `data:image/${ext};base64,`+postSummary.image;
+      postSummary.image =
+        StringUtils.getImageString64(postSummary.post.imageKey, postSummary.image);
       this.zone.run(() => this.postObs.next(postSummary));
   }
 
