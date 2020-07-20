@@ -7,6 +7,9 @@ build/
 
 src/main/resources/application.properties
 bin/main/application.properties
+src/main/resources/first-image.jpg
+bin/main/first-image.jpg
+
 ### STS ###
 .apt_generated
 .classpath
