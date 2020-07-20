@@ -1,7 +1,10 @@
-<mat-grid-list cols='3' rowHeight='4:3' gutterSize='7px' *ngIf='let post of postSummary | async'>
+<div *ngIf='loading' class='loading'>
+    <img src='assets/logo/746.gif' alt='loading...'>
+</div>
+<mat-grid-list cols='3' rowHeight='4:3' gutterSize='7px' *ngIf='postSummary'>
     <mat-grid-tile colspan='2' rowspan='2'>
         <div class='photo-container'>
-            <img [src]='post.image' alt='post photo'>
+            <img [src]='postSummary.image' alt='post photo'>
         </div>
     </mat-grid-tile>
 
@@ -10,9 +13,9 @@
             <button mat-icon-button color='warn' tabindex='-1'>
                 <mat-icon>favorite</mat-icon>
             </button>
-            {{post.likes}}
+            {{postSummary.likes}}
             <span class="spacer"></span>
-            {{post.post.author.username}}
+            {{postSummary.post.author.username}}
         </mat-grid-tile-header>
 
         <div class='comment-form'>
@@ -28,7 +31,7 @@
 
         <div class='comments'>
             <mat-list>
-                <mat-list-item *ngFor='let comment of post.post.comments'>
+                <mat-list-item *ngFor='let comment of postSummary.post.comments'>
                     <h4 matLine>{{comment.author.username}}</h4>
                     <span matLine>{{comment.content}}</span>
                     <mat-divider></mat-divider>

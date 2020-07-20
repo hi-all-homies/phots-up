@@ -6,7 +6,6 @@ import { Comment } from 'src/app/model/comment';
 import { CommentService } from 'src/app/shared/comment.service';
 import { PostService } from 'src/app/shared/post.service';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'post-details',
@@ -15,9 +14,9 @@ import { Observable } from 'rxjs';
 })
 export class PostDetailsComponent implements OnInit {
   currUser: User;
-  postSummary: Observable<PostSummary>;
-  currPost: PostSummary;
+  postSummary: PostSummary;
   comment: string;
+  loading: boolean = true;
 
   constructor(
     private auth: AuthService,
@@ -31,28 +30,35 @@ export class PostDetailsComponent implements OnInit {
     let id = this.route.snapshot.queryParamMap.get('id');
     this.auth.getCurrUser().subscribe(u => this.currUser = u);
 
-    this.postSummary = this.postServive.getPostById(id);
-    this.postSummary.subscribe(p => this.currPost = p);
+    this.postServive.getPostById(id)
+      .subscribe(body =>{
+        this.postSummary = body;
+        this.loading = false});
   }
 
   doComment(){
-    let comment: Comment = {
+    let comment = this.gatherCommentObj();
+
+    this.commentServie.addComment(comment)
+      .subscribe(id =>{
+        comment.id = id;
+        this.postSummary.post.comments.push(comment);
+        this.comment = ''});
+  }
+
+  private gatherCommentObj(): Comment{
+    return {
       id: null,
       author: this.currUser,
       post: {
-        author: this.currPost.post.author,
-        id: this.currPost.post.id,
+        author: this.postSummary.post.author,
+        id: this.postSummary.post.id,
         comments: null,
         content: null,
         imageKey: null,
         likes: null
       },
-      content: this.comment};
-    this.comment = '';
-
-    this.commentServie.addComment(comment)
-      .subscribe(id =>{
-        comment.id = id;
-        this.currPost.post.comments.push(comment)});
+      content: this.comment
+    }
   }
 }

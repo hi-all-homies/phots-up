@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 export class SignInComponent implements OnInit {
   hide: boolean = true;
   loginForm: FormGroup;
+  loading: boolean = false;
 
   constructor(
     private auth: AuthService,
@@ -29,16 +30,20 @@ export class SignInComponent implements OnInit {
       username: this.loginForm.get('username').value,
       password: this.loginForm.get('password').value
     };
-
+    this.loading = true;
     this.auth.login(loginRequest)
       .subscribe(
         ans =>{
           if (ans)
             this.onSuccesLogin()},
-        err => console.log(err));
+        err => {
+          this.loading = false;
+          console.log(err)
+        });
   }
 
   private onSuccesLogin(){
+    this.loading = false;
     this.router.navigate(['/home']);
   }
 }

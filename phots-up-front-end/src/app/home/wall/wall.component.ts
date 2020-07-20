@@ -17,6 +17,7 @@ export class WallComponent implements OnInit {
   posts: PostSummary[] =[];
   currUser: User;
   isMore: boolean = true;
+  loading: boolean = true;
 
   page: number = 0;
 
@@ -34,7 +35,8 @@ export class WallComponent implements OnInit {
     this.postService.getPostObs()
       .subscribe(item =>{
         this.posts.push(item);
-        this.isMore = true});
+        this.isMore = true;
+        this.loading = false});
 
     this.postService.fetchPosts(this.page++);
 
