@@ -12,9 +12,9 @@ import { map,tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  currentUser: BehaviorSubject<User> = new BehaviorSubject(null);
+  private currentUser: BehaviorSubject<User> = new BehaviorSubject(null);
   private readonly url: string = 'login';
-  jwtService = new JwtHelperService();
+  private jwtService = new JwtHelperService();
 
   constructor(
     private http: HttpClient,
@@ -34,6 +34,7 @@ export class AuthService {
     if (response.ok){
       let jwt = <string>response.body.token;
       this.cookie.set('jwt', jwt);
+      this.setCurrUser(jwt);
     }
   }
 
@@ -55,12 +56,14 @@ export class AuthService {
   }
 
   private setCurrUser(jwt: string){
-    let decoded = this.jwtService.decodeToken(jwt.substring(7));
-    const user: User = {
-      id: decoded.userId,
-      username: decoded.sub
-    };
+    if (jwt){
+      let decoded = this.jwtService.decodeToken(jwt.substring(7));
+      const user: User = {
+        id: decoded.userId,
+        username: decoded.sub
+      };
 
-    this.currentUser.next(user);
+      this.currentUser.next(user);
+    }
   }
 }

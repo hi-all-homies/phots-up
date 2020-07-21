@@ -22,6 +22,8 @@ import { PostService } from './shared/post.service';
 import { DataTransferService } from './shared/data-transfer.service';
 import { PostDetailsComponent } from './home/post-details/post-details.component';
 import { CommentService } from './shared/comment.service';
+import { NotificationService } from './shared/notification.service';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ import { CommentService } from './shared/comment.service';
     MaterialModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    SimpleNotificationsModule.forRoot()
   ],
   providers: [
     CookieService,
@@ -51,6 +54,7 @@ import { CommentService } from './shared/comment.service';
     PostService,
     CommentService,
     DataTransferService,
+    NotificationService,
     {provide: MatDialogRef, useValue: {}},
     {provide: HTTP_INTERCEPTORS, useClass: TokenAdder, multi:true}
   ],

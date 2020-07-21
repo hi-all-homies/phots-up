@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { AuthService } from '../shared/auth.service';
+import { User } from '../model/user';
 
 @Component({
   selector: 'app-header',
@@ -8,20 +9,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-
-  loggedIn: boolean = false;
+  currUser: User;
 
   constructor(
-    private dialog: MatDialog,
+    private auth: AuthService,
     private router: Router
     ) { }
 
   ngOnInit(): void {
-    
+    this.auth.getCurrUser().subscribe(u => this.currUser = u);
   }
 
   home(){
     this.router.navigate(['home']);
   }
 
+  logout(){
+
+  }
 }

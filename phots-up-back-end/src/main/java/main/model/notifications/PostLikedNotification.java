@@ -10,13 +10,15 @@ import main.model.entities.Post;
 @Getter
 public class PostLikedNotification extends Notification {
 	private final String whoLiked;
-	private final Post whichPost;
+	private final long postId;
+	private final String postContent;
 	
 	@Builder
 	public PostLikedNotification(NotificationType type, String whoLiked, Post whichPost) {
 		super(type, whichPost.getAuthor().getUsername());
 		this.whoLiked = whoLiked;
-		this.whichPost = whichPost;
+		this.postId = whichPost.getId();
+		this.postContent = whichPost.getContent();
 	}
 
 	@Override
