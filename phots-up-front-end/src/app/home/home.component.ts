@@ -5,6 +5,7 @@ import { DataTransferService } from '../shared/data-transfer.service';
 import { NotificationService } from '../shared/notification.service';
 import { NotificationsService } from 'angular2-notifications';
 import { Notification } from '../model/notifications/notification';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,8 @@ export class HomeComponent implements OnInit {
     private dialog: MatDialog,
     private transferService: DataTransferService,
     private notifyService: NotificationService,
-    private toastsService: NotificationsService
+    private toastsService: NotificationsService,
+    private router: Router
     ) {}
 
   ngOnInit(): void {
@@ -27,7 +29,13 @@ export class HomeComponent implements OnInit {
   }
 
   private handleNotifications(event: Notification){
-    this.toastsService.info(event.getTitle(), event.getContent());
+    let notif = this.toastsService.info(
+      event.getTitle(), event.getContent(),null, {id: event.getPostId()});
+    
+    notif.click.subscribe(
+      click => this.router.navigate(['home/post'], {
+        queryParams: {id: notif.context.id}
+      }))
   }
 
   newPost(){

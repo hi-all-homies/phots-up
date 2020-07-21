@@ -1,1 +1,37 @@
-<p>sign-up works!</p>
+<h1>registration</h1>
+<div class='form-container'>
+    <form [formGroup]='regForm'>
+
+        <mat-form-field>
+            <input matInput formControlName='username'
+                placeholder='username'>
+            <mat-error>fill up username</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput formControlName='password'
+                [type]="hide ? 'password' : 'text'" placeholder='password'>
+            <button mat-icon-button matSuffix (click)='hide = !hide' [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error>fill up password</mat-error>
+        </mat-form-field>
+    
+        <mat-form-field>
+            <input matInput formControlName='repeatPassword'
+                [type]="hide ? 'password' : 'text'" placeholder='repeat pass'>
+            <button mat-icon-button matSuffix (click)='hide = !hide' [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+        </mat-form-field>
+        <span *ngIf='regForm.errors?.notMatching' class='pass-error'>
+            passwords must match!
+        </span>
+    
+        <button mat-raised-button color='accent' (click)='signUp()'
+            [disabled]="regForm.invalid" class='sign-up'>
+            Sign Up
+        </button>
+
+    </form>
+</div>

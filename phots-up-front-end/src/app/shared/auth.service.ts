@@ -13,7 +13,8 @@ import { map,tap } from 'rxjs/operators';
 })
 export class AuthService {
   private currentUser: BehaviorSubject<User> = new BehaviorSubject(null);
-  private readonly url: string = 'login';
+  private readonly login_url: string = 'login';
+  private readonly reg_url: string = 'signup';
   private jwtService = new JwtHelperService();
 
   constructor(
@@ -22,9 +23,15 @@ export class AuthService {
   ) {}
 
 
+  public registrateUser(regRequest: any){
+    return this.http.post<any>(
+      Url.BASE_URL + this.reg_url, regRequest, {observe: 'response'});
+  }
+
+
   public login(loginReq: any): Observable<boolean>{
     return this.http.post<any>(
-        Url.BASE_URL + this.url, loginReq, {observe: 'response'})
+        Url.BASE_URL + this.login_url, loginReq, {observe: 'response'})
       .pipe(
         tap(resp => this.handleResponse(resp)),
         map(resp => this.mapToBoolean(resp)));

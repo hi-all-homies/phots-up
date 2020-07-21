@@ -3,7 +3,6 @@ package main.endpoints;
 import static org.springframework.util.StringUtils.hasText;
 import java.util.function.Predicate;
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.MediaType.TEXT_PLAIN;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -35,7 +34,6 @@ public class RegistrationHandler {
 					.build();
 		else
 			return ServerResponse.badRequest()
-					.contentType(TEXT_PLAIN)
 					.bodyValue("that username already exist or empty fields");
 	}
 	
