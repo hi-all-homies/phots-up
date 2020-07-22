@@ -1,5 +1,6 @@
 package main.dao.user;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import main.model.entities.User;
@@ -21,5 +22,9 @@ public class UserDaoImpl implements UserDao{
 	public Optional<User> loadUserByUsername(String username) {
 		return this.userRepo.findByUsername(username);
 	}
-	
+
+	@Override
+	public List<String> getLikedAuthorUsernames(Long curentUserId) {
+		return this.userRepo.getLikedAuthorUsernames(curentUserId);
+	}
 }

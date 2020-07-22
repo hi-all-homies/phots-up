@@ -2,7 +2,12 @@ package main.dao.post;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import main.dao.comment.CommentRepo;
@@ -54,6 +59,19 @@ public class PostDaoImpl implements PostDao {
 		return this.postRepo.updatePost(post.getContent(), post.getImageKey(), post.getId());	
 	}
 
+	
+	@Override
+	public Collection<Post> findByUsername(String username){
+		var pageable = PageRequest.of(0, 3, Sort.by(Direction.DESC, "id"));
+		
+		var ids = this.postRepo.getPostsByUsername(pageable, username)
+				.stream()
+				.map(post -> post.getId())
+				.collect(Collectors.toList());
+		
+		return this.postRepo.getPostsByIds(ids);
+	}
+	
 
 	@Override
 	@Transactional

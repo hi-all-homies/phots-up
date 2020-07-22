@@ -36,4 +36,8 @@ public interface PostRepo extends JpaRepository<Post, Long>{
 			@Param("imageKey") String imageKey,
 			@Param("id") Long id);
 	
+	
+	
+	@Query(value = "from Post p left join fetch p.author a where a.username =:username")
+	public List<Post> getPostsByUsername(Pageable pageable, @Param("username") String username);
 }

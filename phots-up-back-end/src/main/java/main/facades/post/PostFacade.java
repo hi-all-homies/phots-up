@@ -18,4 +18,6 @@ public interface PostFacade {
 	public Mono<Integer> updatePost(MultiValueMap<String,Part> data);
 	
 	public Mono<Void> deletePost(Long postId);
+	
+	public Flux<PostSummary> getRecommendations(String token);
 }

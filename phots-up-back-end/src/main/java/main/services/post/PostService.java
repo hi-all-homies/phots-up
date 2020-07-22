@@ -16,4 +16,6 @@ public interface PostService {
 	public Mono<Integer> updatePost(Post post);
 	
 	public Mono<Post> deletePost(Long postId);
+	
+	public Flux<PostSummary> getRecommendations(Long currentUserId);
 }

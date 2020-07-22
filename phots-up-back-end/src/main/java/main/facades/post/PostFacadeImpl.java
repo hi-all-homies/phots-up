@@ -77,6 +77,16 @@ public class PostFacadeImpl implements PostFacade{
 				.then();
 	}
 
+	
+	
+	@Override
+	public Flux<PostSummary> getRecommendations(String token) {
+		var currUserId = this.tokenProvider.getUserIdFromToken(token);
+		
+		return this.postService.getRecommendations(currUserId)
+				.map(this::setImage);
+	}
+
 
 	private PostSummary setImage(PostSummary post) {
 		var image = this.imageService.retrieveImageByKey(post.getPost().getImageKey());

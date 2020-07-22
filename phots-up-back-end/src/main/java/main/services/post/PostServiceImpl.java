@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import main.dao.post.PostDao;
+import main.dao.user.UserDao;
 import main.model.dto.PostSummary;
 import main.model.entities.Post;
 import main.model.entities.User;
@@ -17,9 +18,11 @@ import reactor.core.scheduler.Schedulers;
 public class PostServiceImpl implements PostService{
 	public static final int PAGE_SIZE = 7;
 	private final PostDao postDao;
+	private final UserDao userDao;
 
-	public PostServiceImpl(PostDao postDao) {
+	public PostServiceImpl(PostDao postDao, UserDao userDao) {
 		this.postDao = postDao;
+		this.userDao = userDao;
 	}
 
 	@Override
@@ -85,4 +88,14 @@ public class PostServiceImpl implements PostService{
 				.anyMatch(id -> id.equals(currentUserId));
 	}
 	
+
+	@Override
+	public Flux<PostSummary> getRecommendations(Long currentUserId) {
+		return Flux.defer(
+						() -> Flux.fromIterable(this.userDao.getLikedAuthorUsernames(currentUserId)))
+				.flatMap(
+						username -> Flux.fromIterable(this.postDao.findByUsername(username)))
+				.map(post -> convert(post, currentUserId))
+				.subscribeOn(Schedulers.elastic());
+	}
 }

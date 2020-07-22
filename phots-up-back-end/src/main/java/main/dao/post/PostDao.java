@@ -19,4 +19,6 @@ public interface PostDao {
 	
 	public boolean addLike(Long postId, Long userId);
 	
+	public Collection<Post> findByUsername(String username);
+	
 }
