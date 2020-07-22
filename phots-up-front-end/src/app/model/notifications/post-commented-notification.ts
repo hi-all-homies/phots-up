@@ -1,21 +1,21 @@
 import { Notification } from './notification';
-import { Comment } from '../comment';
 
 export class PostCommentedNotification implements Notification{
     type: string;
     receiver: string;
-    comment: Comment;
+    postId: string;
+    content: string;
+    author: string;
 
     getTitle(): string {
-        return `${this.comment.author.username} leave a comment:`
+        return `${this.author} leave a comment:`;
     }
 
     getContent(): string {
-        return this.comment.content;
+        return this.content;
     }
 
     getPostId(): string {
-        let id = this.comment.post.id;
-        return id.toString();
+        return this.postId;
     }
 }

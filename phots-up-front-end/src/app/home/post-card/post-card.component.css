@@ -1,0 +1,14 @@
+.one-post
+{
+    width: 35%;
+    margin: 1% auto;
+}
+.one-post>img
+{
+    max-height: 600px;
+    cursor: pointer;
+}
+.comment
+{
+    margin-left: 30%;
+}

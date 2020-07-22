@@ -8,12 +8,16 @@ import main.model.entities.Comment;
 
 @Getter
 public class PostCommentedNotificaton extends Notification{
-	private final Comment comment;
+	private final long postId;
+	private final String content;
+	private final String author;
 
 	@Builder
 	public PostCommentedNotificaton(NotificationType type, Comment comment) {
 		super(type, comment.getPost().getAuthor().getUsername());
-		this.comment = comment;
+		this.postId = comment.getPost().getId();
+		this.content = comment.getContent();
+		this.author = comment.getAuthor().getUsername();
 	}
 
 	@Override

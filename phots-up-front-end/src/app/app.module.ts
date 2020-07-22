@@ -24,6 +24,7 @@ import { PostDetailsComponent } from './home/post-details/post-details.component
 import { CommentService } from './shared/comment.service';
 import { NotificationService } from './shared/notification.service';
 import { SimpleNotificationsModule } from 'angular2-notifications';
+import { PostCardComponent } from './home/post-card/post-card.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
     SignInComponent,
     SignUpComponent,
     AddPostComponent,
-    PostDetailsComponent
+    PostDetailsComponent,
+    PostCardComponent
   ],
   imports: [
     BrowserModule,
