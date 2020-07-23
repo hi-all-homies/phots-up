@@ -8,9 +8,9 @@
     </button>
 
     <mat-menu #menu='matMenu'>
-        <button mat-menu-item>
+        <button mat-menu-item (click)='signIn()' [disabled]='currUser != null'>
             <mat-icon>account_circle</mat-icon>
-            <span>create new account</span>
+            <span>sign in</span>
         </button>
         <button mat-menu-item (click)='logout()' [disabled]='currUser == null'>
             <mat-icon>login</mat-icon>

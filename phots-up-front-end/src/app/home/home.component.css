@@ -4,8 +4,9 @@
     margin-top: 1%;
     margin-bottom: 1%;
 }
-.add-post
+button
 {
     background-color: limegreen;
     color: white;
+    margin-left: 7px;
 }

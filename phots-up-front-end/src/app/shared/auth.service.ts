@@ -62,6 +62,11 @@ export class AuthService {
     return this.cookie.get('jwt');
   }
 
+  public logOut(){
+    this.currentUser.next(null);
+    this.cookie.delete('jwt');
+  }
+
   private setCurrUser(jwt: string){
     if (jwt){
       let decoded = this.jwtService.decodeToken(jwt.substring(7));

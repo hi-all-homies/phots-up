@@ -23,6 +23,15 @@ export class EventSourceService {
     source.onmessage = this.onMessage;
   }
 
+  public fetchRecommendations(){
+    let token = this.auth.getToken();
+    const source = new EventSource(
+      Url.BASE_URL + `recommend?jwt=${token}`);
+
+    source.onopen = this.onOpen(source);
+    source.onmessage = this.onMessage;
+  }
+
   private onOpen (source: EventSource){
     return event =>{
       if (this.isOpenedOnce){

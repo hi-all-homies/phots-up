@@ -24,6 +24,10 @@ export class PostService {
     this.eventSource.fetchPosts(page);
   }
 
+  public getRecommendations(){
+    this.eventSource.fetchRecommendations();
+  }
+
   public getPostObs(): Observable<PostSummary>{
     return this.eventSource.getPostObs();
   }

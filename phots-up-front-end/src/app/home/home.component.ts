@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddPostComponent } from './add-post/add-post.component';
 import { DataTransferService } from '../shared/data-transfer.service';
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy{
 
   constructor(
     private dialog: MatDialog,
@@ -26,6 +26,10 @@ export class HomeComponent implements OnInit {
     this.notifyService.listen();
     this.notifyService.getNotifications()
       .subscribe(event => this.handleNotifications(event));
+  }
+
+  ngOnDestroy(): void {
+    this.notifyService.closeSocket();
   }
 
   private handleNotifications(event: Notification){
@@ -48,5 +52,9 @@ export class HomeComponent implements OnInit {
       .subscribe(postSummary =>{
         if (postSummary)
           this.transferService.onSuccessPublish(postSummary)});
+  }
+
+  getRecommend(){
+    this.router.navigate(['home/recommend']);
   }
 }

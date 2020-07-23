@@ -16,11 +16,12 @@ export class NotificationService {
   private notifications: Subject<Notification> = new Subject();
 
   constructor(private auth: AuthService) {
-    let jwt = this.auth.getToken();
-    this.socket = webSocket(Url.WS_URL + `?jwt=${jwt}`);
   }
 
   public listen(){
+    let jwt = this.auth.getToken();
+    this.socket = webSocket(Url.WS_URL + `?jwt=${jwt}`);
+
     this.socket.subscribe(event =>{
       let notif: Notification;
       if (event.type == NotificationType.POST_LIKED)
@@ -33,5 +34,9 @@ export class NotificationService {
 
   public getNotifications(){
     return this.notifications.asObservable();
+  }
+
+  public closeSocket(){
+    this.socket.unsubscribe();
   }
 }

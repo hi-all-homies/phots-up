@@ -25,6 +25,7 @@ import { CommentService } from './shared/comment.service';
 import { NotificationService } from './shared/notification.service';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { PostCardComponent } from './home/post-card/post-card.component';
+import { RecommendComponent } from './home/recommend/recommend.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { PostCardComponent } from './home/post-card/post-card.component';
     SignUpComponent,
     AddPostComponent,
     PostDetailsComponent,
-    PostCardComponent
+    PostCardComponent,
+    RecommendComponent
   ],
   imports: [
     BrowserModule,

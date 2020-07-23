@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/shared/auth.service';
 import { Router } from '@angular/router';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-sign-in',
@@ -15,7 +16,8 @@ export class SignInComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private toastsService: NotificationsService
   ) {}
 
   ngOnInit(): void {
@@ -38,8 +40,7 @@ export class SignInComponent implements OnInit {
             this.onSuccesLogin()},
         err => {
           this.loading = false;
-          console.log(err)
-        });
+          this.toastsService.error('wrong username or password')});
   }
 
   private onSuccesLogin(){

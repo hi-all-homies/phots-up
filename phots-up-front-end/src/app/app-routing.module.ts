@@ -6,6 +6,7 @@ import { LoginComponent } from './login/login.component';
 import { SignInComponent } from './login/sign-in/sign-in.component';
 import { SignUpComponent } from './login/sign-up/sign-up.component';
 import { PostDetailsComponent } from './home/post-details/post-details.component';
+import { RecommendComponent } from './home/recommend/recommend.component';
 
 
 const routes: Routes = [
@@ -23,7 +24,8 @@ const routes: Routes = [
     component: HomeComponent,
     children: [
       {path: '', component: WallComponent},
-      {path: 'post', component: PostDetailsComponent}
+      {path: 'post', component: PostDetailsComponent},
+      {path: 'recommend', component: RecommendComponent}
     ]
   }
 ];

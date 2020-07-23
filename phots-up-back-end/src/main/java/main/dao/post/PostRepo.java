@@ -38,6 +38,8 @@ public interface PostRepo extends JpaRepository<Post, Long>{
 	
 	
 	
-	@Query(value = "from Post p left join fetch p.author a where a.username =:username")
-	public List<Post> getPostsByUsername(Pageable pageable, @Param("username") String username);
+	@Query(value = "select p.post_id from posts p left join users u on p.user_id = u.user_id " +
+			"where u.username =:username",
+			nativeQuery = true)
+	public List<Long> getPostsByUsername(Pageable pageable, @Param("username") String username);
 }

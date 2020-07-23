@@ -24,6 +24,7 @@ public class RouterConfig {
 		return RouterFunctions.route()
 				.GET(BASE_URL+"posts", postHandler::getAllPosts)
 				.GET(BASE_URL+"posts/{postid}", postHandler::getPostById)
+				.GET(BASE_URL+"recommend", postHandler::getRecommendations)
 				.POST(BASE_URL+"posts", accept(MULTIPART_FORM_DATA), postHandler::savePost)
 				.DELETE(BASE_URL+"posts/{postid}", postHandler::deletePost)
 				.PUT(BASE_URL+"posts/{postid}", accept(MULTIPART_FORM_DATA), postHandler::updatePost)

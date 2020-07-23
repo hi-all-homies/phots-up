@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import main.facades.post.PostFacade;
 import main.model.dto.PostSummary;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -25,10 +26,7 @@ public class PostHandler {
 		var page = req.queryParam("page").get();
 		var token = req.queryParam(JWT_PARAM_NAME).get();
 		var fluxPosts = this.postFacade.getPosts(Integer.valueOf(page), token);
-		
-		return ServerResponse.ok()
-				.contentType(TEXT_EVENT_STREAM)
-				.body(fluxPosts, PostSummary.class);
+		return this.responseStream(fluxPosts);
 	}
 	
 	public Mono<ServerResponse> savePost(ServerRequest req){
@@ -60,5 +58,17 @@ public class PostHandler {
 		var postId = Long.valueOf(req.pathVariable("postid"));
 		return this.postFacade.deletePost(postId)
 				.then(ServerResponse.ok().build());
+	}
+	
+	public Mono<ServerResponse> getRecommendations(ServerRequest req){
+		var token = req.queryParam(JWT_PARAM_NAME).get();
+		var fluxPosts = this.postFacade.getRecommendations(token);
+		return this.responseStream(fluxPosts);
+	}
+	
+	private Mono<ServerResponse> responseStream(Flux<PostSummary> posts){
+		return ServerResponse.ok()
+				.contentType(TEXT_EVENT_STREAM)
+				.body(posts, PostSummary.class);
 	}
 }
