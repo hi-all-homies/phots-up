@@ -7,6 +7,7 @@ import { SignInComponent } from './login/sign-in/sign-in.component';
 import { SignUpComponent } from './login/sign-up/sign-up.component';
 import { PostDetailsComponent } from './home/post-details/post-details.component';
 import { RecommendComponent } from './home/recommend/recommend.component';
+import { AuthGuard } from './shared/auth.guard';
 
 
 const routes: Routes = [
@@ -22,6 +23,7 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
+    canActivate: [AuthGuard],
     children: [
       {path: '', component: WallComponent},
       {path: 'post', component: PostDetailsComponent},

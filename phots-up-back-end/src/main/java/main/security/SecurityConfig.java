@@ -29,8 +29,10 @@ public class SecurityConfig {
 				.exceptionHandling().authenticationEntryPoint(entryPointFunction)
 				.and()
 				.securityContextRepository(contextRepo)
-				.authorizeExchange().anyExchange().permitAll()
-				.and().build();
+				.authorizeExchange(exchange ->
+					exchange.pathMatchers("/phots/up/api/login", "/phots/up/api/signup").permitAll()
+						.anyExchange().authenticated())
+				.build();
 	}
 	
 	private ServerAuthenticationEntryPoint entryPointFunction = (swExchange, ex) ->
