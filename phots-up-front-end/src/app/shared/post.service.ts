@@ -60,7 +60,6 @@ export class PostService {
     if (image)
       formData.append('image', image);
 
-    console.log(JSON.stringify(post))
     return this.http.put<any>(
       Url.BASE_URL + `posts/${post.id}`, formData, {observe: 'response'});
   }

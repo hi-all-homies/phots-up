@@ -9,6 +9,8 @@ export class DataTransferService {
   private publishedPostEmitter: Subject<PostSummary> = new Subject();
   private publishedPostObs = this.publishedPostEmitter.asObservable();
 
+  private notificationEmitter: Subject<string> = new Subject();
+
   constructor() {}
 
   public getPublishedPostObs(){
@@ -17,5 +19,13 @@ export class DataTransferService {
 
   public onSuccessPublish(value: PostSummary){
     this.publishedPostEmitter.next(value);
+  }
+
+  public receivedNotification(id: string){
+    this.notificationEmitter.next(id);
+  }
+
+  public getNotificationObs(){
+    return this.notificationEmitter.asObservable();
   }
 }

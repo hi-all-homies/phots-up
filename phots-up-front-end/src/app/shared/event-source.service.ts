@@ -10,7 +10,10 @@ import { StringUtils } from './string-utils';
 })
 export class EventSourceService {
   private isOpenedOnce = false;
+  private eventSource: EventSource;
   private postObs: Subject<PostSummary> = new Subject();
+
+  private theEnd: PostSummary = new PostSummary();
 
   constructor(private auth: AuthService, private zone: NgZone) {}
 
@@ -21,6 +24,7 @@ export class EventSourceService {
 
     source.onopen = this.onOpen(source);
     source.onmessage = this.onMessage;
+    this.eventSource = source;
   }
 
   public fetchRecommendations(){
@@ -30,12 +34,14 @@ export class EventSourceService {
 
     source.onopen = this.onOpen(source);
     source.onmessage = this.onMessage;
+    this.eventSource = source;
   }
 
   private onOpen (source: EventSource){
     return event =>{
       if (this.isOpenedOnce){
         source.close();
+        this.zone.run(() => this.postObs.next(this.theEnd));
         this.isOpenedOnce = false;
       }
       else
@@ -52,5 +58,13 @@ export class EventSourceService {
 
   public getPostObs(){
     return this.postObs.asObservable();
+  }
+
+  public closeEventSource(){
+    if (this.eventSource){
+      this.eventSource.close();
+      this.eventSource = null;
+      this.isOpenedOnce = false;
+    }
   }
 }

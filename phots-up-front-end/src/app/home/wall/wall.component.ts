@@ -10,7 +10,6 @@ import { DataTransferService } from 'src/app/shared/data-transfer.service';
 })
 export class WallComponent implements OnInit {
   posts: PostSummary[] =[];
-  isMore: boolean = true;
   loading: boolean = true;
 
   page: number = 0;
@@ -23,9 +22,10 @@ export class WallComponent implements OnInit {
   ngOnInit(): void {
     this.postService.getPostObs()
       .subscribe(item =>{
-        this.posts.push(item);
-        this.isMore = true;
-        this.loading = false});
+        if (item.post == null)
+          this.loading = false;
+        else
+          this.posts.push(item)});
 
     this.postService.fetchPosts(this.page++);
 
@@ -40,7 +40,7 @@ export class WallComponent implements OnInit {
   }
 
   onMore(){
-    this.isMore = false;
+    this.loading = true;
     this.postService.fetchPosts(this.page++);
   }
 }

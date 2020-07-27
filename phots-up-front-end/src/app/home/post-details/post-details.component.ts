@@ -6,6 +6,7 @@ import { Comment } from 'src/app/model/comment';
 import { CommentService } from 'src/app/shared/comment.service';
 import { PostService } from 'src/app/shared/post.service';
 import { ActivatedRoute } from '@angular/router';
+import { DataTransferService } from 'src/app/shared/data-transfer.service';
 
 @Component({
   selector: 'post-details',
@@ -22,7 +23,8 @@ export class PostDetailsComponent implements OnInit {
     private auth: AuthService,
     private commentServie: CommentService,
     private postServive: PostService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private transferService: DataTransferService
     ) {}
 
   ngOnInit(): void {
@@ -30,10 +32,17 @@ export class PostDetailsComponent implements OnInit {
     let id = this.route.snapshot.queryParamMap.get('id');
     this.auth.getCurrUser().subscribe(u => this.currUser = u);
 
+    this.getPostById(id);
+
+    this.transferService.getNotificationObs()
+        .subscribe(id => this.getPostById(id))
+  }
+
+  private getPostById(id: string){
     this.postServive.getPostById(id)
       .subscribe(body =>{
         this.postSummary = body;
-        this.loading = false});
+        this.loading = false})
   }
 
   doComment(){

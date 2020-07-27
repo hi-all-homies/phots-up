@@ -1,16 +1,15 @@
-<div *ngIf='loading' class='loading'>
-    <img src='assets/logo/746.gif' alt='loading...'>
-</div>
-
 <div class='post-container'>
     <post-card [postSummary]='item' *ngFor='let item of posts'
         (delete)='onDelete($event)'>
     </post-card>
 
-    <div class='more'>
-        <button mat-raised-button color='primary' (click)='onMore()'
-            [disabled]='!isMore'>
+    <div class='more' *ngIf='!loading'>
+        <button mat-raised-button color='primary' (click)='onMore()'>
             more
         </button>
     </div>
+</div>
+
+<div *ngIf='loading' class='loading'>
+    <img src='assets/logo/746.gif' alt='loading...'>
 </div>

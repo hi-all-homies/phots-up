@@ -6,6 +6,7 @@ import { NotificationService } from '../shared/notification.service';
 import { NotificationsService } from 'angular2-notifications';
 import { Notification } from '../model/notifications/notification';
 import { Router } from '@angular/router';
+import { EventSourceService } from '../shared/event-source.service';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +20,8 @@ export class HomeComponent implements OnInit, OnDestroy{
     private transferService: DataTransferService,
     private notifyService: NotificationService,
     private toastsService: NotificationsService,
-    private router: Router
+    private router: Router,
+    private sourceService: EventSourceService
     ) {}
 
   ngOnInit(): void {
@@ -36,10 +38,13 @@ export class HomeComponent implements OnInit, OnDestroy{
     let notif = this.toastsService.info(
       event.getTitle(), event.getContent(),null, {id: event.getPostId()});
     
+    let currentPath = this.router.url;
     notif.click.subscribe(
-      click => this.router.navigate(['home/post'], {
-        queryParams: {id: notif.context.id}
-      }))
+      click => {
+        this.router.navigate(['home/post'], {queryParams: {id: notif.context.id}})
+        if (currentPath.includes('post'))
+          this.transferService.receivedNotification(notif.context.id);
+      })
   }
 
   newPost(){
@@ -55,6 +60,7 @@ export class HomeComponent implements OnInit, OnDestroy{
   }
 
   getRecommend(){
+    this.sourceService.closeEventSource();
     this.router.navigate(['home/recommend']);
   }
 }

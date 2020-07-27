@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth.service';
 import { User } from '../model/user';
+import { EventSourceService } from '../shared/event-source.service';
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private sourceService: EventSourceService
     ) { }
 
   ngOnInit(): void {
@@ -21,6 +23,7 @@ export class HeaderComponent implements OnInit {
   }
 
   home(){
+    this.sourceService.closeEventSource();
     this.router.navigate(['home']);
   }
 

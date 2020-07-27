@@ -1,8 +1,8 @@
-<div *ngIf='loading' class='loading'>
-    <img src='assets/logo/746.gif' alt='loading...'>
-</div>
-
 <div class='post-container'>
     <post-card [postSummary]='item' *ngFor='let item of posts'>
     </post-card>
+</div>
+
+<div *ngIf='loading' class='loading'>
+    <img src='assets/logo/746.gif' alt='loading...'>
 </div>
