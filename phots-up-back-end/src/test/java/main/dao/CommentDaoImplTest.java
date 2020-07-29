@@ -1,9 +1,7 @@
 package main.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.Collections;
-import java.util.HashSet;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -30,7 +28,7 @@ import main.model.entities.UserRole;
 		var u  = new User(null,"user---1", "qwedsdsd", Collections.singleton(UserRole.ROLE_ADMIN));
 		var user = userDao.saveUser(u);
 
-		var p = new Post(null, "hello world", "frfdfd", user, new HashSet<User>(), new HashSet<Comment>());
+		var p = new Post(null, "hello world", "frfdfd", user);
 		var post = postDao.savePost(p);
 		
 		

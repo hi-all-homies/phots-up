@@ -1,6 +1,10 @@
 <mat-card class='one-post'>
     <mat-card-header>
         <mat-card-title>by {{postSummary.post.author.username}}</mat-card-title>
+        <mat-card-subtitle>
+            {{postSummary.post.created | date:'H:mm d MMM, yyy'}}
+        </mat-card-subtitle>
+
             <span class='spacer'></span>
 
             <button mat-icon-button [matMenuTriggerFor]='menu'>

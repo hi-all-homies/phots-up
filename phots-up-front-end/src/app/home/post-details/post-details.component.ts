@@ -65,7 +65,8 @@ export class PostDetailsComponent implements OnInit {
         comments: null,
         content: null,
         imageKey: null,
-        likes: null
+        likes: null,
+        created: null
       },
       content: this.comment
     }

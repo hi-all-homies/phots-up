@@ -2,7 +2,6 @@ package main.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Collections;
-import java.util.HashSet;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
-
 import main.dao.comment.CommentDao;
 import main.dao.post.PostDaoImpl;
 import main.dao.user.UserDao;
@@ -31,10 +29,10 @@ public class PostDaoImplTest {
 		var u  = new User(null,"user---1", "qwedsdsd", Collections.singleton(UserRole.ROLE_ADMIN));
 		var user = userDao.saveUser(u);
 
-		var p = new Post(null, "hello world", "frfdfd", user, new HashSet<User>(), new HashSet<Comment>());
+		var p = new Post(null, "hello world", "frfdfd", user);
 		var post = postDaoImpl.savePost(p);
 		
-		var p2 = new Post(null, "test-post", "frfdfd", user, new HashSet<User>(), new HashSet<Comment>());
+		var p2 = new Post(null, "test-post", "frfdfd", user);
 		postDaoImpl.savePost(p2);
 		
 		var comment = new Comment(null, "hey you're a nice dancer", user, post);

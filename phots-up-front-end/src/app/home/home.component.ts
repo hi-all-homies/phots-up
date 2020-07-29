@@ -7,6 +7,8 @@ import { NotificationsService } from 'angular2-notifications';
 import { Notification } from '../model/notifications/notification';
 import { Router } from '@angular/router';
 import { EventSourceService } from '../shared/event-source.service';
+import { AuthService } from '../shared/auth.service';
+import { User } from '../model/user';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +16,7 @@ import { EventSourceService } from '../shared/event-source.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy{
+  currUser: User;
 
   constructor(
     private dialog: MatDialog,
@@ -21,10 +24,12 @@ export class HomeComponent implements OnInit, OnDestroy{
     private notifyService: NotificationService,
     private toastsService: NotificationsService,
     private router: Router,
-    private sourceService: EventSourceService
+    private sourceService: EventSourceService,
+    private auth: AuthService
     ) {}
 
   ngOnInit(): void {
+    this.auth.getCurrUser().subscribe(u => this.currUser = u);
     this.notifyService.listen();
     this.notifyService.getNotifications()
       .subscribe(event => this.handleNotifications(event));

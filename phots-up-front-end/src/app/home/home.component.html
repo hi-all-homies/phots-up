@@ -1,10 +1,16 @@
-<div class="buttons">
-    <button mat-raised-button (click)='newPost()'>
-        Publish a post
-    </button>
-    <button mat-raised-button (click)='getRecommend()'>
-        Recommendations for you
-    </button>
+<div class='panel'>
+    <div class='buttons'>
+        <button mat-raised-button (click)='newPost()'>
+            Publish a post
+        </button>
+        <button mat-raised-button (click)='getRecommend()'>
+            Recommendations for you
+        </button>
+    </div>
+
+    <div class='username'>
+        <span>{{currUser.username}}</span>
+    </div>
 </div>
 <mat-divider></mat-divider>
 

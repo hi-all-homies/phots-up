@@ -1,5 +1,6 @@
 package main.model.entities;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -14,10 +15,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,6 +36,9 @@ public class Post {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "post_id")
 	private Long id;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date created = new Date();
 	
 	@Column(length = 666)
 	private String content;

@@ -8,4 +8,5 @@ export class Post{
     author: User;
     likes: User[];
     comments: Comment[];
+    created: string;
 }
