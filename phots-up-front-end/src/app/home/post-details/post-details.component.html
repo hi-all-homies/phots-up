@@ -1,7 +1,7 @@
 <div *ngIf='loading' class='loading'>
     <img src='assets/logo/746.gif' alt='loading...'>
 </div>
-<mat-grid-list cols='3' rowHeight='4:3' gutterSize='7px' *ngIf='postSummary'>
+<mat-grid-list cols='3' rowHeight='3:2' gutterSize='7px' *ngIf='postSummary'>
     <mat-grid-tile colspan='2' rowspan='2'>
         <div class='photo-container'>
             <img [src]='postSummary.image' alt='post photo'>
