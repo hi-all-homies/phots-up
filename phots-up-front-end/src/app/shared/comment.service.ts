@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Comment } from '../model/comment';
-import { Url } from './base-url';
+import { environment as ENV } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,6 @@ export class CommentService {
 
   public addComment(comment: Comment){
     return this.http.post<any>(
-        Url.BASE_URL + `${comment.post.id}/comments`, comment, {observe: 'body'});
+        ENV.BASE_URL + `${comment.post.id}/comments`, comment, {observe: 'body'});
   }
 }

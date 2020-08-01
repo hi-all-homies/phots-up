@@ -4,7 +4,7 @@ import { User } from '../model/user';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { Url } from './base-url';
+import { environment as ENV } from 'src/environments/environment';
 import { map,tap } from 'rxjs/operators';
 
 
@@ -25,13 +25,13 @@ export class AuthService {
 
   public registrateUser(regRequest: any){
     return this.http.post<any>(
-      Url.BASE_URL + this.reg_url, regRequest, {observe: 'response'});
+      ENV.BASE_URL + this.reg_url, regRequest, {observe: 'response'});
   }
 
 
   public login(loginReq: any): Observable<boolean>{
     return this.http.post<any>(
-        Url.BASE_URL + this.login_url, loginReq, {observe: 'response'})
+        ENV.BASE_URL + this.login_url, loginReq, {observe: 'response'})
       .pipe(
         tap(resp => this.handleResponse(resp)),
         map(resp => this.mapToBoolean(resp)));

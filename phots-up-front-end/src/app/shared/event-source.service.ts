@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 import { PostSummary } from '../model/post-summary';
 import { AuthService } from './auth.service';
-import { Url } from './base-url';
+import { environment as ENV } from 'src/environments/environment';
 import { StringUtils } from './string-utils';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class EventSourceService {
   public fetchPosts(page: number){
     let token = this.auth.getToken();
     const source = new EventSource(
-      Url.BASE_URL + `posts?page=${page}&jwt=${token}`);
+      ENV.BASE_URL + `posts?page=${page}&jwt=${token}`);
 
     source.onopen = this.onOpen(source);
     source.onmessage = this.onMessage;
@@ -30,7 +30,7 @@ export class EventSourceService {
   public fetchRecommendations(){
     let token = this.auth.getToken();
     const source = new EventSource(
-      Url.BASE_URL + `recommend?jwt=${token}`);
+      ENV.BASE_URL + `recommend?jwt=${token}`);
 
     source.onopen = this.onOpen(source);
     source.onmessage = this.onMessage;

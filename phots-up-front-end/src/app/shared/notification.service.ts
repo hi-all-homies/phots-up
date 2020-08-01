@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import {webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { Url } from './base-url';
+import { environment as ENV } from 'src/environments/environment';
 import { Subject } from 'rxjs';
 import { Notification } from '../model/notifications/notification';
 import { NotificationType } from '../model/notifications/notification-type';
@@ -20,7 +20,7 @@ export class NotificationService {
 
   public listen(){
     let jwt = this.auth.getToken();
-    this.socket = webSocket(Url.WS_URL + `?jwt=${jwt}`);
+    this.socket = webSocket(ENV.WS_URL + `?jwt=${jwt}`);
 
     this.socket.subscribe(event =>{
       let notif: Notification;
