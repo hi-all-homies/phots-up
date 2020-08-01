@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  BASE_URL: 'http://10.147.29.16:8080/phots/up/api/',
+  WS_URL: 'ws://10.147.29.16:8080/photsup/notifications'
 };
 
 /*

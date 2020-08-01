@@ -17,12 +17,16 @@ import org.springframework.web.reactive.socket.server.support.HandshakeWebSocket
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
 import main.model.notifications.Notification;
 import reactor.core.publisher.Flux;
+import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 public class WebSocketConfig {
 	@Autowired
 	@Qualifier("source")
 	private Flux<Notification> source;
+
+	@Value(value = "${cors.origin.network}")
+	private String corsOrigin;
 	
 	@Autowired
 	private CustomReqUpgradeStrategy upgradeStrategy;
@@ -55,7 +59,7 @@ public class WebSocketConfig {
 		var config = new CorsConfiguration();
 		config.setAllowedHeaders(Arrays.asList("*"));
 		config.setAllowedMethods(Arrays.asList("*"));
-		config.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+		config.setAllowedOrigins(Arrays.asList(corsOrigin));
 		
 		UrlBasedCorsConfigurationSource source =
 				new UrlBasedCorsConfigurationSource();

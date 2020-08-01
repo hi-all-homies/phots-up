@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PostSummary } from '../model/post-summary';
 import { Post } from '../model/post';
-import { Url } from './base-url';
+import { environment as ENV } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import { map } from 'rxjs/operators';
 import { StringUtils } from './string-utils';
@@ -41,13 +41,13 @@ export class PostService {
     formData.append('image',image);
 
     return this.http.post<Post>(
-        Url.BASE_URL + 'posts', formData, {observe: 'body'})
+        ENV.BASE_URL + 'posts', formData, {observe: 'body'})
   }
 
 
   getPostById(id: string) {
     return this.http.get<PostSummary>(
-        Url.BASE_URL + `posts/${id}`, {observe: 'body'})
+        ENV.BASE_URL + `posts/${id}`, {observe: 'body'})
       .pipe(map(p =>{
         p.image = StringUtils.getImageString64(p.post.imageKey, p.image);
         return p}));
@@ -61,16 +61,16 @@ export class PostService {
       formData.append('image', image);
 
     return this.http.put<any>(
-      Url.BASE_URL + `posts/${post.id}`, formData, {observe: 'response'});
+      ENV.BASE_URL + `posts/${post.id}`, formData, {observe: 'response'});
   }
 
   deletePost(post: Post) {
     return this.http.delete<any>(
-      Url.BASE_URL + `posts/${post.id}`, {observe: 'response'});
+      ENV.BASE_URL + `posts/${post.id}`, {observe: 'response'});
   }
 
   addLike(likeReq: any){
     return this.http.post<any>(
-      Url.BASE_URL + `${likeReq.post.id}/likes`, likeReq, {observe: 'response'});
+      ENV.BASE_URL + `${likeReq.post.id}/likes`, likeReq, {observe: 'response'});
   }
 }
