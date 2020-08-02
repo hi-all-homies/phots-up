@@ -10,7 +10,7 @@
 
     <mat-grid-tile colspan='1' rowspan='2'>
         <mat-grid-tile-header>
-            <button mat-icon-button color='warn' tabindex='-1'>
+            <button mat-icon-button (click)='getLikedUsers($event)' color='warn' tabindex='-1'>
                 <mat-icon>favorite</mat-icon>
             </button>
             {{postSummary.likes}}

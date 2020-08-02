@@ -26,6 +26,7 @@ import { NotificationService } from './shared/notification.service';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { PostCardComponent } from './home/post-card/post-card.component';
 import { RecommendComponent } from './home/recommend/recommend.component';
+import { LikeDialogComponent } from './home/post-details/like-dialog/like-dialog.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { RecommendComponent } from './home/recommend/recommend.component';
     AddPostComponent,
     PostDetailsComponent,
     PostCardComponent,
-    RecommendComponent
+    RecommendComponent,
+    LikeDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,7 @@ import { RecommendComponent } from './home/recommend/recommend.component';
     {provide: MatDialogRef, useValue: {}},
     {provide: HTTP_INTERCEPTORS, useClass: TokenAdder, multi:true}
   ],
-  entryComponents: [AddPostComponent],
+  entryComponents: [AddPostComponent, LikeDialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

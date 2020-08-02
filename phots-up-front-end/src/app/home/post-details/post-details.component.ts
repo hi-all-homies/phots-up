@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { PostSummary } from 'src/app/model/post-summary';
 import { AuthService } from 'src/app/shared/auth.service';
 import { User } from 'src/app/model/user';
@@ -7,6 +7,8 @@ import { CommentService } from 'src/app/shared/comment.service';
 import { PostService } from 'src/app/shared/post.service';
 import { ActivatedRoute } from '@angular/router';
 import { DataTransferService } from 'src/app/shared/data-transfer.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { LikeDialogComponent } from './like-dialog/like-dialog.component';
 
 @Component({
   selector: 'post-details',
@@ -24,7 +26,8 @@ export class PostDetailsComponent implements OnInit {
     private commentServie: CommentService,
     private postServive: PostService,
     private route: ActivatedRoute,
-    private transferService: DataTransferService
+    private transferService: DataTransferService,
+    private dialog: MatDialog
     ) {}
 
   ngOnInit(): void {
@@ -53,6 +56,17 @@ export class PostDetailsComponent implements OnInit {
         comment.id = id;
         this.postSummary.post.comments.push(comment);
         this.comment = ''});
+  }
+
+  getLikedUsers(ev: MouseEvent){
+    let trigger = new ElementRef(ev.currentTarget);
+    let config = new MatDialogConfig();
+    config.data = {
+      trigger: trigger,
+      users: this.postSummary.post.likes,
+    }
+
+    this.dialog.open(LikeDialogComponent, config);
   }
 
   private gatherCommentObj(): Comment{
