@@ -1,0 +1,36 @@
+<div class='container'>
+
+    <div class='avatar' style="background-image: url({{userInfo?.avatar}});">
+    </div>
+
+    <div class='about'>
+        <h3>About me:</h3>
+        <p>{{userInfo?.aboutMe}}</p>
+    </div>
+
+    <div class='panel'>
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Change personal data
+              </mat-panel-title>
+              <mat-panel-description>
+                fill out "about me" and your avatar
+                <span class="spacer"></span>
+                <mat-icon>create</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+        
+            <mat-form-field>
+              <mat-label>About me:</mat-label>
+              <textarea matInput></textarea>
+            </mat-form-field>
+        
+            <mat-action-row>
+              <button mat-raised-button color='warn' (click)='saveChanges()'>
+                  Save
+                </button>
+            </mat-action-row>
+          </mat-expansion-panel>        
+    </div>
+</div>

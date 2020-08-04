@@ -14,7 +14,7 @@ import {MatRippleModule} from '@angular/material/core';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatGridListModule} from '@angular/material/grid-list';
-
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations: [],
@@ -33,7 +33,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
     MatRippleModule,
     MatDialogModule,
     MatMenuModule,
-    MatGridListModule
+    MatGridListModule,
+    MatExpansionModule
   ],
   exports: [
     MatCardModule,
@@ -49,7 +50,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
     MatRippleModule,
     MatDialogModule,
     MatMenuModule,
-    MatGridListModule
+    MatGridListModule,
+    MatExpansionModule
   ],
   providers: [
     {

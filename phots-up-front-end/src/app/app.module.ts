@@ -27,6 +27,8 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import { PostCardComponent } from './home/post-card/post-card.component';
 import { RecommendComponent } from './home/recommend/recommend.component';
 import { LikeDialogComponent } from './home/post-details/like-dialog/like-dialog.component';
+import { UserProfileComponent } from './home/user-profile/user-profile.component';
+import { UserInfoService } from './shared/user-info.service';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,8 @@ import { LikeDialogComponent } from './home/post-details/like-dialog/like-dialog
     PostDetailsComponent,
     PostCardComponent,
     RecommendComponent,
-    LikeDialogComponent
+    LikeDialogComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -61,6 +64,7 @@ import { LikeDialogComponent } from './home/post-details/like-dialog/like-dialog
     CommentService,
     DataTransferService,
     NotificationService,
+    UserInfoService,
     {provide: MatDialogRef, useValue: {}},
     {provide: HTTP_INTERCEPTORS, useClass: TokenAdder, multi:true}
   ],

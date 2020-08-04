@@ -1,0 +1,25 @@
+.container
+{
+    width: 70%;
+    margin: auto;
+}
+.avatar
+{
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background-size: cover;
+  margin: auto;
+}
+.about
+{
+    width: 50%;
+    margin: 25px auto;
+    background-color: white;
+    padding: 10px;
+}
+.panel
+{
+    margin: auto;
+    width: 50%;
+}

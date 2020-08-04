@@ -71,4 +71,10 @@ export class PostCardComponent implements OnInit {
           this.postSummary.likes--;
         })
   }
+
+  toUserProfile(){
+    this.router.navigate(['home/profile'], {
+      queryParams: {user: this.postSummary.post.author.id}
+    })
+  }
 }

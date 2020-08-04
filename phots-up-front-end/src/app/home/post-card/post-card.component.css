@@ -3,6 +3,10 @@
     width: 35%;
     margin: 1% auto;
 }
+mat-card-title
+{
+    cursor: pointer;
+}
 .one-post>img
 {
     max-height: 600px;
