@@ -11,4 +11,6 @@ public interface UserDao {
 	public Optional<User> loadUserByUsername(String username);
 	
 	public List<String> getLikedAuthorUsernames(Long curentUserId);
+	
+	public Optional<User> loadById(Long userId);
 }

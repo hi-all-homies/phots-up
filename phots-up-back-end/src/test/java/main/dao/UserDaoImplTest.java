@@ -1,8 +1,6 @@
 package main.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import java.util.Collections;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,8 +14,8 @@ public class UserDaoImplTest {
 	
 	@Test
 	void shouldSaveAndRetrieveUserJustFine() {
-		Set<UserRole> roles = Collections.singleton(UserRole.ROLE_USER);
-		var test_user = new User(null, "TEST_USER", "password", roles);
+		var test_user = new User(null, "TEST_USER", "password");
+		test_user.getRoles().add(UserRole.ROLE_ADMIN);
 		
 		var saved_user = userDao.saveUser(test_user);
 

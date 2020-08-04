@@ -18,14 +18,14 @@ public class ImageServiceImpl implements ImageService{
 	}
 
 	@Override
-	public String storeImage(FilePart image) {
+	public String storeImage(FilePart image, String... folders) {
 		var prefix = UUID.randomUUID().toString();
 		var filename = String.format("%s-%s", prefix, image.filename());
 		
 		try {
 			var file = File.createTempFile(prefix, null);
 			image.transferTo(file);
-			this.amazonS3.putObject(BUCKET_NAME, filename, file);
+			this.amazonS3.putObject(buildPathToImage(folders), filename, file);
 			file.delete();
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
@@ -34,14 +34,14 @@ public class ImageServiceImpl implements ImageService{
 	}
 	
 	@Override
-	public void deleteImage(String imageKey) {
-		this.amazonS3.deleteObject(BUCKET_NAME, imageKey);
+	public void deleteImage(String imageKey, String... folders) {
+		this.amazonS3.deleteObject(buildPathToImage(folders), imageKey);
 	}
 
 	@Override
-	public byte[] retrieveImageByKey(String imageKey) {
+	public byte[] retrieveImageByKey(String imageKey, String... folders) {
 		try {
-			var image = this.amazonS3.getObject(BUCKET_NAME, imageKey);
+			var image = this.amazonS3.getObject(buildPathToImage(folders), imageKey);
 			return IOUtils.toByteArray(image.getObjectContent());
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
@@ -49,4 +49,10 @@ public class ImageServiceImpl implements ImageService{
 	}
 	
 	
+	private String buildPathToImage(String[] folders) {
+		if (folders.length == 0)
+			return BUCKET_NAME;
+		else
+			return String.format("%s/%s", BUCKET_NAME, folders[0]);
+	}
 }

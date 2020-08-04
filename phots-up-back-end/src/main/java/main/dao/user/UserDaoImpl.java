@@ -27,4 +27,9 @@ public class UserDaoImpl implements UserDao{
 	public List<String> getLikedAuthorUsernames(Long curentUserId) {
 		return this.userRepo.getLikedAuthorUsernames(curentUserId);
 	}
+
+	@Override
+	public Optional<User> loadById(Long userId) {
+		return this.userRepo.findById(userId);
+	}
 }

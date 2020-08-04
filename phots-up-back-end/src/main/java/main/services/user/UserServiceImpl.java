@@ -5,7 +5,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import main.dao.user.UserDao;
+import main.dao.userinfo.UserInfoDao;
 import main.model.entities.User;
+import main.model.entities.UserInfo;
 import main.model.entities.UserRole;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -14,10 +16,12 @@ import reactor.core.scheduler.Schedulers;
 public class UserServiceImpl implements UserService{
 	private final UserDao userDao;
 	private final PasswordEncoder encoder;
+	private final UserInfoDao userInfoDao;
 	
-	public UserServiceImpl(UserDao userDao, PasswordEncoder encoder) {
+	public UserServiceImpl(UserDao userDao, PasswordEncoder encoder, UserInfoDao userInfoDao) {
 		this.userDao = userDao;
 		this.encoder = encoder;
+		this.userInfoDao = userInfoDao;
 	}
 
 	@Override
@@ -37,6 +41,33 @@ public class UserServiceImpl implements UserService{
 				.switchIfEmpty(prepareAndSave(user));
 	}
 	
+	
+	@Override
+	public Mono<UserInfo> getUserInfoByUserId(Long userId) {
+		return Mono.fromCallable(
+				() -> this.userInfoDao.findUserInfoByUserId(userId));
+	}
+
+	@Override
+	public Mono<UserInfo> setOrUpdateUserInfo(final Long userId, final UserInfo userInfo) {
+		return Mono.fromCallable(
+					() -> this.userInfoDao.findUserInfoByUserId(userId))
+				.map(uInfo -> uInfo.update(userInfo))
+				.switchIfEmpty(findUserAndSetToInfo(userId, userInfo))
+				.map(userInfoDao::save);
+	}
+	
+	private Mono<UserInfo>findUserAndSetToInfo(final Long userId, final UserInfo userInfo){
+		return Mono.fromCallable(
+				() -> this.userDao.loadById(userId))
+				.map(optUser ->{
+					var user = optUser.get();
+					userInfo.setUser(user);
+					return userInfo;
+				});
+	}
+	
+
 	private Mono<Boolean> prepareAndSave(User user){
 		return Mono.just(user)
 				.map(u -> {
@@ -46,5 +77,4 @@ public class UserServiceImpl implements UserService{
 				.doOnNext(userDao::saveUser)
 				.map(u -> true);
 	}
-	
 }

@@ -1,7 +1,6 @@
 package main.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import java.util.Collections;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,7 +25,8 @@ public class PostDaoImplTest {
 	
 	@BeforeAll
 	void prepare() {
-		var u  = new User(null,"user---1", "qwedsdsd", Collections.singleton(UserRole.ROLE_ADMIN));
+		var u  = new User(null,"user---1", "qwedsdsd");
+		u.getRoles().add(UserRole.ROLE_ADMIN);
 		var user = userDao.saveUser(u);
 
 		var p = new Post(null, "hello world", "frfdfd", user);

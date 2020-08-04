@@ -19,13 +19,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id", "username"})
 @Entity
@@ -48,6 +46,7 @@ public class User implements UserDetails{
 	@ElementCollection(fetch = FetchType.LAZY)
 	@Column(name = "role")
 	private Set<UserRole> roles = new HashSet<>();
+	
 	
 	public User (Long id, String username, String password) {
 		this.id = id;
