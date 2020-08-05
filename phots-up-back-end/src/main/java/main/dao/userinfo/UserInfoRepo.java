@@ -9,6 +9,6 @@ import main.model.entities.UserInfo;
 @Repository
 public interface UserInfoRepo extends JpaRepository<UserInfo, Long>{
 	
-	@Query(value = "from UserInfo ui left join fetch ui.user u where u.id =:userId")
+	@Query(value = "from UserInfo ui left join fetch ui.user u left join fetch u.roles r where u.id =:userId")
 	public UserInfo findByUserId(@Param("userId") Long userId);
 }

@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService{
 					() -> this.userInfoDao.findUserInfoByUserId(userId))
 				.map(uInfo -> uInfo.update(userInfo))
 				.switchIfEmpty(findUserAndSetToInfo(userId, userInfo))
-				.map(userInfoDao::save);
+				.doOnSuccess(userInfoDao::save);
 	}
 	
 	private Mono<UserInfo>findUserAndSetToInfo(final Long userId, final UserInfo userInfo){

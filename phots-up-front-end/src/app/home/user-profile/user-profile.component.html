@@ -1,6 +1,9 @@
 <div class='container'>
-
-    <div class='avatar' style="background-image: url({{userInfo?.avatar}});">
+    <h1 class='name'>
+      {{userInfo?.user.username}}<br>
+      <mat-icon>south_east</mat-icon>
+    </h1>
+    <div *ngIf='userInfo' class='avatar' [style]='avatarUrl()'>
     </div>
 
     <div class='about'>
@@ -8,7 +11,7 @@
         <p>{{userInfo?.aboutMe}}</p>
     </div>
 
-    <div class='panel'>
+    <div *ngIf='canEdit' class='panel'>
         <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
@@ -23,8 +26,19 @@
         
             <mat-form-field>
               <mat-label>About me:</mat-label>
-              <textarea matInput></textarea>
+              <textarea matInput [(ngModel)]='aboutMe'></textarea>
             </mat-form-field>
+
+            <button mat-raised-button (click)='loadAvatar()' color='primary' class='load'>
+              Load avatar
+            </button>
+
+            <div *ngIf='avatarPreview' class='preview'
+              style="background-image: url({{avatarPreview}});">
+            </div>
+
+            <input type='file' #avatarInput style='display: none'
+              (change)='showPreview($event)'>
         
             <mat-action-row>
               <button mat-raised-button color='warn' (click)='saveChanges()'>

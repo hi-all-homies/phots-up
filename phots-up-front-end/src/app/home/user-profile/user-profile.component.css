@@ -3,6 +3,16 @@
     width: 70%;
     margin: auto;
 }
+.name
+{
+    font-family: cursive;
+    font-size: 24px;
+    margin-left: 30%;
+}
+.name>mat-icon
+{
+    margin-left: 25px;
+}
 .avatar
 {
   width: 350px;
@@ -22,4 +32,19 @@
 {
     margin: auto;
     width: 50%;
+}
+mat-form-field
+{
+    width: 98%;
+}
+.load
+{
+    margin-left: 75%;
+}
+.preview
+{
+    width: 190px;
+    height: 150px;
+    background-size: cover;
+    margin: auto;
 }

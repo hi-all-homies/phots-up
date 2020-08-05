@@ -66,7 +66,7 @@ public class RouterConfig {
 	public RouterFunction<ServerResponse> usrInfoRouting(UserInfoHandler usrInfoHandler){
 		return RouterFunctions.route()
 				.GET(BASE_URL+"profile/{userId}", usrInfoHandler::getUserInfo)
-				.POST(BASE_URL+"profile", accept(APPLICATION_JSON), usrInfoHandler::saveUserInfo)
+				.POST(BASE_URL+"profile", accept(MULTIPART_FORM_DATA), usrInfoHandler::saveUserInfo)
 				.build();
 	}
 }

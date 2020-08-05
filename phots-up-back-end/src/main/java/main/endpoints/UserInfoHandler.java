@@ -30,6 +30,7 @@ public class UserInfoHandler {
 		return req.multipartData()
 				.flatMap(data -> userInfoFacade.setOrUpdateUserInfo(data, token))
 				.flatMap(userInfo -> ServerResponse.ok()
-						.bodyValue(userInfo.getId()));
+						.contentType(APPLICATION_JSON)
+						.bodyValue(userInfo));
 	}
 }

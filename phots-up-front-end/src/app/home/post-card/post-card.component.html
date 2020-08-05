@@ -1,6 +1,6 @@
 <mat-card class='one-post'>
     <mat-card-header>
-        <mat-card-title (click)='toUserProfile()'>
+        <mat-card-title (click)='toUserProfile(postSummary.post.author)'>
             by {{postSummary.post.author.username}}
         </mat-card-title>
         <mat-card-subtitle>
