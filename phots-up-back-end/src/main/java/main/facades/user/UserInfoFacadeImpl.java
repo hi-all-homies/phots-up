@@ -31,10 +31,11 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
 	public Mono<UserInfo> getUserInfoByUserId(Long userId) {
 		return this.userService.getUserInfoByUserId(userId)
 				.map(userInfo ->{
-					var avatar = this.imageService.retrieveImageByKey(
-							userInfo.getAvatarKey(), AVATAR_FOLDER);
-					
-					userInfo.setAvatar(avatar);
+					if (userInfo.getAvatarKey() != null) {
+						var avatar = this.imageService.retrieveImageByKey(
+								userInfo.getAvatarKey(), AVATAR_FOLDER);
+						userInfo.setAvatar(avatar);
+					}
 					return userInfo;
 				});
 	}

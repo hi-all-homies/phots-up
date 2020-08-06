@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { EventSourceService } from '../shared/event-source.service';
 import { AuthService } from '../shared/auth.service';
 import { User } from '../model/user';
+import { UserInfoService } from '../shared/user-info.service';
+import { UserInfo } from '../model/user-info';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +19,7 @@ import { User } from '../model/user';
 })
 export class HomeComponent implements OnInit, OnDestroy{
   currUser: User;
+  userInfo: UserInfo;
 
   constructor(
     private dialog: MatDialog,
@@ -25,11 +28,14 @@ export class HomeComponent implements OnInit, OnDestroy{
     private toastsService: NotificationsService,
     private router: Router,
     private sourceService: EventSourceService,
-    private auth: AuthService
+    private auth: AuthService,
+    private userService: UserInfoService
     ) {}
 
   ngOnInit(): void {
-    this.auth.getCurrUser().subscribe(u => this.currUser = u);
+    this.auth.getCurrUser().subscribe(
+      u => this.initUserAndAvatar(u));
+      
     this.notifyService.listen();
     this.notifyService.getNotifications()
       .subscribe(event => this.handleNotifications(event));
@@ -67,5 +73,26 @@ export class HomeComponent implements OnInit, OnDestroy{
   getRecommend(){
     this.sourceService.closeEventSource();
     this.router.navigate(['home/recommend']);
+  }
+
+  private initUserAndAvatar(user: User){
+	if (user == null || this.currUser != null)
+		return;
+    this.currUser = user;
+    this.userService.getUserInfoByUserId(user.id)
+      .subscribe(resp =>{
+		  if (!resp)
+			this.userInfo =
+				new UserInfo(-1, null, '', user, 'assets/logo/blank.png');
+		  else if (!resp.avatarKey){
+			  resp.avatar = 'assets/logo/blank.png';
+			  this.userInfo = resp;
+		  }
+		  else this.userInfo = resp;
+	  });
+  }
+
+  avatarUrl(): string{
+    return `background-image: url(${this.userInfo.avatar});`
   }
 }

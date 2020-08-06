@@ -8,7 +8,8 @@
         </button>
     </div>
 
-    <div class='username'>
+    <div class='user'>
+        <div *ngIf='userInfo' [style]='avatarUrl()' class='ava-div'></div>
         <span>{{currUser.username}}</span>
     </div>
 </div>

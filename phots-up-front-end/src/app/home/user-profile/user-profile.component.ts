@@ -5,6 +5,7 @@ import { UserInfoService } from 'src/app/shared/user-info.service';
 import { AuthService } from 'src/app/shared/auth.service';
 import { User } from 'src/app/model/user';
 import { DataTransferService } from 'src/app/shared/data-transfer.service';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-user-profile',
@@ -13,6 +14,7 @@ import { DataTransferService } from 'src/app/shared/data-transfer.service';
 })
 export class UserProfileComponent implements OnInit {
   @ViewChild('avatarInput') avatarInput: ElementRef;
+  @ViewChild(MatExpansionPanel) panel: MatExpansionPanel;
   userInfo: UserInfo;
   avatar: File;
   avatarPreview: string;
@@ -29,24 +31,38 @@ export class UserProfileComponent implements OnInit {
     ) {
       this.auth.getCurrUser()
         .subscribe(u => this.currUser = u);
-      
+
       this.transferService.getObservableUser()
         .subscribe(u =>{
           this.blankProfile =
             new UserInfo(-1, null, '', u, 'assets/logo/blank.png');
-          this.canEdit = u.username === this.currUser.username});
+          
+          if (u)
+            this.setObsUserToStorage(u);
+          if (!u)
+            u = this.getObsUserFromStorage();
+          this.canEdit = u.username === this.currUser.username;
+          if (this.userInfo && u.username != this.userInfo.user.username)
+            this.getUserInfo(u.id);
+        }) 
     }
 
   ngOnInit(): void {
     let userId = this.route.snapshot.queryParamMap.get('user');
+    this.getUserInfo(userId);
+  }
+
+
+  private getUserInfo(userId: any){
     this.userService.getUserInfoByUserId(userId)
       .subscribe(resp =>{
         if (resp)
           this.userInfo = resp;
         else
-          this.userInfo = this.blankProfile
-      });
+          this.userInfo = this.blankProfile;
+      })
   }
+
 
   saveChanges(){
     let newUserInfo = new UserInfo(
@@ -60,6 +76,7 @@ export class UserProfileComponent implements OnInit {
         this.avatar = null;
         this.avatarPreview = null;
         this.aboutMe = '';
+        this.panel.close();
       })
   }
 
@@ -85,5 +102,15 @@ export class UserProfileComponent implements OnInit {
   
   avatarUrl(): string{
 	return `background-image: url(${this.userInfo.avatar});`
+  }
+
+  private setObsUserToStorage(user:User){
+    let stringUsr = JSON.stringify(user);
+    sessionStorage.setItem('obsUser', stringUsr);
+  }
+
+  private getObsUserFromStorage(){
+    let stringUsr = sessionStorage.getItem('obsUser');
+    return <User>JSON.parse(stringUsr);
   }
 }
