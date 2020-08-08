@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PostSummary } from 'src/app/model/post-summary';
 import { AuthService } from 'src/app/shared/auth.service';
 import { User } from 'src/app/model/user';
@@ -7,15 +7,13 @@ import { CommentService } from 'src/app/shared/comment.service';
 import { PostService } from 'src/app/shared/post.service';
 import { ActivatedRoute } from '@angular/router';
 import { DataTransferService } from 'src/app/shared/data-transfer.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { LikeDialogComponent } from './like-dialog/like-dialog.component';
 
 @Component({
   selector: 'post-details',
   templateUrl: './post-details.component.html',
   styleUrls: ['./post-details.component.css']
 })
-export class PostDetailsComponent implements OnInit {
+export class PostDetailsComponent implements OnInit{
   currUser: User;
   postSummary: PostSummary;
   comment: string;
@@ -27,7 +25,7 @@ export class PostDetailsComponent implements OnInit {
     private postServive: PostService,
     private route: ActivatedRoute,
     private transferService: DataTransferService,
-    private dialog: MatDialog
+    private postService: PostService
     ) {}
 
   ngOnInit(): void {
@@ -58,15 +56,25 @@ export class PostDetailsComponent implements OnInit {
         this.comment = ''});
   }
 
-  getLikedUsers(ev: MouseEvent){
-    let trigger = new ElementRef(ev.currentTarget);
-    let config = new MatDialogConfig();
-    config.data = {
-      trigger: trigger,
-      users: this.postSummary.post.likes,
-    }
 
-    this.dialog.open(LikeDialogComponent, config);
+  addLike(){
+    let likeReq = {
+      post: this.postSummary.post,
+      user: this.currUser
+    };
+
+    this.postService.addLike(likeReq)
+      .subscribe(resp =>{
+        this.postSummary.meLiked = !this.postSummary.meLiked;
+        if (this.postSummary.meLiked){
+          this.postSummary.likes++;
+          this.postSummary.post.likes.push(this.currUser);
+        }
+        else{
+          this.postSummary.likes--;
+          let ind = this.postSummary.post.likes.indexOf(this.currUser);
+          this.postSummary.post.likes.splice(ind, 1);
+        }})
   }
 
   private gatherCommentObj(): Comment{

@@ -1,0 +1,9 @@
+<div class='likes-popover' (mouseenter)='onEnter()'
+    (mouseleave)='onLeave()' #popOver>
+
+    <div class='content'>
+        <p *ngFor='let user of users'>
+            {{user.username}}
+        </p>
+    </div>
+</div>

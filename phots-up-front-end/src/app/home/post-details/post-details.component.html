@@ -1,6 +1,7 @@
 <div *ngIf='loading' class='loading'>
     <img src='assets/logo/746.gif' alt='loading...'>
 </div>
+
 <mat-grid-list cols='3' rowHeight='3:2' gutterSize='7px' *ngIf='postSummary'>
     <mat-grid-tile colspan='2' rowspan='2'>
         <div class='photo-container'>
@@ -10,10 +11,13 @@
 
     <mat-grid-tile colspan='1' rowspan='2'>
         <mat-grid-tile-header>
-            <button mat-icon-button (click)='getLikedUsers($event)' color='warn' tabindex='-1'>
-                <mat-icon>favorite</mat-icon>
+            <div #likeButton>
+            <button mat-icon-button color='warn' tabindex='-1'
+                (click)='addLike()'>
+                <mat-icon>{{postSummary.meLiked ? 'favorite':'favorite_border'}}</mat-icon>
             </button>
-            {{postSummary.likes}}
+                {{postSummary.likes}}
+            </div>
             <span class="spacer"></span>
             {{postSummary.post.author.username}}
         </mat-grid-tile-header>
@@ -38,5 +42,9 @@
                 </mat-list-item>
             </mat-list>
         </div>
+        
+        <likes-popover [users]='postSummary.post.likes'
+			[source]='likeButton'>
+		</likes-popover>
     </mat-grid-tile>
 </mat-grid-list>

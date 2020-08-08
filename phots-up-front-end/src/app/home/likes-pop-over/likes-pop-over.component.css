@@ -1,0 +1,23 @@
+.likes-popover{
+    width: 150px;
+    height: 350px;
+    position: absolute;
+    display: none;
+    background-color: rgba(0,0,0, 0.7);
+    border-radius: 15%;
+    transition: ease-in-out;
+}
+.content{
+    width: 80%;
+    height: 90%;
+    margin: auto;
+    border-radius: 15%;
+    background-color: whitesmoke;
+    overflow-y: auto;
+}
+p{
+    margin: 10px 10px;
+    font-family: cursive;
+    font-size: 16px;
+    color: darkblue;
+}
