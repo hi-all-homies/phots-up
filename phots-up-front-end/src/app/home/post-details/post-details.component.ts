@@ -46,7 +46,7 @@ export class PostDetailsComponent implements OnInit{
         this.loading = false})
   }
 
-  doComment(){
+  addComment(){
     let comment = this.gatherCommentObj();
 
     this.commentServie.addComment(comment)

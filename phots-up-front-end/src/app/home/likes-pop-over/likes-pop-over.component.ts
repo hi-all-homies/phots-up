@@ -24,7 +24,6 @@ export class LikesPopOverComponent implements OnInit,AfterViewInit {
   }
   
   ngAfterViewInit(){
-    console.log(this.source)
     this.addListenersToSource();
   }
 
@@ -46,8 +45,8 @@ export class LikesPopOverComponent implements OnInit,AfterViewInit {
   }
 
   private onMouseEnter(event: MouseEvent){
-    this.popOver.nativeElement.style.top = `25px`;
-    this.popOver.nativeElement.style.left = `25px`;
+    this.popOver.nativeElement.style.top = `${event.y-200}px`;
+    this.popOver.nativeElement.style.left = `${event.x+50}px`;
     this.setDisplayProp('flex');
   }
 
