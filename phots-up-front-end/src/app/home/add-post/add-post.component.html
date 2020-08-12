@@ -19,7 +19,7 @@
                 <img [src]='imagePreview' height='300'>
             </div>
 
-            <div class='buttons'>
+            <div class='buttons' *ngIf='!isSending'>
                 <button mat-icon-button (click)='chooseImage()' type='button' color='primary'>
                     <mat-icon>add_a_photo</mat-icon>
                 </button> 
@@ -32,6 +32,9 @@
                     Save
                 </button>
             </div>
+            <mat-spinner *ngIf='isSending' style="margin-left: 75%;"
+				diameter='50' color='primary'>
+            </mat-spinner>
         </form>
     </div>
 </div>

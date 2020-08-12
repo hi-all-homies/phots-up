@@ -14,6 +14,7 @@ export class AddPostComponent implements OnInit {
   @ViewChild('imageInput') imageInput;
   imageData: File;
   imagePreview: string;
+  isSending: boolean = false;
 
   post: FormGroup = new FormGroup({
     content: new FormControl('', Validators.required),
@@ -64,6 +65,7 @@ export class AddPostComponent implements OnInit {
   }
 
   edit(){
+	this.isSending = true;
     this.data.postSumm.post.content = this.post.get('content').value;
     this.data.postSumm.image = this.imagePreview;
     this.postService.updatePost(this.data.postSumm.post, this.imageData)
@@ -71,6 +73,7 @@ export class AddPostComponent implements OnInit {
   }
 
   send(){
+    this.isSending = true;
     let post = new Post();
     post.content = this.post.get('content').value;
     this.postService.publishPost(post, this.imageData)

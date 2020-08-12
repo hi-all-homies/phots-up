@@ -15,6 +15,8 @@ import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 
 @NgModule({
   declarations: [],
@@ -34,7 +36,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatDialogModule,
     MatMenuModule,
     MatGridListModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     MatCardModule,
@@ -51,7 +54,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatDialogModule,
     MatMenuModule,
     MatGridListModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     {
