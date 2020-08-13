@@ -14,6 +14,9 @@ public interface UserRepo extends JpaRepository<User, Long>{
 	@Query(value = "from User u left join fetch u.roles where username =:username")
 	public Optional<User> findByUsername(@Param("username") String username);
 	
+	@Query(value = "from User u left join fetch u.roles where u.id =:userId")
+	public Optional<User> loadById(@Param("userId") Long userId);
+	
 	
 	@Query(value = "select distinct u.username from users u left join posts p on u.user_id=p.user_id " +
 			"left join post_likes lk on p.post_id=lk.post_id where lk.user_id =:currentUser " +

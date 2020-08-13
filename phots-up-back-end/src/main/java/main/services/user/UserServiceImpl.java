@@ -45,7 +45,14 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public Mono<UserInfo> getUserInfoByUserId(Long userId) {
 		return Mono.fromCallable(
-				() -> this.userInfoDao.findUserInfoByUserId(userId));
+					() -> this.userInfoDao.findUserInfoByUserId(userId))
+				.switchIfEmpty(gatherUserInfoIfEmpty(userId));
+	}
+	
+	private Mono<UserInfo> gatherUserInfoIfEmpty(Long userId) {
+		return Mono.justOrEmpty(
+				this.userDao.loadById(userId)
+					.map(user -> new UserInfo(null, null, null, user, null)));
 	}
 
 	@Override

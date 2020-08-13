@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth.service';
 import { User } from '../model/user';
 import { EventSourceService } from '../shared/event-source.service';
-import { DataTransferService } from '../shared/data-transfer.service';
 
 @Component({
   selector: 'app-header',
@@ -16,8 +15,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private router: Router,
-    private sourceService: EventSourceService,
-    private transferService: DataTransferService
+    private sourceService: EventSourceService
     ) { }
 
   ngOnInit(): void {
@@ -30,7 +28,6 @@ export class HeaderComponent implements OnInit {
   }
 
   toProfile(){
-    this.transferService.setObservableUser(this.currUser);
     this.router.navigate(['/home/profile'], {
       queryParams: {user: this.currUser.id}
     })

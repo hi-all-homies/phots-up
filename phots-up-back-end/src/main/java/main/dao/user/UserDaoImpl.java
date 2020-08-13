@@ -30,6 +30,6 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	public Optional<User> loadById(Long userId) {
-		return this.userRepo.findById(userId);
+		return this.userRepo.loadById(userId);
 	}
 }

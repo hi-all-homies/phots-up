@@ -4,7 +4,6 @@ import { UserInfo } from 'src/app/model/user-info';
 import { UserInfoService } from 'src/app/shared/user-info.service';
 import { AuthService } from 'src/app/shared/auth.service';
 import { User } from 'src/app/model/user';
-import { DataTransferService } from 'src/app/shared/data-transfer.service';
 import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
@@ -18,36 +17,20 @@ export class UserProfileComponent implements OnInit {
   userInfo: UserInfo;
   avatar: File;
   avatarPreview: string;
-  blankProfile: UserInfo;
+  readonly blankAvatar: string = 'assets/logo/blank.png';
   currUser: User;
   aboutMe: string;
-  canEdit: boolean;
+  canEdit: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private userService: UserInfoService,
-    private auth: AuthService,
-    private transferService: DataTransferService
-    ) {
-      this.auth.getCurrUser()
-        .subscribe(u => this.currUser = u);
-
-      this.transferService.getObservableUser()
-        .subscribe(u =>{
-          this.blankProfile =
-            new UserInfo(-1, null, '', u, 'assets/logo/blank.png');
-          
-          if (u)
-            this.setObsUserToStorage(u);
-          if (!u)
-            u = this.getObsUserFromStorage();
-          this.canEdit = u.username === this.currUser.username;
-          if (this.userInfo && u.username != this.userInfo.user.username)
-            this.getUserInfo(u.id);
-        }) 
-    }
+    private auth: AuthService
+    ) {}
 
   ngOnInit(): void {
+    this.auth.getCurrUser()
+      .subscribe(u => this.currUser = u);
     let userId = this.route.snapshot.queryParamMap.get('user');
     this.getUserInfo(userId);
   }
@@ -55,11 +38,13 @@ export class UserProfileComponent implements OnInit {
 
   private getUserInfo(userId: any){
     this.userService.getUserInfoByUserId(userId)
-      .subscribe(resp =>{
-        if (resp)
-          this.userInfo = resp;
-        else
-          this.userInfo = this.blankProfile;
+      .subscribe(userInfo =>{
+        if (userInfo.avatar == null)
+          userInfo.avatar = this.blankAvatar;
+        if (userInfo.aboutMe == null)
+          userInfo.aboutMe = '';
+        this.userInfo = userInfo;
+        this.canEdit = userInfo.user.username === this.currUser.username;
       })
   }
 
@@ -70,7 +55,8 @@ export class UserProfileComponent implements OnInit {
     
     this.userService.saveUserInfo(newUserInfo, this.avatar)
       .subscribe(resp =>{
-        this.userInfo.avatar = this.avatarPreview;
+		if (this.avatarPreview)
+			this.userInfo.avatar = this.avatarPreview;
         this.userInfo.aboutMe = resp.body.aboutMe;
         this.userInfo.avatarKey = resp.body.avatarKey;
         this.avatar = null;
@@ -102,15 +88,5 @@ export class UserProfileComponent implements OnInit {
   
   avatarUrl(): string{
 	return `background-image: url(${this.userInfo.avatar});`
-  }
-
-  private setObsUserToStorage(user:User){
-    let stringUsr = JSON.stringify(user);
-    sessionStorage.setItem('obsUser', stringUsr);
-  }
-
-  private getObsUserFromStorage(){
-    let stringUsr = sessionStorage.getItem('obsUser');
-    return <User>JSON.parse(stringUsr);
   }
 }

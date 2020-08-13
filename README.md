@@ -1,5 +1,9 @@
 # Phot's up - (spring boot webflux, data jpa, security, cloud aws) + jwt + angular
 
+## How it works
+![schema](demo/app.png)
+
+
 ### authorization
 ![auth](demo/auth.gif)
 

@@ -6,7 +6,6 @@ import { AuthService } from 'src/app/shared/auth.service';
 import { User } from 'src/app/model/user';
 import { PostService } from 'src/app/shared/post.service';
 import { AddPostComponent } from '../add-post/add-post.component';
-import { DataTransferService } from 'src/app/shared/data-transfer.service';
 
 @Component({
   selector: 'post-card',
@@ -25,8 +24,7 @@ export class PostCardComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private auth: AuthService,
-    private postService: PostService,
-    private transferServie: DataTransferService
+    private postService: PostService
     ) {}
 
   ngOnInit(): void {
@@ -75,7 +73,6 @@ export class PostCardComponent implements OnInit {
   }
 
   toUserProfile(author: User){
-    this.transferServie.setObservableUser(author);
     this.router.navigate(['home/profile'], {
       queryParams: {user: author.id}
     })
