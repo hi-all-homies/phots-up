@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import main.dao.user.UserDao;
-import main.dao.userinfo.UserInfoDao;
 import main.model.entities.User;
 import main.model.entities.UserInfo;
 import main.model.entities.UserRole;
@@ -16,12 +15,10 @@ import reactor.core.scheduler.Schedulers;
 public class UserServiceImpl implements UserService{
 	private final UserDao userDao;
 	private final PasswordEncoder encoder;
-	private final UserInfoDao userInfoDao;
 	
-	public UserServiceImpl(UserDao userDao, PasswordEncoder encoder, UserInfoDao userInfoDao) {
+	public UserServiceImpl(UserDao userDao, PasswordEncoder encoder) {
 		this.userDao = userDao;
 		this.encoder = encoder;
-		this.userInfoDao = userInfoDao;
 	}
 
 	@Override
@@ -43,36 +40,16 @@ public class UserServiceImpl implements UserService{
 	
 	
 	@Override
-	public Mono<UserInfo> getUserInfoByUserId(Long userId) {
-		return Mono.fromCallable(
-					() -> this.userInfoDao.findUserInfoByUserId(userId))
-				.switchIfEmpty(gatherUserInfoIfEmpty(userId));
+	public Mono<User> getUserInfoByUserId(Long userId) {
+		return null;
 	}
 	
-	private Mono<UserInfo> gatherUserInfoIfEmpty(Long userId) {
-		return Mono.justOrEmpty(
-				this.userDao.loadById(userId)
-					.map(user -> new UserInfo(null, null, null, user, null)));
-	}
 
 	@Override
-	public Mono<UserInfo> setOrUpdateUserInfo(final Long userId, final UserInfo userInfo) {
-		return Mono.fromCallable(
-					() -> this.userInfoDao.findUserInfoByUserId(userId))
-				.map(uInfo -> uInfo.update(userInfo))
-				.switchIfEmpty(findUserAndSetToInfo(userId, userInfo))
-				.doOnSuccess(userInfoDao::save);
+	public Mono<User> setOrUpdateUserInfo(final Long userId, final UserInfo userInfo) {
+		return null;
 	}
 	
-	private Mono<UserInfo>findUserAndSetToInfo(final Long userId, final UserInfo userInfo){
-		return Mono.fromCallable(
-				() -> this.userDao.loadById(userId))
-				.map(optUser ->{
-					var user = optUser.get();
-					userInfo.setUser(user);
-					return userInfo;
-				});
-	}
 	
 
 	private Mono<Boolean> prepareAndSave(User user){

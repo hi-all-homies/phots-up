@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import main.model.entities.User;
 import main.model.entities.UserInfo;
 import main.security.TokenProvider;
 import main.services.image.ImageService;
@@ -28,20 +29,12 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
 	}
 
 	@Override
-	public Mono<UserInfo> getUserInfoByUserId(Long userId) {
-		return this.userService.getUserInfoByUserId(userId)
-				.map(userInfo ->{
-					if (userInfo.getAvatarKey() != null) {
-						var avatar = this.imageService.retrieveImageByKey(
-								userInfo.getAvatarKey(), AVATAR_FOLDER);
-						userInfo.setAvatar(avatar);
-					}
-					return userInfo;
-				});
+	public Mono<User> getUserInfoByUserId(Long userId) {
+		return null;
 	}
 
 	@Override
-	public Mono<UserInfo> setOrUpdateUserInfo(MultiValueMap<String, Part> data, String token) {
+	public Mono<User> setOrUpdateUserInfo(MultiValueMap<String, Part> data, String token) {
 		var userInfoJson = (FormFieldPart) data.getFirst("userInfo");
 		var userInfo = jsonToUserInfo(userInfoJson.value());
 		

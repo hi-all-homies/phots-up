@@ -13,6 +13,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.springframework.security.core.GrantedAuthority;
@@ -47,6 +49,9 @@ public class User implements UserDetails{
 	@Column(name = "role")
 	private Set<UserRole> roles = new HashSet<>();
 	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "info_id")
+	private UserInfo userInfo;
 	
 	public User (Long id, String username, String password) {
 		this.id = id;
