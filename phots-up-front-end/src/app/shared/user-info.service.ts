@@ -4,6 +4,7 @@ import { UserInfo } from '../model/user-info';
 import { environment as ENV } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { StringUtils } from './string-utils';
+import { User } from '../model/user';
 
 @Injectable({
   providedIn: 'root'
@@ -13,23 +14,22 @@ export class UserInfoService {
   constructor(private http: HttpClient) {}
 
   public getUserInfoByUserId(userId: any){
-    return this.http.get<UserInfo>(
+    return this.http.get<User>(
         ENV.BASE_URL + `profile/${userId}`, {observe: 'response'})
       .pipe(
         map(resp => this.handleAvatar(resp)))
   }
 
-  private handleAvatar(resp: HttpResponse<UserInfo>): UserInfo | null{
-    let userInfo = resp.body;
-    if (userInfo){
-      if (userInfo.avatar){
+  private handleAvatar(resp: HttpResponse<User>): User{
+    let user = resp.body;
+    if (user.userInfo){
+      if (user.userInfo.avatar){
         let img = StringUtils.getImageString64(
-          userInfo.avatarKey, userInfo.avatar);
-        userInfo.avatar = img;
+          user.userInfo.avatarKey, user.userInfo.avatar);
+        user.userInfo.avatar = img;
       }
-      return userInfo;
     }
-    else return null;
+    return user;
   }
 
   public saveUserInfo(userInfo: UserInfo, avatar?: File){
@@ -41,7 +41,7 @@ export class UserInfoService {
     if (avatar)
       fd.append('avatar', avatar);
     
-    return this.http.post<UserInfo>(
+    return this.http.post<User>(
       ENV.BASE_URL+'profile', fd, {observe: 'response'})
   }
 }

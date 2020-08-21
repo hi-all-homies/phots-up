@@ -9,7 +9,7 @@ public interface UserService extends ReactiveUserDetailsService{
 	
 	public Mono<Boolean> registerUser(User user);
 	
-	public Mono<User> getUserInfoByUserId(Long userId);
+	public Mono<User> getFullUser(Long userId);
 	
 	public Mono<User> setOrUpdateUserInfo(Long userId, UserInfo userInfo);
 }

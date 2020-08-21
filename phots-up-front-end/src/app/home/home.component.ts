@@ -19,7 +19,6 @@ import { UserInfo } from '../model/user-info';
 })
 export class HomeComponent implements OnInit, OnDestroy{
   currUser: User;
-  userInfo: UserInfo;
 
   constructor(
     private dialog: MatDialog,
@@ -75,24 +74,24 @@ export class HomeComponent implements OnInit, OnDestroy{
     this.router.navigate(['home/recommend']);
   }
 
+  readonly blankAvatar: string = 'assets/logo/blank.png';
+
   private initUserAndAvatar(user: User){
-	if (user == null || this.currUser != null)
+	if (this.currUser)
 		return;
-    this.currUser = user;
+	this.currUser = user;
     this.userService.getUserInfoByUserId(user.id)
-      .subscribe(resp =>{
-		  if (!resp)
-			this.userInfo =
-				new UserInfo(-1, null, '', user, 'assets/logo/blank.png');
-		  else if (!resp.avatarKey){
-			  resp.avatar = 'assets/logo/blank.png';
-			  this.userInfo = resp;
-		  }
-		  else this.userInfo = resp;
-	  });
+      .subscribe(usr => {
+        if (!usr.userInfo)
+          usr.userInfo = new UserInfo(-1, null, '', this.blankAvatar);
+        if (!usr.userInfo.avatar)
+          usr.userInfo.avatar = this.blankAvatar;
+
+        this.currUser.userInfo = usr.userInfo;
+      })
   }
 
   avatarUrl(): string{
-    return `background-image: url(${this.userInfo.avatar});`
+    return `background-image: url(${this.currUser.userInfo.avatar});`
   }
 }

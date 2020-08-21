@@ -1,14 +1,14 @@
 <div class='container'>
     <h1 class='name'>
-      {{userInfo?.user.username}}<br>
+      {{userProfile?.username}}<br>
       <mat-icon>south_east</mat-icon>
     </h1>
-    <div *ngIf='userInfo' class='avatar' [style]='avatarUrl()'>
+    <div *ngIf='userProfile' class='avatar' [style]='avatarUrl()'>
     </div>
 
     <div class='about'>
         <h3>About me:</h3>
-        <p>{{userInfo?.aboutMe}}</p>
+        <p>{{userProfile?.userInfo.aboutMe}}</p>
     </div>
 
     <div *ngIf='canEdit' class='panel'>

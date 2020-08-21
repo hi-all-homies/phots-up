@@ -71,15 +71,19 @@ public class PostServiceImpl implements PostService{
 				post, post.getLikes().size(), post.getComments().size(), meLiked);
 		post.setLikes(null);
 		post.setComments(null);
-		
+		post.getAuthor().setUserInfo(null);
 		return postSummary;
 	}
 	
 	private PostSummary convertWhenFetchById(Post post, Long currentUserId) {
 		var meLiked = this.getMeLiked(post.getLikes(), currentUserId);
 		
-		return new PostSummary(
+		var postSummary = new PostSummary(
 				post, post.getLikes().size(), post.getComments().size(), meLiked);
+		post.getAuthor().setUserInfo(null);
+		post.getLikes().forEach(user -> user.setUserInfo(null));
+		post.getComments().forEach(comm -> comm.getAuthor().setUserInfo(null));
+		return postSummary;
 	}
 	
 	private boolean getMeLiked(Collection<User> likes, Long currentUserId) {

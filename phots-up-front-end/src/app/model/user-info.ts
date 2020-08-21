@@ -1,4 +1,3 @@
-import { User } from './user';
 
 export class UserInfo {
     
@@ -6,7 +5,6 @@ export class UserInfo {
         public id: number,
         public avatarKey: string,
         public aboutMe: string,
-        public user: User,
         public avatar: string
     ){}
 }

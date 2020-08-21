@@ -40,14 +40,20 @@ public class UserServiceImpl implements UserService{
 	
 	
 	@Override
-	public Mono<User> getUserInfoByUserId(Long userId) {
-		return null;
+	public Mono<User> getFullUser(Long userId) {
+		return Mono.fromCallable(() -> {
+			var user = this.userDao.loadById(userId);
+			if (user.isEmpty())
+				return null;
+			else
+				return user.get();
+		});
 	}
 	
 
 	@Override
-	public Mono<User> setOrUpdateUserInfo(final Long userId, final UserInfo userInfo) {
-		return null;
+	public Mono<User> setOrUpdateUserInfo(Long userId, UserInfo userInfo) {
+		return Mono.fromCallable(() -> this.userDao.updateUserInfo(userId, userInfo));
 	}
 	
 	

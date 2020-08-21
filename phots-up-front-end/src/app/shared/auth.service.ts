@@ -72,7 +72,8 @@ export class AuthService {
       let decoded = this.jwtService.decodeToken(jwt.substring(7));
       const user: User = {
         id: decoded.userId,
-        username: decoded.sub
+        username: decoded.sub,
+        userInfo: null
       };
 
       this.currentUser.next(user);

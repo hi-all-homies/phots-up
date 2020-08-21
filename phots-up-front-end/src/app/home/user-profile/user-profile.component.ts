@@ -14,12 +14,12 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 export class UserProfileComponent implements OnInit {
   @ViewChild('avatarInput') avatarInput: ElementRef;
   @ViewChild(MatExpansionPanel) panel: MatExpansionPanel;
-  userInfo: UserInfo;
   avatar: File;
   avatarPreview: string;
   readonly blankAvatar: string = 'assets/logo/blank.png';
   currUser: User;
-  aboutMe: string;
+  userProfile: User;
+  aboutMe: string = '';
   canEdit: boolean = false;
 
   constructor(
@@ -38,30 +38,30 @@ export class UserProfileComponent implements OnInit {
 
   private getUserInfo(userId: any){
     this.userService.getUserInfoByUserId(userId)
-      .subscribe(userInfo =>{
-        if (userInfo.avatar == null)
-          userInfo.avatar = this.blankAvatar;
-        if (userInfo.aboutMe == null)
-          userInfo.aboutMe = '';
-        this.userInfo = userInfo;
-        this.canEdit = userInfo.user.username === this.currUser.username;
+      .subscribe(user =>{
+        if (!user.userInfo)
+          user.userInfo = new UserInfo(-1, null, '', this.blankAvatar);
+        if (!user.userInfo.avatar)
+          user.userInfo.avatar = this.blankAvatar;
+        this.userProfile = user;
+        this.aboutMe = user.userInfo.aboutMe;
+        this.canEdit = user.username === this.currUser.username;
       })
   }
 
 
   saveChanges(){
     let newUserInfo = new UserInfo(
-      null, this.userInfo.avatarKey, this.aboutMe, this.currUser, null);
+      null, this.userProfile.userInfo.avatarKey, this.aboutMe, null);
     
     this.userService.saveUserInfo(newUserInfo, this.avatar)
       .subscribe(resp =>{
-		if (this.avatarPreview)
-			this.userInfo.avatar = this.avatarPreview;
-        this.userInfo.aboutMe = resp.body.aboutMe;
-        this.userInfo.avatarKey = resp.body.avatarKey;
+		    if (this.avatarPreview)
+			    this.userProfile.userInfo.avatar = this.avatarPreview;
+        this.userProfile.userInfo.aboutMe = resp.body.userInfo.aboutMe;
+        this.userProfile.userInfo.avatarKey = resp.body.userInfo.avatarKey;
         this.avatar = null;
         this.avatarPreview = null;
-        this.aboutMe = '';
         this.panel.close();
       })
   }
@@ -87,6 +87,6 @@ export class UserProfileComponent implements OnInit {
   }
   
   avatarUrl(): string{
-	return `background-image: url(${this.userInfo.avatar});`
+	  return `background-image: url(${this.userProfile.userInfo.avatar});`
   }
 }

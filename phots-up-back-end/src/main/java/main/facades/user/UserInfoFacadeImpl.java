@@ -30,7 +30,15 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
 
 	@Override
 	public Mono<User> getUserInfoByUserId(Long userId) {
-		return null;
+		return this.userService.getFullUser(userId)
+				.map(user -> {
+					if (user.getUserInfo() != null && user.getUserInfo().getAvatarKey() != null) {
+						byte[] avatar = this.imageService.retrieveImageByKey(
+								user.getUserInfo().getAvatarKey(), AVATAR_FOLDER);
+						user.getUserInfo().setAvatar(avatar);
+					}
+					return user;
+				});
 	}
 
 	@Override
