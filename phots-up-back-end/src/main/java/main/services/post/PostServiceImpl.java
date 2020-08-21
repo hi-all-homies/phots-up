@@ -71,7 +71,6 @@ public class PostServiceImpl implements PostService{
 				post, post.getLikes().size(), post.getComments().size(), meLiked);
 		post.setLikes(null);
 		post.setComments(null);
-		post.getAuthor().setUserInfo(null);
 		return postSummary;
 	}
 	
@@ -80,9 +79,7 @@ public class PostServiceImpl implements PostService{
 		
 		var postSummary = new PostSummary(
 				post, post.getLikes().size(), post.getComments().size(), meLiked);
-		post.getAuthor().setUserInfo(null);
-		post.getLikes().forEach(user -> user.setUserInfo(null));
-		post.getComments().forEach(comm -> comm.getAuthor().setUserInfo(null));
+		
 		return postSummary;
 	}
 	
