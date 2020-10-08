@@ -18,4 +18,6 @@ public interface UserDao {
 	public User updateUserInfo(Long userId, UserInfo userInfo);
 
 	public Optional<User> isExisted(User user);
+	
+	public boolean confirm(String code);
 }

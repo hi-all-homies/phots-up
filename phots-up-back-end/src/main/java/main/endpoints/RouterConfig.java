@@ -20,7 +20,8 @@ public class RouterConfig {
 			LoginHandler loginHandler,
 			CommentHandler commentHandler,
 			RegistrationHandler regHandler,
-			UserInfoHandler usrInfoHandler){
+			UserInfoHandler usrInfoHandler,
+			ConfirmReqHandler confirmHandler){
 		
 		return RouterFunctions.route()
 				.GET(BASE_URL+"posts", postHandler::getAllPosts)
@@ -34,6 +35,7 @@ public class RouterConfig {
 				.add(likeRouting(likeHandler))
 				.add(registrationRouting(regHandler))
 				.add(usrInfoRouting(usrInfoHandler))
+				.add(confirmRouting(confirmHandler))
 				.build();
 	}
 	
@@ -60,6 +62,12 @@ public class RouterConfig {
 	public RouterFunction<ServerResponse> registrationRouting(RegistrationHandler regHandler){
 		return RouterFunctions.route()
 				.POST(BASE_URL+"signup", accept(APPLICATION_JSON), regHandler::handleRegistration)
+				.build();
+	}
+	
+	public RouterFunction<ServerResponse> confirmRouting(ConfirmReqHandler confirmHandler){
+		return RouterFunctions.route()
+				.GET(BASE_URL+"confirm/{code}", confirmHandler::confirmReg)
 				.build();
 	}
 	

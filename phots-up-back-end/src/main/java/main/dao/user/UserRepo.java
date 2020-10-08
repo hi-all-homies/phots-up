@@ -25,5 +25,7 @@ public interface UserRepo extends JpaRepository<User, Long>{
 	public List<String> getLikedAuthorUsernames(@Param("currentUser") Long currentUser);
 	
 	
-	public Optional<User> findByUsernameAndEmail(String username, String email);	
+	public Optional<User> findByUsernameOrEmail(String username, String email);
+	
+	public User findByConfirmCode(String confirmCode);
 }

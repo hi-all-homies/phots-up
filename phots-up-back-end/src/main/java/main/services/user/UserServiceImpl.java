@@ -41,6 +41,18 @@ public class UserServiceImpl implements UserService{
 				.switchIfEmpty(prepareAndSave(user));
 	}
 	
+	private Mono<Boolean> prepareAndSave(User user){
+		return Mono.just(user)
+				.map(u -> {
+						u.getRoles().add(UserRole.ROLE_USER);
+						u.setPassword(this.encoder.encode(u.getPassword()));
+						u.setConfirmCode(UUID.randomUUID().toString());
+						return u; })
+				.doOnNext(userDao::saveUser)
+				.doOnNext(u -> emailsSender.sendEmail(u.getEmail(), u.getConfirmCode()))
+				.map(u -> true);
+	}
+	
 	
 	@Override
 	public Mono<User> getFullUser(Long userId) {
@@ -52,24 +64,14 @@ public class UserServiceImpl implements UserService{
 				return user.get();
 		});
 	}
-	
 
 	@Override
 	public Mono<User> setOrUpdateUserInfo(Long userId, UserInfo userInfo) {
 		return Mono.fromCallable(() -> this.userDao.updateUserInfo(userId, userInfo));
 	}
 	
-	
-
-	private Mono<Boolean> prepareAndSave(User user){
-		return Mono.just(user)
-				.map(u -> {
-						u.getRoles().add(UserRole.ROLE_USER);
-						u.setPassword(this.encoder.encode(u.getPassword()));
-						u.setConfirmCode(UUID.randomUUID().toString());
-						return u; })
-				.doOnNext(userDao::saveUser)
-				.doOnNext(u -> emailsSender.sendEmail(u.getEmail(), u.getConfirmCode()))
-				.map(u -> true);
+	@Override
+	public boolean confirm(String code) {
+		return this.userDao.confirm(code);
 	}
 }

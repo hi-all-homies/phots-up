@@ -55,6 +55,15 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	public Optional<User> isExisted(User user) {
-		return this.userRepo.findByUsernameAndEmail(user.getUsername(), user.getEmail());
+		return this.userRepo.findByUsernameOrEmail(user.getUsername(), user.getEmail());
+	}
+
+	@Override
+	@Transactional
+	public boolean confirm(String code) {
+		User user = this.userRepo.findByConfirmCode(code);
+		if (user != null)
+			user.setConfirmCode(null);
+		return user != null;
 	}
 }

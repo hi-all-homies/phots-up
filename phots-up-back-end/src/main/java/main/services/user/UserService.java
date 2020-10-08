@@ -12,4 +12,6 @@ public interface UserService extends ReactiveUserDetailsService{
 	public Mono<User> getFullUser(Long userId);
 	
 	public Mono<User> setOrUpdateUserInfo(Long userId, UserInfo userInfo);
+	
+	public boolean confirm(String code);
 }

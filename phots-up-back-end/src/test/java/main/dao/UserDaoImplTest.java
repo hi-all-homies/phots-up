@@ -26,8 +26,8 @@ public class UserDaoImplTest {
 	
 	@Test
 	void isExistedShoudWork() {
-		var user = userDao.saveUser(new User(null, "user1", "pass1", "emai@test.com"));
-		var existed = userDao.isExisted(user);
+		userDao.saveUser(new User(null, "user1", "pass1", "emai@test.com"));
+		var existed = userDao.isExisted(new User(12l, "hey1", "asd", "emai@test.com"));
 		var unexisted = userDao.isExisted(new User(3l, "asfdfd", "sdsff", "ex@example.org"));
 		
 		assertEquals(existed.isPresent(), true);

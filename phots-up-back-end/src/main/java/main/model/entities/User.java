@@ -45,7 +45,9 @@ public class User implements UserDetails{
 	
 	@JsonIgnore
 	private String email;
+	
 	@JsonIgnore
+	@Column(nullable = true)
 	private String confirmCode;
 	
 	@JsonIgnore
