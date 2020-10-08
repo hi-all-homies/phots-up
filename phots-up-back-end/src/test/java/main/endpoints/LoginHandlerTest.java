@@ -26,12 +26,10 @@ public class LoginHandlerTest {
 	
 	@Test
 	void shouldGenerateJWT() {
-		var user = new User(23l, "donald", "12345");
+		var user = new User(23l, "donald", "12345", "example@example.com");
 		user.getRoles().add(UserRole.ROLE_USER);
 		
-		LoginRequest lr = new LoginRequest();
-		lr.setUsername("donald");
-		lr.setPassword("12345");
+		LoginRequest lr = new LoginRequest("donald", "12345", null);
 		
 		Mockito.when(userService.findByUsername(lr.getUsername()))
 			.thenReturn(Mono.just(user));

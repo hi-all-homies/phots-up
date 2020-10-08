@@ -23,4 +23,7 @@ public interface UserRepo extends JpaRepository<User, Long>{
 			"and p.user_id !=:currentUser",
 			nativeQuery = true)
 	public List<String> getLikedAuthorUsernames(@Param("currentUser") Long currentUser);
+	
+	
+	public Optional<User> findByUsernameAndEmail(String username, String email);	
 }

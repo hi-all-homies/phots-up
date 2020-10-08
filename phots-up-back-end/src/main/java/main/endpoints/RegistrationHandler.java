@@ -1,8 +1,8 @@
 package main.endpoints;
 
-import static org.springframework.util.StringUtils.hasText;
-import java.util.function.Predicate;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.util.StringUtils.hasText;
+import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -14,14 +14,16 @@ import reactor.core.publisher.Mono;
 @Component
 public class RegistrationHandler {
 	private final UserService userService;
-
+	private final Pattern pattern;
+	
 	public RegistrationHandler(UserService userService) {
 		this.userService = userService;
+		this.pattern = Pattern.compile("^(.+)@(.+)$");
 	}
 	
 	public Mono<ServerResponse> handleRegistration(ServerRequest req){
 		return req.bodyToMono(LoginRequest.class)
-				.filter(requestNotEmpty)
+				.filter(this::checkRequest)
 				.map(this::mapToUser)
 				.flatMap(userService::registerUser)
 				.flatMap(this::generateResponse)
@@ -37,10 +39,14 @@ public class RegistrationHandler {
 					.bodyValue("that username already exist or empty fields");
 	}
 	
-	private Predicate<LoginRequest> requestNotEmpty = loginReq ->
-		hasText(loginReq.getUsername()) && hasText(loginReq.getPassword());
-	
+	private boolean checkRequest(LoginRequest loginReq) {
+		var matcher = this.pattern.matcher(loginReq.getEmail());
+		return hasText(loginReq.getUsername()) &&
+				hasText(loginReq.getPassword()) &&
+				matcher.matches();
+	}
+		
 	private User mapToUser(LoginRequest request) {
-		return new User(null, request.getUsername(), request.getPassword());
+		return new User(null, request.getUsername(), request.getPassword(), request.getEmail());
 	}
 }

@@ -1,11 +1,24 @@
 package main.model.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
-@Data
-@NoArgsConstructor
+@Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginRequest {
-	private String username;
-	private String password;
+	private final String username;
+	private final String password;
+	private final String email;
+	
+	@JsonCreator
+	public LoginRequest(
+			@JsonProperty("username") String username,
+			@JsonProperty("password") String password,
+			@JsonProperty("email") String email) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+	}
 }

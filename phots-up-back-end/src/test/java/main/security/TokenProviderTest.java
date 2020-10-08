@@ -13,7 +13,7 @@ public class TokenProviderTest {
 	
 	@Test
 	void shouldGenerateValidToken() {
-		var user = new User(134l, "token", "provider");
+		var user = new User(134l, "token", "provider", "example@example.com");
 		user.getRoles().add(UserRole.ROLE_ADMIN);
 		user.getRoles().add(UserRole.ROLE_USER);
 		

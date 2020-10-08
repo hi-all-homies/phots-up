@@ -16,4 +16,6 @@ public interface UserDao {
 	public Optional<User> loadById(Long userId);
 	
 	public User updateUserInfo(Long userId, UserInfo userInfo);
+
+	public Optional<User> isExisted(User user);
 }

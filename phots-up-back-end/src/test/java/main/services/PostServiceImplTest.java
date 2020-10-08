@@ -28,8 +28,8 @@ public class PostServiceImplTest {
 	@BeforeEach
 	public void setUp() {
 		var role = singleton(UserRole.ROLE_USER);
-		var u1 = new User(1l, "user---1", "pass");
-		var u2 = new User(2l, "user---2", "pass222");
+		var u1 = new User(1l, "user---1", "pass", "example@example.com");
+		var u2 = new User(2l, "user---2", "pass222", "example@example.com");
 		u1.setRoles(role);
 		u2.setRoles(role);
 		

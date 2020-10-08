@@ -52,4 +52,9 @@ public class UserDaoImpl implements UserDao{
 		}
 		return user;
 	}
+
+	@Override
+	public Optional<User> isExisted(User user) {
+		return this.userRepo.findByUsernameAndEmail(user.getUsername(), user.getEmail());
+	}
 }

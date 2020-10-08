@@ -24,7 +24,7 @@ import main.model.entities.UserRole;
 	
 	@BeforeAll
 	void prepare() {
-		var u  = new User(null,"user---1", "qwedsdsd");
+		var u  = new User(null,"user---1", "qwedsdsd", "example@example.com");
 		u.getRoles().add(UserRole.ROLE_ADMIN);
 		var user = userDao.saveUser(u);
 

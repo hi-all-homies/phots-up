@@ -44,6 +44,11 @@ public class User implements UserDetails{
 	private String password;
 	
 	@JsonIgnore
+	private String email;
+	@JsonIgnore
+	private String confirmCode;
+	
+	@JsonIgnore
 	@Enumerated(EnumType.STRING)
 	@ElementCollection(fetch = FetchType.LAZY)
 	@Column(name = "role")
@@ -53,10 +58,11 @@ public class User implements UserDetails{
 	@JoinColumn(name = "info_id")
 	private UserInfo userInfo;
 	
-	public User (Long id, String username, String password) {
+	public User (Long id, String username, String password, String email) {
 		this.id = id;
 		this.username= username;
 		this.password = password;
+		this.email = email;
 	}
 
 	@Override

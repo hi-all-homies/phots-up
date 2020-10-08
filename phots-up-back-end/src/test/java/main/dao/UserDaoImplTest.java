@@ -14,7 +14,7 @@ public class UserDaoImplTest {
 	
 	@Test
 	void shouldSaveAndRetrieveUserJustFine() {
-		var test_user = new User(null, "TEST_USER", "password");
+		User test_user = new User(null, "TEST_USER", "password", "example@example.com");
 		test_user.getRoles().add(UserRole.ROLE_ADMIN);
 		
 		var saved_user = userDao.saveUser(test_user);
@@ -22,5 +22,15 @@ public class UserDaoImplTest {
 		var retrieved_user = userDao.loadUserByUsername("TEST_USER").get();
 		
 		assertEquals(saved_user, retrieved_user);
+	}
+	
+	@Test
+	void isExistedShoudWork() {
+		var user = userDao.saveUser(new User(null, "user1", "pass1", "emai@test.com"));
+		var existed = userDao.isExisted(user);
+		var unexisted = userDao.isExisted(new User(3l, "asfdfd", "sdsff", "ex@example.org"));
+		
+		assertEquals(existed.isPresent(), true);
+		assertEquals(unexisted.isEmpty(), true);
 	}
 }

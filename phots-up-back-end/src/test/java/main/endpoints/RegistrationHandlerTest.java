@@ -21,18 +21,14 @@ public class RegistrationHandlerTest {
 	
 	@Test
 	void shouldRegUserWithNewUsernameAndViceVersa() {
-		var newUser = new LoginRequest();
-		newUser.setUsername("new-username");
-		newUser.setPassword("12345");
+		var newUser = new LoginRequest("new-username", "12345", null);
 		
-		var existedUser = new LoginRequest();
-		existedUser.setUsername("existed");
-		existedUser.setPassword("12345");
+		var existedUser = new LoginRequest("existed", "12345", null);
 		
-		Mockito.when(userService.registerUser(new User(null, newUser.getUsername(), newUser.getPassword())))
+		Mockito.when(userService.registerUser(new User(null, newUser.getUsername(), newUser.getPassword(), "example@example.com")))
 			.thenReturn(Mono.just(true));
 		
-		Mockito.when(userService.registerUser(new User(null, existedUser.getUsername(), existedUser.getPassword())))
+		Mockito.when(userService.registerUser(new User(null, existedUser.getUsername(), existedUser.getPassword(), "example@example.com")))
 			.thenReturn(Mono.just(false));
 		
 		client.post().uri("/phots/up/api/signup")

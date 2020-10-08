@@ -20,7 +20,7 @@ public class UserServiceImplTest {
 	
 	@BeforeAll
 	void voud() {
-		var userToSave = new User(null, "12345", "password");
+		var userToSave = new User(null, "12345", "password", "example@example.com");
 		userService.registerUser(userToSave).subscribe();
 	}
 	
@@ -39,14 +39,14 @@ public class UserServiceImplTest {
 	
 	@Test
 	void testingSave() {
-		var userToSave = new User(null, "testUser", "password");
+		var userToSave = new User(null, "testUser", "password", "example@example.com");
 		
 		var result = userService.registerUser(userToSave);
 		StepVerifier.create(result)
 			.expectNext(true)
 			.verifyComplete();
 		
-		var userToSave2 = new User(null, "12345", "password");
+		var userToSave2 = new User(null, "12345", "password", "example@example.com");
 		var result2 = userService.registerUser(userToSave2);
 		StepVerifier.create(result2)
 			.expectNext(false)
