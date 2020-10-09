@@ -9,6 +9,7 @@ import { PostDetailsComponent } from './home/post-details/post-details.component
 import { RecommendComponent } from './home/recommend/recommend.component';
 import { AuthGuard } from './shared/auth.guard';
 import { UserProfileComponent } from './home/user-profile/user-profile.component';
+import { ConfirmComponent } from './login/confirm/confirm.component';
 
 
 const routes: Routes = [
@@ -31,7 +32,8 @@ const routes: Routes = [
       {path: 'recommend', component: RecommendComponent},
       {path: 'profile', component: UserProfileComponent}
     ]
-  }
+  },
+  {path: 'confirm/:code', component: ConfirmComponent}
 ];
 
 @NgModule({

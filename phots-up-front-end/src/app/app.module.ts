@@ -29,6 +29,7 @@ import { RecommendComponent } from './home/recommend/recommend.component';
 import { UserProfileComponent } from './home/user-profile/user-profile.component';
 import { UserInfoService } from './shared/user-info.service';
 import { LikesPopOverComponent } from './home/likes-pop-over/likes-pop-over.component';
+import { ConfirmComponent } from './login/confirm/confirm.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { LikesPopOverComponent } from './home/likes-pop-over/likes-pop-over.comp
     PostCardComponent,
     RecommendComponent,
     UserProfileComponent,
-    LikesPopOverComponent
+    LikesPopOverComponent,
+    ConfirmComponent
   ],
   imports: [
     BrowserModule,

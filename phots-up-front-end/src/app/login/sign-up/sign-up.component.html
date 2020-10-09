@@ -1,6 +1,12 @@
 <h1>registration</h1>
 <div class='form-container'>
-    <form [formGroup]='regForm'>
+    <form #form [formGroup]='regForm'>
+
+        <mat-form-field>
+            <input type="email" matInput formControlName='email'
+                placeholder='email'>
+            <mat-error>email format isn't correct</mat-error>
+        </mat-form-field>
 
         <mat-form-field>
             <input matInput formControlName='username'

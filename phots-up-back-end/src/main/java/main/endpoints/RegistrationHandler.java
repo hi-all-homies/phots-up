@@ -40,10 +40,12 @@ public class RegistrationHandler {
 	}
 	
 	private boolean checkRequest(LoginRequest loginReq) {
-		var matcher = this.pattern.matcher(loginReq.getEmail());
+		var email = loginReq.getEmail();
+		boolean matchResult =  email != null ? this.pattern.matcher(email).matches() : false;
+		
 		return hasText(loginReq.getUsername()) &&
 				hasText(loginReq.getPassword()) &&
-				matcher.matches();
+				matchResult;
 	}
 		
 	private User mapToUser(LoginRequest request) {

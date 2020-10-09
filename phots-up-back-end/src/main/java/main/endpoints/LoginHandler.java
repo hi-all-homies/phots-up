@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import main.model.dto.LoginRequest;
 import main.model.dto.TokenResponse;
+import main.model.entities.User;
 import main.security.TokenProvider;
 import main.services.user.UserService;
 import reactor.core.publisher.Mono;
@@ -45,6 +46,7 @@ public class LoginHandler {
 
 	private Mono<UserDetails> verifyCredentials(LoginRequest loginReq){
 		return this.userService.findByUsername(loginReq.getUsername())
+				.filter(user -> ((User) user).getConfirmCode() == null)
 				.filter(user -> this.encoder.matches(loginReq.getPassword(), user.getPassword()));
 	}
 }
