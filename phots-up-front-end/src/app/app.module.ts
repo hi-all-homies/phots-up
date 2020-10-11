@@ -30,6 +30,8 @@ import { UserProfileComponent } from './home/user-profile/user-profile.component
 import { UserInfoService } from './shared/user-info.service';
 import { LikesPopOverComponent } from './home/likes-pop-over/likes-pop-over.component';
 import { ConfirmComponent } from './login/confirm/confirm.component';
+import { AddConfirmDirective } from './login/confirm/add-confirm.directive';
+import { ResultComponent } from './login/confirm/result/result.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { ConfirmComponent } from './login/confirm/confirm.component';
     RecommendComponent,
     UserProfileComponent,
     LikesPopOverComponent,
-    ConfirmComponent
+    ConfirmComponent,
+    AddConfirmDirective,
+    ResultComponent
   ],
   imports: [
     BrowserModule,

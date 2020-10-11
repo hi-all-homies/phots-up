@@ -5,20 +5,3 @@
     justify-content: center;
     color: ivory;
 }
-.confirmed{
-    width: 40%;
-    background-color: limegreen;
-    display: none;
-    padding: 10px;
-    height: 100px;
-}
-.confirmed p{
-    text-align: center;
-}
-.fail{
-    width: 40%;
-    background-color: crimson;
-    display: none;
-    padding: 10%;
-    height: 100px;
-}

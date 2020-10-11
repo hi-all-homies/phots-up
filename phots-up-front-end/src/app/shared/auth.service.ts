@@ -29,8 +29,8 @@ export class AuthService {
   }
 
 
-  confirmCode(code: string): Observable<Boolean> {
-    return this.http.get<Boolean>(ENV.BASE_URL + `confirm/${code}`, {observe: 'body'});
+  confirmCode(code: string): Observable<boolean> {
+    return this.http.get<boolean>(ENV.BASE_URL + `confirm/${code}`, {observe: 'body'});
   }
 
 
