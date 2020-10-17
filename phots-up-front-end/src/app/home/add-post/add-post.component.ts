@@ -17,7 +17,7 @@ export class AddPostComponent implements OnInit {
   isSending: boolean = false;
 
   post: FormGroup = new FormGroup({
-    content: new FormControl('', Validators.required),
+    content: new FormControl('', [Validators.required, Validators.maxLength(666)]),
     image: new FormControl(null, Validators.required)
   });
 
