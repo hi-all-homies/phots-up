@@ -13,7 +13,7 @@ public class NotificationTest {
 	@Test
 	void shouldReturnStringRepresentationOfPostLikedNotification() {
 		var user = new User(123l, "jimbo", "12345", "example@example.com");
-		var post = new Post(null, "hello world...", null, user);
+		var post = new Post(null, "hello world...", user);
 		
 		Notification notification =
 				PostLikedNotification.builder()

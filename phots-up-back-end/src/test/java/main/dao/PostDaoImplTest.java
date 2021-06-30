@@ -29,10 +29,10 @@ public class PostDaoImplTest {
 		u.getRoles().add(UserRole.ROLE_ADMIN);
 		var user = userDao.saveUser(u);
 
-		var p = new Post(null, "hello world", "frfdfd", user);
+		var p = new Post(null, "hello world",user);
 		var post = postDaoImpl.savePost(p);
 		
-		var p2 = new Post(null, "test-post", "frfdfd", user);
+		var p2 = new Post(null, "test-post", user);
 		postDaoImpl.savePost(p2);
 		
 		var comment = new Comment(null, "hey you're a nice dancer", user, post);
@@ -46,7 +46,7 @@ public class PostDaoImplTest {
 		var posts = postDaoImpl.findAll(PageRequest.of(0, 7));
 		posts.stream().forEach(p -> {
 			var str = String.format("author: %s, img key: %s, comment count: %d, like count: %d",
-					p.getAuthor().getUsername(), p.getImageKey(), p.getComments().size(), p.getLikes().size());
+					p.getAuthor().getUsername(), p.getImage(), p.getComments().size(), p.getLikes().size());
 			System.out.println(str);
 		});
 	}
@@ -64,7 +64,6 @@ public class PostDaoImplTest {
 		var p = new Post();
 		p.setId(2l);
 		p.setContent("new content");
-		p.setImageKey("new key");
 		
 		this.postDaoImpl.updatePost(p);
 	}

@@ -48,7 +48,10 @@ public class UserDaoImpl implements UserDao{
 		}
 		else {
 			user.getUserInfo().setAboutMe(userInfo.getAboutMe());
-			user.getUserInfo().setAvatarKey(userInfo.getAvatarKey());
+			if (userInfo.getAvatar() != null) {
+				user.getUserInfo().setAvatar(userInfo.getAvatar());
+				user.getUserInfo().setAvatarKey(userInfo.getAvatarKey());
+			}
 		}
 		return user;
 	}

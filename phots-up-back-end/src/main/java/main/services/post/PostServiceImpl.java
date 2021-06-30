@@ -53,9 +53,9 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public Mono<Integer> updatePost(Post post) {
-		return Mono.defer(
-						() -> Mono.just(this.postDao.updatePost(post)))
+	public Mono<Long> updatePost(Post post) {
+		return Mono.just(post)
+				.map(p -> postDao.updatePost(p))
 				.subscribeOn(Schedulers.elastic());
 	}
 

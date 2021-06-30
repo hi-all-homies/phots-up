@@ -15,7 +15,7 @@ public interface PostDao {
 	
 	public Optional<Post> deletePost(Long postId);
 	
-	public int updatePost(Post post);
+	public long updatePost(Post post);
 	
 	public boolean addLike(Long postId, Long userId);
 	

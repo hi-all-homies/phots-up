@@ -28,7 +28,7 @@ import main.model.entities.UserRole;
 		u.getRoles().add(UserRole.ROLE_ADMIN);
 		var user = userDao.saveUser(u);
 
-		var p = new Post(null, "hello world", "frfdfd", user);
+		var p = new Post(null, "hello world", user);
 		var post = postDao.savePost(p);
 		
 		

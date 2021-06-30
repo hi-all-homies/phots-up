@@ -15,7 +15,7 @@ public interface PostFacade {
 	
 	public Mono<PostSummary> getPostById(Long postId, String token);
 	
-	public Mono<Integer> updatePost(MultiValueMap<String,Part> data);
+	public Mono<Long> updatePost(MultiValueMap<String,Part> data);
 	
 	public Mono<Void> deletePost(Long postId);
 	

@@ -33,9 +33,9 @@ public class PostServiceImplTest {
 		u1.setRoles(role);
 		u2.setRoles(role);
 		
-		var p1 = new Post(1l, "first post", "dfdffdfr4", u1);
-		var p2 = new Post(2l, "hello world", "dffdferfdfr4", u1);
-		var p3 = new Post(3l, "i'm here", "dffdfr45y5", u2);
+		var p1 = new Post(1l, "first post", u1);
+		var p2 = new Post(2l, "hello world", u1);
+		var p3 = new Post(3l, "i'm here", u2);
 		var likes = Set.of(u1, u2);
 		p1.setLikes(likes);
 		p2.setLikes(likes);

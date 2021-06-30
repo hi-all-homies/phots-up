@@ -3,6 +3,8 @@ package main.security;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import main.model.entities.User;
 import main.model.entities.UserRole;
 import reactor.test.StepVerifier;
@@ -10,6 +12,7 @@ import reactor.test.StepVerifier;
 @SpringBootTest
 public class TokenProviderTest {
 	@Autowired TokenProvider tokenProvider;
+	@Autowired PasswordEncoder encoder;
 	
 	@Test
 	void shouldGenerateValidToken() {
@@ -28,4 +31,5 @@ public class TokenProviderTest {
 			.expectNext("token")
 			.verifyComplete();
 	}
+	
 }

@@ -9,5 +9,4 @@ public class PostSummary {
 	private final int likes;
 	private final int comments;
 	private final boolean meLiked;
-	private byte[] image;
 }

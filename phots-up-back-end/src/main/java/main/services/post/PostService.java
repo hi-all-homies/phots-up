@@ -13,7 +13,7 @@ public interface PostService {
 	
 	public Mono<Post> savePost(Post post);
 	
-	public Mono<Integer> updatePost(Post post);
+	public Mono<Long> updatePost(Post post);
 	
 	public Mono<Post> deletePost(Long postId);
 	
