@@ -1,5 +1,5 @@
 package main.services.image;
-
+/*
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -56,3 +56,4 @@ public class ImageServiceImpl implements ImageService{
 			return String.format("%s/%s", BUCKET_NAME, folders[0]);
 	}
 }
+*/
