@@ -8,6 +8,7 @@ import { environment as ENV } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import { map } from 'rxjs/operators';
 import { StringUtils } from './string-utils';
+import { User } from '../model/user';
 
 @Injectable({
   providedIn: 'root'
@@ -49,14 +50,20 @@ export class PostService {
     return this.http.get<PostSummary>(
         ENV.BASE_URL + `posts/${id}`, {observe: 'body'})
       .pipe(map(p =>{
-        p.image = StringUtils.getImageString64(p.post.imageKey, p.image);
+        p.post.image = StringUtils.getImageString64(p.post.imageKey, p.post.image);
         return p}));
   }
 
 
   public updatePost(post: Post, image?: File){
     let formData = new FormData();
-    formData.append('post', JSON.stringify(post));
+
+    let updatedPost: Post = {
+      ...post,
+      image: null
+    };
+    formData.append('post', JSON.stringify(updatedPost));
+
     if (image)
       formData.append('image', image);
 
@@ -69,7 +76,18 @@ export class PostService {
       ENV.BASE_URL + `posts/${post.id}`, {observe: 'response'});
   }
 
-  addLike(likeReq: any){
+  addLike(post: Post, user: User){
+    let likedPost: Post = {
+      ...post,
+      image: null,
+      imageKey: null
+    };
+    
+    let likeReq = {
+      post: likedPost,
+      user: user
+    }
+
     return this.http.post<any>(
       ENV.BASE_URL + `${likeReq.post.id}/likes`, likeReq, {observe: 'response'});
   }

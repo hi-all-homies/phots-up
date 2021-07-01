@@ -40,7 +40,9 @@ export class PostCardComponent implements OnInit {
       isEdit: true
     };
 
-    this.dialog.open(AddPostComponent, config);
+    let ref = this.dialog.open(AddPostComponent, config);
+    ref.afterClosed()
+      .subscribe();
   }
 
   delete(){
@@ -57,12 +59,7 @@ export class PostCardComponent implements OnInit {
   }
 
   onLike(){
-    let likeReq = {
-      post: this.postSummary.post,
-      user: this.currUser
-    };
-
-    this.postService.addLike(likeReq)
+    this.postService.addLike(this.postSummary.post, this.currUser)
       .subscribe(resp =>{
         this.postSummary.meLiked = !this.postSummary.meLiked;
         if (this.postSummary.meLiked)

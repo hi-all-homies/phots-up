@@ -16,6 +16,8 @@ export class AddPostComponent implements OnInit {
   imagePreview: string;
   isSending: boolean = false;
 
+  editedPostSummary: PostSummary;
+
   post: FormGroup = new FormGroup({
     content: new FormControl('', [Validators.required, Validators.maxLength(666)]),
     image: new FormControl(null, Validators.required)
@@ -36,7 +38,8 @@ export class AddPostComponent implements OnInit {
 
   private initForEdit(){
     this.post.get('content').patchValue(this.data.postSumm.post.content);
-    this.imagePreview = this.data.postSumm.image;
+    this.imagePreview = this.data.postSumm.post.image;
+    this.editedPostSummary = this.data.postSumm;
     this.isEdit = this.data.isEdit;
     this.post.get('image').patchValue(this.imagePreview.length);
   }
@@ -67,7 +70,7 @@ export class AddPostComponent implements OnInit {
   edit(){
 	this.isSending = true;
     this.data.postSumm.post.content = this.post.get('content').value;
-    this.data.postSumm.image = this.imagePreview;
+    this.data.postSumm.post.image = this.imagePreview;
     this.postService.updatePost(this.data.postSumm.post, this.imageData)
       .subscribe(resp => this.ref.close());
   }
@@ -82,12 +85,12 @@ export class AddPostComponent implements OnInit {
   }
 
   private gatherPostSummary(post: Post): PostSummary{
+    post.image = this.imagePreview;
     return {
       post: post,
-      meLiked: false,
-      image: this.imagePreview,
-      comments: 0,
-      likes:0
+      meLiked: (this.isEdit) ? this.editedPostSummary.meLiked : false,
+      comments: (this.isEdit) ? this.editedPostSummary.comments : 0,
+      likes: (this.isEdit) ? this.editedPostSummary.likes : 0
     };
   }
 }

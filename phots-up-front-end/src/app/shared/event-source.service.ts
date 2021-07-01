@@ -51,8 +51,8 @@ export class EventSourceService {
 
   private onMessage = (event: MessageEvent) =>{
     let postSummary = <PostSummary>JSON.parse(event.data);
-      postSummary.image =
-        StringUtils.getImageString64(postSummary.post.imageKey, postSummary.image);
+      postSummary.post.image =
+        StringUtils.getImageString64(postSummary.post.imageKey, postSummary.post.image);
       this.zone.run(() => this.postObs.next(postSummary));
   }
 

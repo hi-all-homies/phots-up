@@ -26,7 +26,7 @@
             </mat-menu>
     </mat-card-header>
 
-    <img mat-card-image src='{{postSummary.image}}' (click)='getDetails()' alt='post photo'>
+    <img mat-card-image src='{{postSummary.post.image}}' (click)='getDetails()' alt='post photo'>
     <mat-card-content>
         <p>
             {{postSummary.post.content}}

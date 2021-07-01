@@ -58,12 +58,7 @@ export class PostDetailsComponent implements OnInit{
 
 
   addLike(){
-    let likeReq = {
-      post: this.postSummary.post,
-      user: this.currUser
-    };
-
-    this.postService.addLike(likeReq)
+    this.postService.addLike(this.postSummary.post, this.currUser)
       .subscribe(resp =>{
         this.postSummary.meLiked = !this.postSummary.meLiked;
         if (this.postSummary.meLiked){
@@ -87,6 +82,7 @@ export class PostDetailsComponent implements OnInit{
         comments: null,
         content: null,
         imageKey: null,
+        image: null,
         likes: null,
         created: null
       },

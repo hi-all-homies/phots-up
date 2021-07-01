@@ -5,6 +5,7 @@ export class Post{
     id:number;
     content: string;
     imageKey: string;
+    image: string;
     author: User;
     likes: User[];
     comments: Comment[];
