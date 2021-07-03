@@ -1,6 +1,5 @@
 package main.facades.user;
 
-import java.io.ByteArrayOutputStream;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.http.codec.multipart.FormFieldPart;
 import org.springframework.http.codec.multipart.Part;
@@ -8,24 +7,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import main.model.entities.User;
 import main.model.entities.UserInfo;
 import main.security.TokenProvider;
+import main.services.image.ImageService;
 import main.services.user.UserService;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
+@RequiredArgsConstructor
 public class UserInfoFacadeImpl implements UserInfoFacade {
 	private final UserService userService;
 	private final TokenProvider tokenProvider;
+	private final ImageService imgService;
 	private final ObjectMapper mapper = new ObjectMapper();
 	
-	
-	public UserInfoFacadeImpl(UserService userService, TokenProvider tokenProvider) {
-		this.userService = userService;
-		this.tokenProvider = tokenProvider;
-	}
 
 	@Override
 	public Mono<User> getUserInfoByUserId(Long userId) {
@@ -34,32 +31,22 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
 
 	@Override
 	public Mono<User> setOrUpdateUserInfo(MultiValueMap<String, Part> data, String token) {
+		final var userId = this.tokenProvider.getUserIdFromToken(token);
+		
 		var userInfoJson = (FormFieldPart) data.getFirst("userInfo");
-		var userInfo = jsonToUserInfo(userInfoJson.value());
+		final var userInfo = jsonToUserInfo(userInfoJson.value());
 		
 		var avatar = (FilePart) data.getFirst("avatar");
 		
-		var userId = this.tokenProvider.getUserIdFromToken(token);
-		
-		return setAvatar(avatar, userInfo)
-				.flatMap(uInf -> userService.setOrUpdateUserInfo(userId, uInf));
+		return Mono.justOrEmpty(avatar)
+				.flatMap(imgService::storeImage)
+				.map(resp -> resp.getData())
+				.flatMap(d -> {
+					userInfo.setAvatarUrl(d.getUrl());
+					return userService.setOrUpdateUserInfo(userId, userInfo);})
+				.switchIfEmpty(userService.setOrUpdateUserInfo(userId, userInfo));
 	}
 	
-	
-	private Mono<UserInfo> setAvatar(FilePart avatar, UserInfo userInfo){
-		if (avatar != null) {
-			var outStream = new ByteArrayOutputStream();
-			return avatar.content()
-					.flatMap(db -> Flux.just(db.asByteBuffer().array()))
-					.collectList()
-					.map(list -> {
-						list.forEach(bytes -> outStream.writeBytes(bytes));
-						userInfo.setAvatar(outStream.toByteArray());
-						userInfo.setAvatarKey(avatar.filename());
-						return userInfo;});
-			}
-		else return Mono.just(userInfo);
-	}
 	
 
 	private UserInfo jsonToUserInfo(String value) {

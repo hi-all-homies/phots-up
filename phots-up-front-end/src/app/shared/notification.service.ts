@@ -25,7 +25,7 @@ export class NotificationService {
     this.config = {
       url: wsURL,
       closeObserver: {next: (event: CloseEvent) => this.socket = null},
-      openObserver: {next: (event: Event) => console.log('conn is open!')}
+      openObserver: {next: (event: Event) => {}}
     };
   }
 

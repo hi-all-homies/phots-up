@@ -1,59 +1,55 @@
 package main.services.image;
-/*
+
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.util.IOUtils;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Service
 public class ImageServiceImpl implements ImageService{
-	private static final String BUCKET_NAME = "phots-up-app-777";
-	private final AmazonS3 amazonS3;
-
-	public ImageServiceImpl(AmazonS3 amazonS3) {
-		this.amazonS3 = amazonS3;
+	private final WebClient webClient;
+	
+	@Value("${images.api.key}")
+	private String API_KEY;
+	
+	@Value("${error.image.url}")
+	private String ERR_IMG_URL;
+	
+	private final String BASE_URL = "https://api.imgbb.com/1/upload";
+	
+	public ImageServiceImpl(WebClient.Builder builder) {
+		this.webClient = builder.baseUrl(BASE_URL).build();
 	}
 
 	@Override
-	public String storeImage(FilePart image, String... folders) {
-		var prefix = UUID.randomUUID().toString();
-		var filename = String.format("%s-%s", prefix, image.filename());
-		
+	public Mono<ResponseImgBB> storeImage(FilePart image) {
+		final File file;
+		MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
 		try {
-			var file = File.createTempFile(prefix, null);
+			file = File.createTempFile(image.filename(), null);
 			image.transferTo(file);
-			this.amazonS3.putObject(buildPathToImage(folders), filename, file);
-			file.delete();
+	        bodyBuilder.part("image", new FileSystemResource(file));
+	        
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		return filename;
-	}
-	
-	@Override
-	public void deleteImage(String imageKey, String... folders) {
-		this.amazonS3.deleteObject(buildPathToImage(folders), imageKey);
-	}
-
-	@Override
-	public byte[] retrieveImageByKey(String imageKey, String... folders) {
-		try {
-			var image = this.amazonS3.getObject(buildPathToImage(folders), imageKey);
-			return IOUtils.toByteArray(image.getObjectContent());
-		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-	}
-	
-	
-	private String buildPathToImage(String[] folders) {
-		if (folders.length == 0)
-			return BUCKET_NAME;
-		else
-			return String.format("%s/%s", BUCKET_NAME, folders[0]);
+		
+		return this.webClient.post()
+				.uri(uBuild -> uBuild.queryParam("key", API_KEY).build())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.MULTIPART_FORM_DATA)
+				.body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+				.retrieve()
+				.bodyToMono(ResponseImgBB.class)
+				.onErrorReturn(new ResponseImgBB(new DataImgBB(null, ERR_IMG_URL, ERR_IMG_URL, 0)))
+				.doFinally(signal -> file.delete());
 	}
 }
-*/
+

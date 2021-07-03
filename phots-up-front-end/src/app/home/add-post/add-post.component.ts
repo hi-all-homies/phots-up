@@ -38,7 +38,7 @@ export class AddPostComponent implements OnInit {
 
   private initForEdit(){
     this.post.get('content').patchValue(this.data.postSumm.post.content);
-    this.imagePreview = this.data.postSumm.post.image;
+    this.imagePreview = this.data.postSumm.post.imageUrl;
     this.editedPostSummary = this.data.postSumm;
     this.isEdit = this.data.isEdit;
     this.post.get('image').patchValue(this.imagePreview.length);
@@ -70,7 +70,7 @@ export class AddPostComponent implements OnInit {
   edit(){
 	this.isSending = true;
     this.data.postSumm.post.content = this.post.get('content').value;
-    this.data.postSumm.post.image = this.imagePreview;
+    this.data.postSumm.post.imageUrl = this.imagePreview;
     this.postService.updatePost(this.data.postSumm.post, this.imageData)
       .subscribe(resp => this.ref.close());
   }
@@ -85,7 +85,7 @@ export class AddPostComponent implements OnInit {
   }
 
   private gatherPostSummary(post: Post): PostSummary{
-    post.image = this.imagePreview;
+    post.imageUrl = this.imagePreview;
     return {
       post: post,
       meLiked: (this.isEdit) ? this.editedPostSummary.meLiked : false,

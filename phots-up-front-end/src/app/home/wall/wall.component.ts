@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PostSummary } from 'src/app/model/post-summary';
 import { PostService } from 'src/app/shared/post.service';
 import { DataTransferService } from 'src/app/shared/data-transfer.service';
+import { BehaviorSubject } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-wall',
@@ -13,6 +15,7 @@ export class WallComponent implements OnInit {
   loading: boolean = true;
 
   page: number = 0;
+  pageSubj: BehaviorSubject<number> = new BehaviorSubject(this.page);
 
   constructor(
     private postService: PostService,
@@ -20,14 +23,12 @@ export class WallComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.postService.getPostObs()
-      .subscribe(item =>{
-        if (item.post == null)
-          this.loading = false;
-        else
-          this.posts.push(item)});
-
-    this.postService.fetchPosts(this.page++);
+    this.pageSubj.asObservable()
+      .pipe(
+        flatMap(p => this.postService.fetchPosts(p)))
+      .subscribe(item => {
+        if (this.posts.length > 0) this.loading = false;
+        this.posts.push(item)});
 
     this.transferService.getPublishedPostObs()
       .subscribe(publishedPost => this.posts.unshift(publishedPost));
@@ -41,6 +42,6 @@ export class WallComponent implements OnInit {
 
   onMore(){
     this.loading = true;
-    this.postService.fetchPosts(this.page++);
+    this.pageSubj.next(++this.page);
   }
 }

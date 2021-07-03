@@ -1,7 +1,7 @@
 .container
 {
-    width: 70%;
-    margin: auto;
+    padding-bottom: 1.5%;
+    
 }
 .name
 {
@@ -28,23 +28,14 @@
     background-color: white;
     padding: 10px;
 }
-.panel
-{
-    margin: auto;
-    width: 50%;
+mat-form-field{
+    width: 100%;
 }
-mat-form-field
-{
-    width: 98%;
+.user-profile-buttons{
+    display: flex;
+    width: 100%;
 }
-.load
-{
-    margin-left: 75%;
+.user-profile-buttons>div>button{
+    margin-left: 1rem;
 }
-.preview
-{
-    width: 190px;
-    height: 150px;
-    background-size: cover;
-    margin: auto;
-}
+

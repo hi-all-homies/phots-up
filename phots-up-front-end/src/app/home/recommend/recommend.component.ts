@@ -14,12 +14,10 @@ export class RecommendComponent implements OnInit {
   constructor(private postService: PostService) {}
 
   ngOnInit(): void {
-    this.postService.getPostObs()
+    this.postService.getRecommendations()
       .subscribe(item =>{
-        if (item.post == null)
-          this.loading = false;
-        else
-          this.posts.push(item)});
+        if (this.posts.length > 0) this.loading = false;
+        this.posts.push(item)});
 
     this.postService.getRecommendations();
   }

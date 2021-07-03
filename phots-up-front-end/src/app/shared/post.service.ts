@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
-import { EventSourceService } from './event-source.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { PostSummary } from '../model/post-summary';
 import { Post } from '../model/post';
 import { environment as ENV } from 'src/environments/environment';
 import { AuthService } from './auth.service';
-import { map } from 'rxjs/operators';
-import { StringUtils } from './string-utils';
+import { concatMap } from 'rxjs/operators';
 import { User } from '../model/user';
 
 @Injectable({
@@ -16,22 +13,26 @@ import { User } from '../model/user';
 export class PostService {
 
   constructor(
-    private eventSource: EventSourceService,
     private http: HttpClient,
     private auth: AuthService
     ) {}
 
   public fetchPosts(page: number){
-    this.eventSource.fetchPosts(page);
+    const url = ENV.BASE_URL + `posts?page=${page}`;
+    return this.getPostSummaryObs(url);
   }
 
   public getRecommendations(){
-    this.eventSource.fetchRecommendations();
+    const url = ENV.BASE_URL + `recommend`;
+    return this.getPostSummaryObs(url);
   }
 
-  public getPostObs(): Observable<PostSummary>{
-    return this.eventSource.getPostObs();
+  private getPostSummaryObs(url: string){
+    return this.http.get<PostSummary[]>(url, {observe: 'body'})
+      .pipe(
+        concatMap(list => list));
   }
+
 
   public publishPost(post: Post, image: File){
     let formData = new FormData();
@@ -48,20 +49,14 @@ export class PostService {
 
   getPostById(id: string) {
     return this.http.get<PostSummary>(
-        ENV.BASE_URL + `posts/${id}`, {observe: 'body'})
-      .pipe(map(p =>{
-        p.post.image = StringUtils.getImageString64(p.post.imageKey, p.post.image);
-        return p}));
+        ENV.BASE_URL + `posts/${id}`, {observe: 'body'});
   }
 
 
   public updatePost(post: Post, image?: File){
     let formData = new FormData();
 
-    let updatedPost: Post = {
-      ...post,
-      image: null
-    };
+    let updatedPost: Post = { ...post };
     formData.append('post', JSON.stringify(updatedPost));
 
     if (image)
@@ -78,9 +73,7 @@ export class PostService {
 
   addLike(post: Post, user: User){
     let likedPost: Post = {
-      ...post,
-      image: null,
-      imageKey: null
+      ...post
     };
     
     let likeReq = {

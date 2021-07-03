@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 import main.dao.post.PostDao;
 import main.dao.user.UserDao;
 import main.model.dto.PostSummary;
@@ -15,15 +16,12 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 @Service
+@RequiredArgsConstructor
 public class PostServiceImpl implements PostService{
 	public static final int PAGE_SIZE = 7;
 	private final PostDao postDao;
 	private final UserDao userDao;
 
-	public PostServiceImpl(PostDao postDao, UserDao userDao) {
-		this.postDao = postDao;
-		this.userDao = userDao;
-	}
 
 	@Override
 	public Flux<PostSummary> getAllPosts(int page, long currUserId) {
@@ -31,7 +29,7 @@ public class PostServiceImpl implements PostService{
 				page, PAGE_SIZE, Sort.by(Direction.DESC, "id"));
 		
 		return Flux.defer(() -> Flux.fromIterable(this.postDao.findAll(pageReq)))
-				.subscribeOn(Schedulers.elastic())
+				.subscribeOn(Schedulers.boundedElastic())
 				.sort((x,y) -> y.getId().compareTo(x.getId()))
 				.map(post -> convert(post, currUserId));
 	}
@@ -40,7 +38,7 @@ public class PostServiceImpl implements PostService{
 	public Mono<PostSummary> getPostById(Long postId, long currUserId) {
 		return Mono.defer(
 						() -> Mono.justOrEmpty(this.postDao.findById(postId)))
-				.subscribeOn(Schedulers.elastic())
+				.subscribeOn(Schedulers.boundedElastic())
 				.map(post -> convertWhenFetchById(post, currUserId));
 	}
 	
@@ -49,19 +47,20 @@ public class PostServiceImpl implements PostService{
 	public Mono<Post> savePost(Post post) {
 		return Mono.defer(
 						() -> Mono.just(this.postDao.savePost(post)))
-				.subscribeOn(Schedulers.elastic());
+				.subscribeOn(Schedulers.boundedElastic());
 	}
 
 	@Override
 	public Mono<Long> updatePost(Post post) {
 		return Mono.just(post)
 				.map(p -> postDao.updatePost(p))
-				.subscribeOn(Schedulers.elastic());
+				.subscribeOn(Schedulers.boundedElastic());
 	}
 
 	@Override
 	public Mono<Post> deletePost(Long postId) {
-		return Mono.justOrEmpty(this.postDao.deletePost(postId));
+		return Mono.justOrEmpty(this.postDao.deletePost(postId))
+				.subscribeOn(Schedulers.boundedElastic());
 	}
 
 	private PostSummary convert(Post post, Long currentUserId) {
@@ -97,6 +96,6 @@ public class PostServiceImpl implements PostService{
 				.flatMap(
 						username -> Flux.fromIterable(this.postDao.findByUsername(username)))
 				.map(post -> convert(post, currentUserId))
-				.subscribeOn(Schedulers.elastic());
+				.subscribeOn(Schedulers.boundedElastic());
 	}
 }

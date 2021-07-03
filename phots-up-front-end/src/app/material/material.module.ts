@@ -14,7 +14,6 @@ import {MatRippleModule} from '@angular/material/core';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatGridListModule} from '@angular/material/grid-list';
-import {MatExpansionModule} from '@angular/material/expansion';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
@@ -36,7 +35,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatDialogModule,
     MatMenuModule,
     MatGridListModule,
-    MatExpansionModule,
     MatProgressSpinnerModule
   ],
   exports: [
@@ -54,7 +52,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatDialogModule,
     MatMenuModule,
     MatGridListModule,
-    MatExpansionModule,
     MatProgressSpinnerModule
   ],
   providers: [

@@ -1,32 +1,28 @@
 package main.endpoints;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import org.springframework.beans.factory.annotation.Value;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import org.springframework.http.HttpStatus;
-import static org.springframework.http.MediaType.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import lombok.RequiredArgsConstructor;
 import main.facades.post.PostFacade;
 import main.model.dto.PostSummary;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
+@RequiredArgsConstructor
 public class PostHandler {
-	@Value(value = "${token.param.name}")
-	private String JWT_PARAM_NAME;
 	private final PostFacade postFacade;
 
-	public PostHandler(PostFacade postFacade) {
-		this.postFacade = postFacade;
-	}
 	
 	public Mono<ServerResponse> getAllPosts(ServerRequest req){
 		var page = req.queryParam("page").get();
-		var token = req.queryParam(JWT_PARAM_NAME).get();
+		var token = req.headers().firstHeader(AUTHORIZATION);
 		var fluxPosts = this.postFacade.getPosts(Integer.valueOf(page), token);
-		return this.responseStream(fluxPosts);
+		return this.genereateResponseFromFlux(fluxPosts);
 	}
 	
 	public Mono<ServerResponse> savePost(ServerRequest req){
@@ -61,14 +57,15 @@ public class PostHandler {
 	}
 	
 	public Mono<ServerResponse> getRecommendations(ServerRequest req){
-		var token = req.queryParam(JWT_PARAM_NAME).get();
+		var token = req.headers().firstHeader(AUTHORIZATION);
 		var fluxPosts = this.postFacade.getRecommendations(token);
-		return this.responseStream(fluxPosts);
+		return this.genereateResponseFromFlux(fluxPosts);
 	}
 	
-	private Mono<ServerResponse> responseStream(Flux<PostSummary> posts){
-		return ServerResponse.ok()
-				.contentType(TEXT_EVENT_STREAM)
-				.body(posts, PostSummary.class);
+	private Mono<ServerResponse> genereateResponseFromFlux(Flux<PostSummary> posts){
+		return posts.collectList()
+				.flatMap(list -> ServerResponse.ok()
+						.contentType(APPLICATION_JSON)
+						.bodyValue(list));
 	}
 }

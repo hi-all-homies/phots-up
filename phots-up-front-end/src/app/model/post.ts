@@ -4,8 +4,7 @@ import { Comment } from './comment';
 export class Post{
     id:number;
     content: string;
-    imageKey: string;
-    image: string;
+    imageUrl: string;
     author: User;
     likes: User[];
     comments: Comment[];

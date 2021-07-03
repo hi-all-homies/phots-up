@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,8 +25,5 @@ public class UserInfo {
 	@Column(length = 666)
 	private String aboutMe;
 	
-	@Lob
-	private byte[] avatar;
-	
-	private String avatarKey;
+	private String avatarUrl;
 }

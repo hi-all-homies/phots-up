@@ -6,7 +6,6 @@ import { NotificationService } from '../shared/notification.service';
 import { NotificationsService } from 'angular2-notifications';
 import { Notification } from '../model/notifications/notification';
 import { Router } from '@angular/router';
-import { EventSourceService } from '../shared/event-source.service';
 import { AuthService } from '../shared/auth.service';
 import { User } from '../model/user';
 import { UserInfoService } from '../shared/user-info.service';
@@ -26,7 +25,6 @@ export class HomeComponent implements OnInit, OnDestroy{
     private notifyService: NotificationService,
     private toastsService: NotificationsService,
     private router: Router,
-    private sourceService: EventSourceService,
     private auth: AuthService,
     private userService: UserInfoService
     ) {}
@@ -70,7 +68,6 @@ export class HomeComponent implements OnInit, OnDestroy{
   }
 
   getRecommend(){
-    this.sourceService.closeEventSource();
     this.router.navigate(['home/recommend']);
   }
 
@@ -83,15 +80,15 @@ export class HomeComponent implements OnInit, OnDestroy{
     this.userService.getUserInfoByUserId(user.id)
       .subscribe(usr => {
         if (!usr.userInfo)
-          usr.userInfo = new UserInfo(-1, null, '', this.blankAvatar);
-        if (!usr.userInfo.avatar)
-          usr.userInfo.avatar = this.blankAvatar;
+          usr.userInfo = new UserInfo(-1, null, this.blankAvatar);
+        if (!usr.userInfo.avatarUrl)
+          usr.userInfo.avatarUrl = this.blankAvatar;
 
         this.currUser.userInfo = usr.userInfo;
       })
   }
 
   avatarUrl(): string{
-    return `background-image: url(${this.currUser.userInfo.avatar});`
+    return `background-image: url(${this.currUser.userInfo.avatarUrl});`
   }
 }

@@ -1,6 +1,5 @@
 package main.facades.post;
 
-import java.io.ByteArrayOutputStream;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.http.codec.multipart.FormFieldPart;
 import org.springframework.http.codec.multipart.Part;
@@ -8,23 +7,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import main.model.dto.PostSummary;
 import main.model.entities.Post;
 import main.security.TokenProvider;
+import main.services.image.ImageService;
 import main.services.post.PostService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
+@RequiredArgsConstructor
 public class PostFacadeImpl implements PostFacade{
 	private final PostService postService;
 	private final TokenProvider tokenProvider;
 	private final ObjectMapper mapper = new ObjectMapper();
-	
-	public PostFacadeImpl(PostService postService, TokenProvider tokenProvider) {
-		this.postService = postService;
-		this.tokenProvider = tokenProvider;
-	}
+	private final ImageService imgService;
 	
 	
 	@Override
@@ -32,10 +30,12 @@ public class PostFacadeImpl implements PostFacade{
 		var image = (FilePart) data.getFirst("image");
 		var jsonPost = (FormFieldPart) data.getFirst("post");
 		
-		Post post = jsonToPost(jsonPost.value());
+		final Post post = jsonToPost(jsonPost.value());
 		
-		return setImage(post, image)
-				.flatMap(p -> postService.savePost(p));
+		return this.imgService.storeImage(image)
+				.map(resp -> resp.getData())
+				.doOnNext(d -> post.setImageUrl(d.getUrl()))
+				.flatMap(d -> postService.savePost(post));
 	}
 
 	@Override
@@ -53,30 +53,19 @@ public class PostFacadeImpl implements PostFacade{
 	@Override
 	public Mono<Long> updatePost(MultiValueMap<String,Part> data){
 		var jsonPost = (FormFieldPart) data.getFirst("post");
-		Post updatedPost = jsonToPost(jsonPost.value());
+		final Post updatedPost = jsonToPost(jsonPost.value());
 		
 		var image = (FilePart) data.getFirst("image");
 		
-		return setImage(updatedPost, image)
-				.flatMap(p -> postService.updatePost(p));
+		return Mono.justOrEmpty(image)
+				.flatMap(imgService::storeImage)
+				.map(resp -> resp.getData())
+				.flatMap(d -> {
+					updatedPost.setImageUrl(d.getUrl());
+					return postService.updatePost(updatedPost);})
+				.switchIfEmpty(postService.updatePost(updatedPost));
 	}
 	
-	
-	
-	private Mono<Post> setImage(Post post, FilePart image) {
-		if (image != null) {
-			var outStream = new ByteArrayOutputStream();
-			return image.content()
-					.flatMap(db -> Flux.just(db.asByteBuffer().array()))
-					.collectList()
-					.map(list -> {
-						list.forEach(bytes -> outStream.writeBytes(bytes));
-						post.setImage(outStream.toByteArray());
-						post.setImageKey(image.filename());
-						return post;});
-			}
-		else return Mono.just(post);
-	}
 	
 	
 	@Override

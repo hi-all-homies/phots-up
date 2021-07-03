@@ -5,11 +5,12 @@
 .more
 {
     max-width: 40%;
-    margin: 1% auto;
+    margin: auto;
+    padding-bottom: 2%;
 }
 .more>button
 {
-    margin-left: 90%;
+    margin-left: 90%
 }
 .loading
 {

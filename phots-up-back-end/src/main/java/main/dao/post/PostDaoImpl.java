@@ -56,10 +56,7 @@ public class PostDaoImpl implements PostDao {
 	public long updatePost(Post post) {
 		long id = post.getId();
 		var storedPost = this.postRepo.findById(id).get();
-		if (post.getImage() != null) {
-			storedPost.setImage(post.getImage());
-			storedPost.setImageKey(post.getImageKey());
-		}
+		storedPost.setImageUrl(post.getImageUrl());
 		storedPost.setContent(post.getContent());
 		return id;
 	}

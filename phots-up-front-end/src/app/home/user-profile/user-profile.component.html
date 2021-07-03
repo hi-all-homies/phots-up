@@ -3,48 +3,32 @@
       {{userProfile?.username}}<br>
       <mat-icon>south_east</mat-icon>
     </h1>
-    <div *ngIf='userProfile' class='avatar' [style]='avatarUrl()'>
+    <div (click)='loadAvatar()' (mouseover)='onMouseOver($event)' *ngIf='userProfile' class='avatar' [style]='avatarUrl()'>
     </div>
 
-    <div class='about'>
+    <div matRipple class='about'>
+      <div *ngIf='!isGoingEdit' (click)='changeAboutMe()'>
         <h3>About me:</h3>
         <p>{{userProfile?.userInfo.aboutMe}}</p>
+      </div>
+
+      <div *ngIf='isGoingEdit' class="edit-form">
+      <mat-form-field appearance="fill">
+        <mat-label>About me</mat-label>
+        <textarea [(ngModel)]='aboutMe' matInput>
+        </textarea>
+      </mat-form-field>
+
+      <div class='user-profile-buttons'>
+       <div style="margin-left: auto;">
+        <button (click)='onCancel()' mat-raised-button color="warn">Cancel</button>
+        <button (click)='saveChanges()' mat-raised-button color="primary">Save</button>
+       </div>
+      </div>  
+      </div>
     </div>
 
-    <div *ngIf='canEdit' class='panel'>
-        <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                Change personal data
-              </mat-panel-title>
-              <mat-panel-description>
-                fill out "about me" and your avatar
-                <span class="spacer"></span>
-                <mat-icon>create</mat-icon>
-              </mat-panel-description>
-            </mat-expansion-panel-header>
-        
-            <mat-form-field>
-              <mat-label>About me:</mat-label>
-              <textarea matInput [(ngModel)]='aboutMe'></textarea>
-            </mat-form-field>
-
-            <button mat-raised-button (click)='loadAvatar()' color='primary' class='load'>
-              Load avatar
-            </button>
-
-            <div *ngIf='avatarPreview' class='preview'
-              style="background-image: url({{avatarPreview}});">
-            </div>
-
-            <input type='file' #avatarInput style='display: none'
+    <input type='file' #avatarInput style='display: none'
               (change)='showPreview($event)'>
-        
-            <mat-action-row>
-              <button mat-raised-button color='warn' (click)='saveChanges()'>
-                  Save
-                </button>
-            </mat-action-row>
-          </mat-expansion-panel>        
-    </div>
+     
 </div>

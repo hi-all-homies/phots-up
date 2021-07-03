@@ -17,7 +17,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from './shared/auth.service';
 import { TokenAdder } from './shared/token-adder';
-import { EventSourceService } from './shared/event-source.service';
 import { PostService } from './shared/post.service';
 import { DataTransferService } from './shared/data-transfer.service';
 import { PostDetailsComponent } from './home/post-details/post-details.component';
@@ -65,7 +64,6 @@ import { ResultComponent } from './login/confirm/result/result.component';
   providers: [
     CookieService,
     AuthService,
-    EventSourceService,
     PostService,
     CommentService,
     DataTransferService,

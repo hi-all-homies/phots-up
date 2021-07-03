@@ -4,7 +4,6 @@ import { UserInfo } from 'src/app/model/user-info';
 import { UserInfoService } from 'src/app/shared/user-info.service';
 import { AuthService } from 'src/app/shared/auth.service';
 import { User } from 'src/app/model/user';
-import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-user-profile',
@@ -13,14 +12,16 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 })
 export class UserProfileComponent implements OnInit {
   @ViewChild('avatarInput') avatarInput: ElementRef;
-  @ViewChild(MatExpansionPanel) panel: MatExpansionPanel;
   avatar: File;
-  avatarPreview: string;
   readonly blankAvatar: string = 'assets/logo/blank.png';
   currUser: User;
   userProfile: User;
   aboutMe: string = '';
   canEdit: boolean = false;
+
+  imgResult: string = '';
+
+  isGoingEdit: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,9 +41,9 @@ export class UserProfileComponent implements OnInit {
     this.userService.getUserInfoByUserId(userId)
       .subscribe(user =>{
         if (!user.userInfo)
-          user.userInfo = new UserInfo(-1, null, '', this.blankAvatar);
-        if (!user.userInfo.avatar)
-          user.userInfo.avatar = this.blankAvatar;
+          user.userInfo = new UserInfo(-1, null, this.blankAvatar);
+        if (!user.userInfo.avatarUrl)
+          user.userInfo.avatarUrl = this.blankAvatar;
         this.userProfile = user;
         this.aboutMe = user.userInfo.aboutMe;
         this.canEdit = user.username === this.currUser.username;
@@ -51,23 +52,24 @@ export class UserProfileComponent implements OnInit {
 
 
   saveChanges(){
-    let newUserInfo = new UserInfo(
-      null, this.userProfile.userInfo.avatarKey, this.aboutMe, null);
+    let avaUrl = this.userProfile.userInfo.avatarUrl === this.blankAvatar ?
+      null : this.userProfile.userInfo.avatarUrl;
+    let newUserInfo = new UserInfo(null, this.aboutMe, avaUrl);
     
     this.userService.saveUserInfo(newUserInfo, this.avatar)
       .subscribe(resp =>{
-		    if (this.avatarPreview)
-			    this.userProfile.userInfo.avatar = this.avatarPreview;
         this.userProfile.userInfo.aboutMe = resp.body.userInfo.aboutMe;
-        this.userProfile.userInfo.avatarKey = resp.body.userInfo.avatarKey;
-        this.avatar = null;
-        this.avatarPreview = null;
-        this.panel.close();
+        if (this.avatar){
+          this.userProfile.userInfo.avatarUrl = this.imgResult;
+          this.avatar = null;
+        }
+        this.isGoingEdit = false;
       })
   }
 
   loadAvatar(){
-    this.avatarInput.nativeElement.click();
+    if (this.canEdit)
+      this.avatarInput.nativeElement.click();
   }
 
   showPreview(event: any){
@@ -75,18 +77,36 @@ export class UserProfileComponent implements OnInit {
 
     if (this.avatar){
       let type = this.avatar.type;
-      if (type.match(/image\/*/) == null)
+      if (type.match(/image\/*/) == null){
+        this.avatar = null;
         return;
+      }
 
       const reader = new FileReader();
-      reader.onload = ev =>
-        this.avatarPreview = <string> ev.target.result;
+      reader.onload = ev => {
+        this.imgResult = <string>ev.target.result;
+        this.userProfile.userInfo.avatarUrl = this.imgResult;
+      }
 
       reader.readAsDataURL(this.avatar);
+      this.isGoingEdit=true;
     }
   }
   
   avatarUrl(): string{
-	  return `background-image: url(${this.userProfile.userInfo.avatar});`
+	  return `background-image: url(${this.userProfile.userInfo.avatarUrl});`
+  }
+
+  onMouseOver(event){
+    if (this.canEdit)
+      event.target.style.cursor = 'pointer';
+  }
+
+  changeAboutMe(){
+    if (this.canEdit && !this.isGoingEdit)
+      this.isGoingEdit = true
+  }
+  onCancel(){
+    this.isGoingEdit = false
   }
 }

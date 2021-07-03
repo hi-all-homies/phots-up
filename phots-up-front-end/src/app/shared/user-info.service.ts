@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { UserInfo } from '../model/user-info';
 import { environment as ENV } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import { StringUtils } from './string-utils';
 import { User } from '../model/user';
 
 @Injectable({
@@ -17,20 +16,9 @@ export class UserInfoService {
     return this.http.get<User>(
         ENV.BASE_URL + `profile/${userId}`, {observe: 'response'})
       .pipe(
-        map(resp => this.handleAvatar(resp)))
+        map(resp => resp.body));
   }
 
-  private handleAvatar(resp: HttpResponse<User>): User{
-    let user = resp.body;
-    if (user.userInfo){
-      if (user.userInfo.avatar){
-        let img = StringUtils.getImageString64(
-          user.userInfo.avatarKey, user.userInfo.avatar);
-        user.userInfo.avatar = img;
-      }
-    }
-    return user;
-  }
 
   public saveUserInfo(userInfo: UserInfo, avatar?: File){
     let fd = new FormData();

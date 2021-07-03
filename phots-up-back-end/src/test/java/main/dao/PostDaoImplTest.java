@@ -45,8 +45,8 @@ public class PostDaoImplTest {
 		
 		var posts = postDaoImpl.findAll(PageRequest.of(0, 7));
 		posts.stream().forEach(p -> {
-			var str = String.format("author: %s, img key: %s, comment count: %d, like count: %d",
-					p.getAuthor().getUsername(), p.getImage(), p.getComments().size(), p.getLikes().size());
+			var str = String.format("author: %s, img: %s, comment count: %d, like count: %d",
+					p.getAuthor().getUsername(), p.getImageUrl(), p.getComments().size(), p.getLikes().size());
 			System.out.println(str);
 		});
 	}

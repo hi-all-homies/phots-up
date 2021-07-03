@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 import main.dao.user.UserDao;
 import main.model.entities.User;
 import main.model.entities.UserInfo;
@@ -14,16 +15,12 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 	private final UserDao userDao;
 	private final PasswordEncoder encoder;
 	private final EmailsSender emailsSender;
 	
-	public UserServiceImpl(UserDao userDao, PasswordEncoder encoder, EmailsSender emailsSender) {
-		this.userDao = userDao;
-		this.encoder = encoder;
-		this.emailsSender = emailsSender;
-	}
 
 	@Override
 	public Mono<UserDetails> findByUsername(String username) {
@@ -31,14 +28,15 @@ public class UserServiceImpl implements UserService{
 						this.userDao.loadUserByUsername(username)))
 				.cast(UserDetails.class)
 				.switchIfEmpty(Mono.error(new UsernameNotFoundException("there's no such username")))
-				.subscribeOn(Schedulers.elastic());
+				.subscribeOn(Schedulers.boundedElastic());
 	}
 
 	@Override
 	public Mono<Boolean> registerUser(User user) {
 		return Mono.defer(() -> Mono.justOrEmpty(this.userDao.isExisted(user)))
 				.map(dbUser -> false)
-				.switchIfEmpty(prepareAndSave(user));
+				.switchIfEmpty(prepareAndSave(user))
+				.subscribeOn(Schedulers.boundedElastic());
 	}
 	
 	private Mono<Boolean> prepareAndSave(User user){
@@ -61,13 +59,14 @@ public class UserServiceImpl implements UserService{
 			if (user.isEmpty())
 				return null;
 			else
-				return user.get();
-		});
+				return user.get();})
+				.subscribeOn(Schedulers.boundedElastic());
 	}
 
 	@Override
 	public Mono<User> setOrUpdateUserInfo(Long userId, UserInfo userInfo) {
-		return Mono.fromCallable(() -> this.userDao.updateUserInfo(userId, userInfo));
+		return Mono.fromCallable(() -> this.userDao.updateUserInfo(userId, userInfo))
+				.subscribeOn(Schedulers.boundedElastic());
 	}
 	
 	@Override
