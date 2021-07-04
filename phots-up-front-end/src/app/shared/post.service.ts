@@ -4,13 +4,14 @@ import { PostSummary } from '../model/post-summary';
 import { Post } from '../model/post';
 import { environment as ENV } from 'src/environments/environment';
 import { AuthService } from './auth.service';
-import { concatMap } from 'rxjs/operators';
 import { User } from '../model/user';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
+
 
   constructor(
     private http: HttpClient,
@@ -28,9 +29,9 @@ export class PostService {
   }
 
   private getPostSummaryObs(url: string){
-    return this.http.get<PostSummary[]>(url, {observe: 'body'})
+    return this.http.get<PostSummary[]>(url, {observe: 'response'})
       .pipe(
-        concatMap(list => list));
+        map(resp => resp.body));
   }
 
 
@@ -47,7 +48,7 @@ export class PostService {
   }
 
 
-  getPostById(id: string) {
+  getPostById(id: number) {
     return this.http.get<PostSummary>(
         ENV.BASE_URL + `posts/${id}`, {observe: 'body'});
   }

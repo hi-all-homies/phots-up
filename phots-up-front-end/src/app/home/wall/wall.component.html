@@ -4,7 +4,7 @@
     </post-card>
 
     <div class='more' *ngIf='!loading'>
-        <button mat-raised-button color='primary' (click)='onMore()'>
+        <button mat-raised-button color='primary' (click)='onMore()' [disabled]='moreDisabled'>
             more
         </button>
     </div>

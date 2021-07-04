@@ -15,9 +15,11 @@ export class RecommendComponent implements OnInit {
 
   ngOnInit(): void {
     this.postService.getRecommendations()
-      .subscribe(item =>{
-        if (this.posts.length > 0) this.loading = false;
-        this.posts.push(item)});
+      .subscribe(postList => {
+        this.loading = false;
+        postList.forEach(el => this.posts.push(el));
+        //this.transferService.setPosts(this.posts);
+      });
 
     this.postService.getRecommendations();
   }

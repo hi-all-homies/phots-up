@@ -17,15 +17,17 @@
 
 }
 .mat-dialog-content{
-    max-height: fit-content;
+    max-height: 615px;
 }
 .img-div-dialog{
     width: 75%;
-    
+    height: 100%;
 }
 .img-div-dialog>img{
+    max-height: 100%;
     max-width: 100%;
-    height: auto;
+    display: block;
+    margin: auto;
     border-radius: 3%;
 }
 .details-actions-container{

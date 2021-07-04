@@ -15,6 +15,7 @@ export class WallComponent implements OnInit {
   loading: boolean = true;
 
   page: number = 0;
+  moreDisabled: boolean = false;
   pageSubj: BehaviorSubject<number> = new BehaviorSubject(this.page);
 
   constructor(
@@ -25,10 +26,13 @@ export class WallComponent implements OnInit {
   ngOnInit(): void {
     this.pageSubj.asObservable()
       .pipe(
-        flatMap(p => this.postService.fetchPosts(p)))
-      .subscribe(item => {
-        if (this.posts.length > 0) this.loading = false;
-        this.posts.push(item)});
+        flatMap(page => this.postService.fetchPosts(page)))
+      .subscribe(postList => {
+        this.loading = false;
+        postList.forEach(el => this.posts.push(el));
+        this.transferService.setPosts(this.posts);
+        if (postList.length === 0) this.moreDisabled = true;
+      });
 
     this.transferService.getPublishedPostObs()
       .subscribe(publishedPost => this.posts.unshift(publishedPost));

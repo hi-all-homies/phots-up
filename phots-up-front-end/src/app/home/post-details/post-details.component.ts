@@ -22,8 +22,6 @@ export class PostDetailsComponent implements OnInit{
   comment: string;
   loading: boolean = true;
 
-  comments: Comment[] = [];
-
   constructor(
     private auth: AuthService,
     private commentServie: CommentService,
@@ -37,17 +35,39 @@ export class PostDetailsComponent implements OnInit{
     this.currentPost = this.data.currentPost;
     this.posts = this.data.posts;
     this.comment = '';
+    
     this.auth.getCurrUser().subscribe(u => this.currUser = u);
+
+    this.transferService.getPostsObs().subscribe(list => this.posts = list);
+    
+    this.getPostById(this.currentPost.post.id);
 
     /*
     this.transferService.getNotificationObs()
         .subscribe(id => this.getPostById(id))
     */
-   
   }
 
-  private getPostById(id: string){
-    
+  private getPostById(id: number){
+    this.postServive.getPostById(id)
+      .subscribe(result => {
+        this.currentPost = result;
+        this.loading = false;
+      });
+  }
+
+  back(){
+    --this.index;
+    this.currentPost = this.posts[this.index];
+    this.loading = true;
+    this.getPostById(this.currentPost.post.id);
+  }
+
+  forward(){
+    ++this.index;
+    this.currentPost = this.posts[this.index];
+    this.loading = true;
+    this.getPostById(this.currentPost.post.id);
   }
 
   addComment(){
