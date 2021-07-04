@@ -6,6 +6,8 @@ import { AuthService } from 'src/app/shared/auth.service';
 import { User } from 'src/app/model/user';
 import { PostService } from 'src/app/shared/post.service';
 import { AddPostComponent } from '../add-post/add-post.component';
+import { PostDetailsComponent } from '../post-details/post-details.component';
+import { DataTransferService } from 'src/app/shared/data-transfer.service';
 
 @Component({
   selector: 'post-card',
@@ -14,6 +16,8 @@ import { AddPostComponent } from '../add-post/add-post.component';
 })
 export class PostCardComponent implements OnInit {
   @Input('postSummary') postSummary: PostSummary;
+
+  @Input('index') index: number;
 
   @Output('delete')
   emitter: EventEmitter<PostSummary> = new EventEmitter();
@@ -24,7 +28,8 @@ export class PostCardComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private auth: AuthService,
-    private postService: PostService
+    private postService: PostService,
+    private dataTransfer: DataTransferService
     ) {}
 
   ngOnInit(): void {
@@ -53,9 +58,20 @@ export class PostCardComponent implements OnInit {
   }
 
   getDetails(){
-    this.router.navigate(['home/post'], {
-      queryParams: {id: this.postSummary.post.id}
-    })
+    this.dataTransfer.getPostsObs()
+      .subscribe(posts => {
+        const config: MatDialogConfig = {
+          width: '100%',
+          position: {top: '2rem'},
+          closeOnNavigation: true,
+          backdropClass: 'details-backdrop',
+          data:{
+            index: this.index,
+            currentPost: this.postSummary,
+            posts: posts}};
+          
+          this.dialog.open(PostDetailsComponent, config);
+      });
   }
 
   onLike(){

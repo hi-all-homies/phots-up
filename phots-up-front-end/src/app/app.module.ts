@@ -72,7 +72,7 @@ import { ResultComponent } from './login/confirm/result/result.component';
     {provide: MatDialogRef, useValue: {}},
     {provide: HTTP_INTERCEPTORS, useClass: TokenAdder, multi:true}
   ],
-  entryComponents: [AddPostComponent],
+  entryComponents: [AddPostComponent, PostDetailsComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

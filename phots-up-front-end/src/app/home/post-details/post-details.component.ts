@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { PostSummary } from 'src/app/model/post-summary';
 import { AuthService } from 'src/app/shared/auth.service';
 import { User } from 'src/app/model/user';
 import { Comment } from 'src/app/model/comment';
 import { CommentService } from 'src/app/shared/comment.service';
 import { PostService } from 'src/app/shared/post.service';
-import { ActivatedRoute } from '@angular/router';
 import { DataTransferService } from 'src/app/shared/data-transfer.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'post-details',
@@ -14,61 +14,64 @@ import { DataTransferService } from 'src/app/shared/data-transfer.service';
   styleUrls: ['./post-details.component.css']
 })
 export class PostDetailsComponent implements OnInit{
+  posts: PostSummary[];
+  currentPost: PostSummary;
+  index: number;
+
   currUser: User;
-  postSummary: PostSummary;
   comment: string;
   loading: boolean = true;
+
+  comments: Comment[] = [];
 
   constructor(
     private auth: AuthService,
     private commentServie: CommentService,
-    private postServive: PostService,
-    private route: ActivatedRoute,
     private transferService: DataTransferService,
-    private postService: PostService
+    private postServive: PostService,
+    @Inject(MAT_DIALOG_DATA) private data: any
     ) {}
 
   ngOnInit(): void {
+    this.index = this.data.index;
+    this.currentPost = this.data.currentPost;
+    this.posts = this.data.posts;
     this.comment = '';
-    let id = this.route.snapshot.queryParamMap.get('id');
     this.auth.getCurrUser().subscribe(u => this.currUser = u);
 
-    this.getPostById(id);
-
+    /*
     this.transferService.getNotificationObs()
         .subscribe(id => this.getPostById(id))
+    */
+   
   }
 
   private getPostById(id: string){
-    this.postServive.getPostById(id)
-      .subscribe(body =>{
-        this.postSummary = body;
-        this.loading = false})
+    
   }
 
   addComment(){
     let comment = this.gatherCommentObj();
-
     this.commentServie.addComment(comment)
       .subscribe(id =>{
         comment.id = id;
-        this.postSummary.post.comments.push(comment);
+        this.currentPost.post.comments.push(comment);
         this.comment = ''});
   }
 
 
   addLike(){
-    this.postService.addLike(this.postSummary.post, this.currUser)
+    this.postServive.addLike(this.currentPost.post, this.currUser)
       .subscribe(resp =>{
-        this.postSummary.meLiked = !this.postSummary.meLiked;
-        if (this.postSummary.meLiked){
-          this.postSummary.likes++;
-          this.postSummary.post.likes.push(this.currUser);
+        this.currentPost.meLiked = !this.currentPost.meLiked;
+        if (this.currentPost.meLiked){
+          this.currentPost.likes++;
+          this.currentPost.post.likes.push(this.currUser);
         }
         else{
-          this.postSummary.likes--;
-          let ind = this.postSummary.post.likes.indexOf(this.currUser);
-          this.postSummary.post.likes.splice(ind, 1);
+          this.currentPost.likes--;
+          let ind = this.currentPost.post.likes.indexOf(this.currUser);
+          this.currentPost.post.likes.splice(ind, 1);
         }})
   }
 
@@ -77,8 +80,8 @@ export class PostDetailsComponent implements OnInit{
       id: null,
       author: this.currUser,
       post: {
-        author: this.postSummary.post.author,
-        id: this.postSummary.post.id,
+        author: this.currentPost.post.author,
+        id: this.currentPost.post.id,
         comments: null,
         content: null,
         imageUrl: null,

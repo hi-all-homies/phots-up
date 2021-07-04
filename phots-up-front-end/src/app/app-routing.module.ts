@@ -5,7 +5,6 @@ import { WallComponent } from './home/wall/wall.component';
 import { LoginComponent } from './login/login.component';
 import { SignInComponent } from './login/sign-in/sign-in.component';
 import { SignUpComponent } from './login/sign-up/sign-up.component';
-import { PostDetailsComponent } from './home/post-details/post-details.component';
 import { RecommendComponent } from './home/recommend/recommend.component';
 import { AuthGuard } from './shared/auth.guard';
 import { UserProfileComponent } from './home/user-profile/user-profile.component';
@@ -28,7 +27,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {path: '', component: WallComponent},
-      {path: 'post', component: PostDetailsComponent},
       {path: 'recommend', component: RecommendComponent},
       {path: 'profile', component: UserProfileComponent}
     ]

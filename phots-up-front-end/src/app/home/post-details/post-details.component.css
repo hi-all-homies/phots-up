@@ -1,75 +1,70 @@
-.post-details{
-    width: 100%;
-    height: 100%;
-}
-.main-div{
-    width: 100%;
-    height: 500px;
-    margin-top: 5px;
+.details-nav{
     display: flex;
+    width: 100%;
 }
-#inner{
-    margin: 0px 20px;
-}
-.image-place{
-    width: 60%;
-    height: 100%;
-    border-style: groove;
-    background-color: rgba(0, 0,0, 0.8);
+.details-nav>div{
     display: flex;
     justify-content: center;
+    width: 100%;
 }
-img{
-    object-fit: contain;
-    max-width: 100%;
-    max-height: 100%;
+.details-nav>button{
+    margin-left: auto;
 }
-.actions-block{
-    width: 35%;
+.details-container{
     height: 100%;
-}
-.comment-block{
     width: 100%;
-    height: 85%;
-    overflow-y: auto;
+    display: flex;
+
 }
-.comment>span{
-    margin: 10px 15px;
-    font-weight: bold;
+.mat-dialog-content{
+    max-height: fit-content;
 }
-.comment>p{
-    margin-left: 15px;
-}
-.form-div{
-    width: 100%;
-    height: 15%;
+.img-div-dialog{
+    width: 75%;
     
-    display: -moz-box;
-    -moz-box-pack: center;
-    -moz-box-align: center;
-  
-    display: -webkit-box;
-    -webkit-box-pack: center;
-    -webkit-box-align: center;
 }
-#control{
-    margin: 5px;
+.img-div-dialog>img{
+    max-width: 100%;
+    height: auto;
+    border-radius: 3%;
 }
-.send-button{
-    background-color: limegreen;
-    color: white;
+.details-actions-container{
+    width: 25%;
 }
-.bottom{
-    width: 100%;
-    margin-top: 10px;
+.ava-sec{
     display: flex;
 }
-.text-content{
-    margin-left: 15px;
-    max-width: 50%;
-    font-size: 20px;
-    font-family: cursive;
+.ava-sec>button{
+    margin: auto;
 }
-.like{
-    margin-left: 35px;
+.ava-sec>div{
+    display: contents;
+}
+.ava-sec>div>span{margin: auto;}
+.details-ava{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.post-content{
+    padding-left: 1rem;
+}
+.comments{
+    height: 100%;
+    margin-top: 1.5rem;
+    padding-left: 1rem;
+    
+    height: 375px;
+    overflow-y: auto;
+}
+mat-form-field{
+    width: 100%;
+}
+.comments-form{
+    display: grid;
+}
+
+.comments-form>button{
+    margin-left: auto;
 }

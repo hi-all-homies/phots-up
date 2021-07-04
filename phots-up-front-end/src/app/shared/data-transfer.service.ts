@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { PostSummary } from '../model/post-summary';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataTransferService {
-  private publishedPostEmitter: Subject<PostSummary> = new Subject();
-  private publishedPostObs = this.publishedPostEmitter.asObservable();
+  private postPublishedEventEmitter: Subject<PostSummary> = new Subject();
+  private publishedPostObs = this.postPublishedEventEmitter.asObservable();
 
   private notificationEmitter: Subject<string> = new Subject();
+
+  private postsObs: BehaviorSubject<PostSummary[]> =  new BehaviorSubject([]);
 
   constructor() {}
 
@@ -18,7 +20,7 @@ export class DataTransferService {
   }
 
   public onSuccessPublish(value: PostSummary){
-    this.publishedPostEmitter.next(value);
+    this.postPublishedEventEmitter.next(value);
   }
 
   public receivedNotification(id: string){
@@ -27,5 +29,13 @@ export class DataTransferService {
 
   public getNotificationObs(){
     return this.notificationEmitter.asObservable();
+  }
+
+  public setPosts(posts: PostSummary[]){
+    this.postsObs.next(posts);
+  }
+
+  public getPostsObs(){
+    return this.postsObs.asObservable();
   }
 }

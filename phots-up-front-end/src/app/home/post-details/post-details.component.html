@@ -1,55 +1,60 @@
-<div class='post-details'>
-
-    <div *ngIf='loading' class='loading'>
-        <img src='assets/logo/746.gif' alt='loading...'>
-    </div>    
-
-    <div class='main-div' *ngIf='postSummary'>
-        
-        <div class='image-place' id='inner'>
-            <img [src]='postSummary.post.imageUrl' alt="...">
-        </div>
-    
-        <div class='actions-block'>
-            <div class='comment-block'>
-                <div *ngFor='let comment of postSummary.post.comments' class='comment'>
-                    <span>{{comment.author.username}}:</span>
-                    <p>{{comment.content}}</p>
-                    <hr>
-                </div>
-            </div>
-    
-            <div class='form-div'>
-                <div>
-                    <mat-form-field id='control'>
-                        <input matInput type='text' [(ngModel)]='comment'
-                            placeholder='leave a comment' tabindex='-1'>
-                    </mat-form-field>
-                    
-                    <button mat-raised-button (click)='addComment()'
-                        id='control' tabindex='-1' class='send-button'>
-                        Send
-                    </button>
-                </div>
-            </div>
-        </div>
+<div mat-dialog-title>
+<div class='details-nav'>
+    <div>
+    <button mat-icon-button tabindex="-1"><mat-icon>arrow_back</mat-icon></button>
+    <button mat-icon-button tabindex="-1"><mat-icon>arrow_forward</mat-icon></button>
     </div>
-    
-    <div class='bottom' *ngIf='postSummary'>
-    
-        <div class='text-content'>
-            {{postSummary.post.content}}
+    <button mat-icon-button mat-dialog-close><mat-icon>close</mat-icon></button>
+</div>
+</div>
+
+<div mat-dialog-content>
+    <div class='details-container'>
+        <div class='img-div-dialog'>
+            <img [src]='currentPost?.post.imageUrl' alt="postImg">
         </div>
-    
-        <div #likeButton class='like'>
-            <button mat-icon-button color='warn' tabindex='-1'
-                (click)='addLike()'>
-                <mat-icon>{{postSummary.meLiked ? 'favorite':'favorite_border'}}</mat-icon>
-            </button>
-                {{postSummary.likes}}
+
+        <div class='details-actions-container'>
+            <div class='details-actions' *ngIf='!loading'>
+                <div class='ava-sec'>
+                    <button mat-icon-button color="accent">
+                        <mat-icon>{{currentPost.meLiked ? 'favorite':'favorite_border'}}</mat-icon>
+                    </button>
+                    <span>{{currentPost.likes}}</span>
+                    <div>
+                        <span>{{currentPost.post.author.username}}</span>
+                        <img class='details-ava' [src]='currentPost.post.author.userInfo.avatarUrl'
+                        alt="ava">
+                    </div>
+                </div>
+                <mat-divider></mat-divider>
+
+                <div class='post-content'>
+                    <h4>{{currentPost.post.content}}</h4>
+                </div>
+                <mat-divider></mat-divider>
+
+                <div class='comments'>
+                    <div>
+                        <p *ngFor='let comment of currentPost.post.comments'>
+                            <span>{{comment.author.username}}: </span>
+                            <span>{{comment.content}}</span>
+                        </p>
+                    </div>
+                    
+                    <div class='comments-form'>
+                        <mat-form-field>
+                            <mat-label>Leave a comment</mat-label>
+                            <input matInput type="text" name='comment' [(ngModel)]='comment'>
+                        </mat-form-field>
+                        <button mat-raised-button color="primary">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf='loading' class='loading'>
+                <img src='assets/logo/746.gif' alt='loading...'>
+            </div>
         </div>
-        <likes-popover [users]='postSummary.post.likes'
-			[source]='likeButton'>
-		</likes-popover>
     </div>
 </div>
