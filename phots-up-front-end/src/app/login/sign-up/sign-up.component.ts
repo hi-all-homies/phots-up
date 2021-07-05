@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/co
 import { FormGroup, FormControl, ValidatorFn, ValidationErrors, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/shared/auth.service';
 import { NotificationsService } from 'angular2-notifications';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sign-up',
@@ -45,6 +46,7 @@ export class SignUpComponent implements OnInit {
     };
 
     this.auth.registrateUser(regRequest)
+      .pipe(first())
       .subscribe(
         resp => this.successReg(),
         err => this.toastsService.error(

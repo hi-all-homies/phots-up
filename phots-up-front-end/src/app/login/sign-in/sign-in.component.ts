@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/shared/auth.service';
 import { Router } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sign-in',
@@ -27,13 +28,14 @@ export class SignInComponent implements OnInit {
     });
   }
 
-  onSubmit(){
+  logIn(){
     const loginRequest = {
       username: this.loginForm.get('username').value,
       password: this.loginForm.get('password').value
     };
     this.loading = true;
     this.auth.login(loginRequest)
+      .pipe(first())
       .subscribe(
         ans =>{
           if (ans)

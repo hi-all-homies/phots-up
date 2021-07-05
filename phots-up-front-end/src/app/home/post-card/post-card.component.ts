@@ -8,6 +8,7 @@ import { PostService } from 'src/app/shared/post.service';
 import { AddPostComponent } from '../add-post/add-post.component';
 import { PostDetailsComponent } from '../post-details/post-details.component';
 import { DataTransferService } from 'src/app/shared/data-transfer.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'post-card',
@@ -59,6 +60,7 @@ export class PostCardComponent implements OnInit {
 
   getDetails(){
     this.dataTransfer.getPostsObs()
+      .pipe(first())
       .subscribe(posts => {
         const config: MatDialogConfig = {
           width: '100%',

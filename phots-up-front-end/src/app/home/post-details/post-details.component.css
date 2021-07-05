@@ -36,10 +36,11 @@
 .ava-sec{
     display: flex;
 }
-.ava-sec>button{
-    margin: auto;
+.likes{
+    display: flex;
 }
-.ava-sec>div{
+.likes>button{margin: auto;}
+.avatar-place{
     display: contents;
 }
 .ava-sec>div>span{margin: auto;}

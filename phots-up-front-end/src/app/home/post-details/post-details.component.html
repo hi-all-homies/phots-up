@@ -21,11 +21,17 @@
         <div class='details-actions-container'>
             <div class='details-actions' *ngIf='!loading'>
                 <div class='ava-sec'>
-                    <button mat-icon-button color="accent">
+                    <div #likeButton class='likes'>
+                    <button (click)='addLike()' mat-icon-button color="accent">
                         <mat-icon>{{currentPost.meLiked ? 'favorite':'favorite_border'}}</mat-icon>
                     </button>
                     <span>{{currentPost.likes}}</span>
-                    <div>
+                    </div>
+                    <likes-popover [users]='currentPost.post.likes'
+                        [source]='likeButton'>
+                    </likes-popover>
+
+                    <div class='avatar-place'>
                         <span>{{currentPost.post.author.username}}</span>
                         <img class='details-ava' [src]='currentPost.post.author.userInfo.avatarUrl'
                         alt="ava">
@@ -51,7 +57,7 @@
                             <mat-label>Leave a comment</mat-label>
                             <input matInput type="text" name='comment' [(ngModel)]='comment'>
                         </mat-form-field>
-                        <button mat-raised-button color="primary">Send</button>
+                        <button (click)='addComment()' mat-raised-button color="primary">Send</button>
                     </div>
                 </div>
             </div>

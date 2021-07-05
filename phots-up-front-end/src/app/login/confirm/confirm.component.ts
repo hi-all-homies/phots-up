@@ -1,5 +1,6 @@
 import { Component, ComponentFactoryResolver, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { first } from 'rxjs/operators';
 import { AuthService } from 'src/app/shared/auth.service';
 import { AddConfirmDirective } from './add-confirm.directive';
 import { ResultComponent } from './result/result.component';
@@ -18,11 +19,13 @@ export class ConfirmComponent implements OnInit{
     private auth: AuthService){}
 
   ngOnInit(){
-    this.route.paramMap.subscribe(params => {
-      let code = params.get('code');
-      this.auth.confirmCode(code)
-        .subscribe(result => this.loadComponent(result))
-      })
+    this.route.paramMap
+      .pipe(first())  
+      .subscribe(params => {
+        let code = params.get('code');
+        this.auth.confirmCode(code)
+          .pipe(first())
+          .subscribe(result => this.loadComponent(result))});
   }
 
   private loadComponent(result: boolean){

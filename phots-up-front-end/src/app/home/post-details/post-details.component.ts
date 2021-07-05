@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { PostSummary } from 'src/app/model/post-summary';
 import { AuthService } from 'src/app/shared/auth.service';
 import { User } from 'src/app/model/user';
@@ -7,13 +7,15 @@ import { CommentService } from 'src/app/shared/comment.service';
 import { PostService } from 'src/app/shared/post.service';
 import { DataTransferService } from 'src/app/shared/data-transfer.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'post-details',
   templateUrl: './post-details.component.html',
   styleUrls: ['./post-details.component.css']
 })
-export class PostDetailsComponent implements OnInit{
+export class PostDetailsComponent implements OnInit, OnDestroy{
   posts: PostSummary[];
   currentPost: PostSummary;
   index: number;
@@ -21,6 +23,9 @@ export class PostDetailsComponent implements OnInit{
   currUser: User;
   comment: string;
   loading: boolean = true;
+
+  unsubscribe = new Subject();
+
 
   constructor(
     private auth: AuthService,
@@ -36,20 +41,20 @@ export class PostDetailsComponent implements OnInit{
     this.posts = this.data.posts;
     this.comment = '';
     
-    this.auth.getCurrUser().subscribe(u => this.currUser = u);
+    this.auth.getCurrUser()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(u => this.currUser = u);
 
-    this.transferService.getPostsObs().subscribe(list => this.posts = list);
+    this.transferService.getPostsObs()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(list => this.posts = list);
     
     this.getPostById(this.currentPost.post.id);
-
-    /*
-    this.transferService.getNotificationObs()
-        .subscribe(id => this.getPostById(id))
-    */
   }
 
   private getPostById(id: number){
     this.postServive.getPostById(id)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(result => {
         this.currentPost = result;
         this.loading = false;
@@ -71,8 +76,12 @@ export class PostDetailsComponent implements OnInit{
   }
 
   addComment(){
+    let comm = this.comment.trim();
+    if (comm === '') return;
+    
     let comment = this.gatherCommentObj();
     this.commentServie.addComment(comment)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(id =>{
         comment.id = id;
         this.currentPost.post.comments.push(comment);
@@ -82,6 +91,7 @@ export class PostDetailsComponent implements OnInit{
 
   addLike(){
     this.postServive.addLike(this.currentPost.post, this.currUser)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(resp =>{
         this.currentPost.meLiked = !this.currentPost.meLiked;
         if (this.currentPost.meLiked){
@@ -110,5 +120,10 @@ export class PostDetailsComponent implements OnInit{
       },
       content: this.comment
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 }

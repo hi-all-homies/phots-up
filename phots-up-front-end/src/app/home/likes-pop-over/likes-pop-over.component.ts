@@ -45,8 +45,8 @@ export class LikesPopOverComponent implements OnInit,AfterViewInit {
   }
 
   private onMouseEnter(event: MouseEvent){
-    this.popOver.nativeElement.style.top = `${event.y-200}px`;
-    this.popOver.nativeElement.style.left = `${event.x+50}px`;
+    this.popOver.nativeElement.style.top = `${event.y+70}px`;
+    this.popOver.nativeElement.style.left = `${event.x+30}px`;
     this.setDisplayProp('flex');
   }
 
