@@ -35,7 +35,7 @@ public class WebSocketConfig {
 	public HandlerMapping webSocketMapping() {
 		Map<String, WebSocketHandler>handlers = new HashMap<>();
 		handlers.put("/photsup/notifications", new NotificationHandler(source));
-		
+	
 		var mapping = new SimpleUrlHandlerMapping();
 		mapping.setUrlMap(handlers);
 		mapping.setCorsConfigurationSource(cors());
@@ -60,6 +60,7 @@ public class WebSocketConfig {
 		config.setAllowedHeaders(Arrays.asList("*"));
 		config.setAllowedMethods(Arrays.asList("*"));
 		config.setAllowedOrigins(Arrays.asList(corsOrigin));
+		config.setAllowCredentials(true);
 		
 		UrlBasedCorsConfigurationSource source =
 				new UrlBasedCorsConfigurationSource();

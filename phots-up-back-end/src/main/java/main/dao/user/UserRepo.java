@@ -11,7 +11,7 @@ import main.model.entities.User;
 @Repository
 public interface UserRepo extends JpaRepository<User, Long>{
 		
-	@Query(value = "from User u left join fetch u.roles where username =:username")
+	@Query(value = "from User u left join fetch u.roles left join fetch u.userInfo where username =:username")
 	public Optional<User> findByUsername(@Param("username") String username);
 	
 	@Query(value = "from User u left join fetch u.roles left join fetch u.userInfo where u.id =:userId")

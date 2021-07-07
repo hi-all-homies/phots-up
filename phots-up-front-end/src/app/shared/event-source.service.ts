@@ -1,9 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 import { PostSummary } from '../model/post-summary';
-import { AuthService } from './auth.service';
 import { environment as ENV } from 'src/environments/environment';
-import { StringUtils } from './string-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +13,12 @@ export class EventSourceService {
 
   private theEnd: PostSummary = new PostSummary();
 
-  constructor(private auth: AuthService, private zone: NgZone) {}
+  constructor(private zone: NgZone) {}
 
   public fetchPosts(page: number){
-    let token = this.auth.getToken();
+    
     const source = new EventSource(
-      ENV.BASE_URL + `posts?page=${page}&jwt=${token}`);
+      ENV.BASE_URL + `posts?page=${page}`);
 
     source.onopen = this.onOpen(source);
     source.onmessage = this.onMessage;
@@ -28,9 +26,8 @@ export class EventSourceService {
   }
 
   public fetchRecommendations(){
-    let token = this.auth.getToken();
-    const source = new EventSource(
-      ENV.BASE_URL + `recommend?jwt=${token}`);
+    
+    const source = new EventSource(ENV.BASE_URL + `recommend?`);
 
     source.onopen = this.onOpen(source);
     source.onmessage = this.onMessage;

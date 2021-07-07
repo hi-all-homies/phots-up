@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
 import { WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { environment as ENV } from 'src/environments/environment';
 import { Observable, Subject, interval } from 'rxjs';
@@ -14,20 +13,18 @@ import { takeWhile } from 'rxjs/operators';
 })
 export class NotificationService {
   private socket: WebSocketSubject<any>;
-  private config : WebSocketSubjectConfig<any>;
+
+  private config : WebSocketSubjectConfig<any> = {
+    url: ENV.WS_URL,
+    closeObserver: {next: (event: CloseEvent) => this.socket = null},
+    openObserver: {next: (event: Event) => {}}
+  };
+
   private notifications: Subject<Notification> = new Subject();
 
   private reconnections: Observable<number>;
 
-  constructor(private auth: AuthService) {
-    const wsURL = `${ENV.WS_URL}?jwt=${this.auth.getToken()}`;
-    
-    this.config = {
-      url: wsURL,
-      closeObserver: {next: (event: CloseEvent) => this.socket = null},
-      openObserver: {next: (event: Event) => {}}
-    };
-  }
+  constructor() {}
 
   public listen(){
     this.connect();
@@ -66,7 +63,8 @@ export class NotificationService {
   }
 
   public closeSocket(){
-    this.socket.unsubscribe();
+    if (this.socket)
+      this.socket.unsubscribe();
     this.notifications.complete();
   }
 }

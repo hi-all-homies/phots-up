@@ -1,6 +1,5 @@
 package main.endpoints;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,7 @@ public class PostHandler {
 	
 	public Mono<ServerResponse> getAllPosts(ServerRequest req){
 		var page = req.queryParam("page").get();
-		var token = req.headers().firstHeader(AUTHORIZATION);
+		var token = req.cookies().getFirst("token").getValue();
 		var fluxPosts = this.postFacade.getPosts(Integer.valueOf(page), token);
 		return this.genereateResponseFromFlux(fluxPosts);
 	}
@@ -35,7 +34,7 @@ public class PostHandler {
 	
 	public Mono<ServerResponse> getPostById(ServerRequest req){
 		var postId = Long.valueOf(req.pathVariable("postid"));
-		var token = req.headers().firstHeader(AUTHORIZATION);
+		var token = req.cookies().getFirst("token").getValue();
 		
 		return this.postFacade.getPostById(postId, token)
 				.flatMap(post -> ServerResponse.ok()
@@ -57,7 +56,7 @@ public class PostHandler {
 	}
 	
 	public Mono<ServerResponse> getRecommendations(ServerRequest req){
-		var token = req.headers().firstHeader(AUTHORIZATION);
+		var token = req.cookies().getFirst("token").getValue();
 		var fluxPosts = this.postFacade.getRecommendations(token);
 		return this.genereateResponseFromFlux(fluxPosts);
 	}

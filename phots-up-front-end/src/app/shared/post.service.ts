@@ -5,7 +5,7 @@ import { Post } from '../model/post';
 import { environment as ENV } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import { User } from '../model/user';
-import { map } from 'rxjs/operators';
+import { first, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -37,10 +37,14 @@ export class PostService {
 
   public publishPost(post: Post, image: File){
     let formData = new FormData();
-    this.auth.getCurrUser().subscribe(u =>{
-      post.author = u;
-      formData.append('post', JSON.stringify(post));
-    });
+    this.auth.getCurrentUser()
+      .pipe(
+        tap(u => u.userInfo = null),
+        first())
+      .subscribe(u =>{
+        post.author = u;
+        formData.append('post', JSON.stringify(post))});
+
     formData.append('image',image);
 
     return this.http.post<Post>(

@@ -1,7 +1,6 @@
 package main.endpoints;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -25,7 +24,7 @@ public class UserInfoHandler {
 	}
 	
 	public Mono<ServerResponse> saveUserInfo(ServerRequest req){
-		final var token = req.headers().firstHeader(AUTHORIZATION);
+		final var token = req.cookies().getFirst("token").getValue();
 		
 		return req.multipartData()
 				.flatMap(data -> userInfoFacade.setOrUpdateUserInfo(data, token))

@@ -1,24 +1,18 @@
 package main.security;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
+@RequiredArgsConstructor
 @Component
 public class CustomContextRepo implements ServerSecurityContextRepository{
-	@Value(value = "${token.param.name}")
-	private String JWT_PARAM_NAME;
 	private final TokenProvider tokenProvider;
 	
-	public CustomContextRepo(TokenProvider tokenProvider) {
-		this.tokenProvider = tokenProvider;
-	}
 
 	@Override
 	public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
@@ -27,10 +21,8 @@ public class CustomContextRepo implements ServerSecurityContextRepository{
 
 	@Override
 	public Mono<SecurityContext> load(ServerWebExchange exchange) {
-		return Mono.justOrEmpty(
-						exchange.getRequest().getHeaders().getFirst(AUTHORIZATION))
-				.switchIfEmpty(
-						Mono.justOrEmpty(exchange.getRequest().getQueryParams().getFirst(JWT_PARAM_NAME)))
+		return Mono.justOrEmpty(exchange.getRequest().getCookies().getFirst("token"))
+				.map(cookie -> cookie.getValue())
 				.filter(token -> token.startsWith(tokenProvider.getPrefix()))
 				.map(tokenProvider::verifyToken)
 				.onErrorResume(err -> Mono.empty())

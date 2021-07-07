@@ -2,7 +2,6 @@ package main.websocket;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.buffer.NettyDataBufferFactory;
 import org.springframework.http.server.reactive.AbstractServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -24,8 +23,6 @@ import reactor.netty.http.websocket.WebsocketOutbound;
 
 @Component
 public class CustomReqUpgradeStrategy implements RequestUpgradeStrategy {
-	@Value(value = "${token.param.name}")
-	private String JWT_PARAM_NAME;
 	private final TokenProvider tokenProvider;
 
 	public CustomReqUpgradeStrategy(TokenProvider tokenProvider) {
@@ -44,7 +41,7 @@ public class CustomReqUpgradeStrategy implements RequestUpgradeStrategy {
         HandshakeInfo handshakeInfo = handshakeInfoFactory.get();
         NettyDataBufferFactory bufferFactory = (NettyDataBufferFactory) response.bufferFactory();
         
-        var token = exchange.getRequest().getQueryParams().getFirst(JWT_PARAM_NAME);
+        var token = exchange.getRequest().getCookies().getFirst("token").getValue();
         var username = tokenProvider.getUsernameFromToken(token);
         handshakeInfo.getHeaders().add("username", username);
         

@@ -17,9 +17,7 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import main.model.dto.TokenResponse;
 import main.model.entities.User;
-import reactor.core.publisher.Mono;
 
 @Component
 public class TokenProvider {
@@ -37,7 +35,7 @@ public class TokenProvider {
 		expirationTime = expirationTime*1000*60*60*24;
 	}
 	
-	public Mono<TokenResponse> generateToken(UserDetails userDetails){
+	public String generateToken(UserDetails userDetails){
 		var user = (User) userDetails;
 		var userId = user.getId();
 		var username = user.getUsername();
@@ -52,8 +50,7 @@ public class TokenProvider {
 				.signWith(this.key)
 				.compact();
 		
-		return Mono.just(
-				new TokenResponse(this.prefix + token));
+		return this.prefix + token;
 	}
 	
 	

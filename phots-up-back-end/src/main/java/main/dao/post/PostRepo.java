@@ -20,8 +20,8 @@ public interface PostRepo extends JpaRepository<Post, Long>{
 	public List<Post> getPostsByIds(@Param("ids") List<Long> ids);
 	
 	
-	@Query(value = "from Post p left join fetch p.author left join fetch p.comments c " +
-			"left join fetch c.author left join fetch p.likes where p.id =:id")
+	@Query(value = "from Post p left join fetch p.author a left join fetch a.userInfo "
+			+ "left join fetch p.comments c left join fetch c.author left join fetch p.likes where p.id =:id")
 	public Optional<Post>getById(@Param("id") Long id);
 	
 	

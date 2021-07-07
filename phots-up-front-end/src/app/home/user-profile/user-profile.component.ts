@@ -4,6 +4,7 @@ import { UserInfo } from 'src/app/model/user-info';
 import { UserInfoService } from 'src/app/shared/user-info.service';
 import { AuthService } from 'src/app/shared/auth.service';
 import { User } from 'src/app/model/user';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-profile',
@@ -30,7 +31,8 @@ export class UserProfileComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
-    this.auth.getCurrUser()
+    this.auth.getCurrentUser()
+      .pipe(first())
       .subscribe(u => this.currUser = u);
     let userId = this.route.snapshot.queryParamMap.get('user');
     this.getUserInfo(userId);

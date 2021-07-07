@@ -8,7 +8,7 @@ import { PostService } from 'src/app/shared/post.service';
 import { DataTransferService } from 'src/app/shared/data-transfer.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'post-details',
@@ -41,8 +41,10 @@ export class PostDetailsComponent implements OnInit, OnDestroy{
     this.posts = this.data.posts;
     this.comment = '';
     
-    this.auth.getCurrUser()
-      .pipe(takeUntil(this.unsubscribe))
+    this.auth.getCurrentUser()
+      .pipe(
+        tap(u => u.userInfo = null),
+        takeUntil(this.unsubscribe))
       .subscribe(u => this.currUser = u);
 
     this.transferService.getPostsObs()

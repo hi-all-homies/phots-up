@@ -8,8 +8,9 @@ import { Notification } from '../model/notifications/notification';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth.service';
 import { User } from '../model/user';
-import { UserInfoService } from '../shared/user-info.service';
-import { UserInfo } from '../model/user-info';
+import { first } from 'rxjs/operators';
+import { PostDetailsComponent } from './post-details/post-details.component';
+import { PostService } from '../shared/post.service';
 
 @Component({
   selector: 'app-home',
@@ -26,12 +27,13 @@ export class HomeComponent implements OnInit, OnDestroy{
     private toastsService: NotificationsService,
     private router: Router,
     private auth: AuthService,
-    private userService: UserInfoService
+    private postService: PostService
     ) {}
 
   ngOnInit(): void {
-    this.auth.getCurrUser().subscribe(
-      u => this.initUserAndAvatar(u));
+    this.auth.getCurrentUser()
+      .pipe(first())  
+      .subscribe(u => this.initUserAndAvatar(u));
       
     this.notifyService.listen();
     this.notifyService.getNotifications()
@@ -46,13 +48,42 @@ export class HomeComponent implements OnInit, OnDestroy{
     let notif = this.toastsService.info(
       event.getTitle(), event.getContent(),null, {id: event.getPostId()});
     
-    let currentPath = this.router.url;
-    notif.click.subscribe(
-      click => {
-        this.router.navigate(['home/post'], {queryParams: {id: notif.context.id}})
-        if (currentPath.includes('post'))
-          this.transferService.receivedNotification(notif.context.id);
-      })
+    notif.click
+      .pipe(first())
+      .subscribe(click => {
+        const id: number = notif.context.id;
+        this.openDetailsDialog(id)});
+  }
+
+  private openDetailsDialog(id: number){
+    this.transferService.getPostsObs()
+          .pipe(first())
+          .subscribe(posts => {
+            let index: number;
+            let currentPost = posts.find((v, ind) => {
+              index = ind;
+              return v.post.id === id})
+            
+            if (!currentPost){
+              this.postService.getPostById(id)
+                .pipe(first())
+                .subscribe(post => {
+                  posts.unshift(post);
+                  index = 0;
+                  currentPost = post})
+            }
+
+            const config: MatDialogConfig = {
+              width: '100%',
+              position: {top: '2rem'},
+              closeOnNavigation: true,
+              backdropClass: 'details-backdrop',
+              data:{
+                index: index,
+                currentPost: currentPost,
+                posts: posts}};
+            
+            this.dialog.open(PostDetailsComponent, config)})
   }
 
   newPost(){
@@ -74,18 +105,9 @@ export class HomeComponent implements OnInit, OnDestroy{
   readonly blankAvatar: string = 'assets/logo/blank.png';
 
   private initUserAndAvatar(user: User){
-	if (this.currUser)
-		return;
-	this.currUser = user;
-    this.userService.getUserInfoByUserId(user.id)
-      .subscribe(usr => {
-        if (!usr.userInfo)
-          usr.userInfo = new UserInfo(-1, null, this.blankAvatar);
-        if (!usr.userInfo.avatarUrl)
-          usr.userInfo.avatarUrl = this.blankAvatar;
-
-        this.currUser.userInfo = usr.userInfo;
-      })
+	  this.currUser = user;
+    if (!this.currUser.userInfo.avatarUrl)
+      this.currUser.userInfo.avatarUrl = this.blankAvatar;
   }
 
   avatarUrl(): string{

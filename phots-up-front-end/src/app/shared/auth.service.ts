@@ -3,7 +3,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../model/user';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { JwtHelperService } from "@auth0/angular-jwt";
 import { environment as ENV } from 'src/environments/environment';
 import { map,tap } from 'rxjs/operators';
 
@@ -15,7 +14,6 @@ export class AuthService {
   private currentUser: BehaviorSubject<User> = new BehaviorSubject(null);
   private readonly login_url: string = 'login';
   private readonly reg_url: string = 'signup';
-  private jwtService = new JwtHelperService();
 
   constructor(
     private http: HttpClient,
@@ -36,7 +34,7 @@ export class AuthService {
 
   public login(loginReq: any): Observable<boolean>{
     return this.http.post<any>(
-        ENV.BASE_URL + this.login_url, loginReq, {observe: 'response'})
+        ENV.BASE_URL + this.login_url, loginReq, {observe: 'response', withCredentials: true})
       .pipe(
         tap(resp => this.handleResponse(resp)),
         map(resp => this.mapToBoolean(resp)));
@@ -44,9 +42,21 @@ export class AuthService {
 
   private handleResponse(response: HttpResponse<any>){
     if (response.ok){
-      let jwt = <string>response.body.token;
-      this.cookie.set('jwt', jwt);
-      this.setCurrUser(jwt);
+      let userId: number = response.body.userId;
+      let username: string = response.body.username;
+      let avatarUrl: string = response.body.avatarUrl;
+
+      const user: User = {
+        id: userId,
+        username: username,
+        userInfo: {
+          id: 0,
+          aboutMe: '',
+          avatarUrl: avatarUrl}};
+        
+      const cookieUser = JSON.stringify(user);
+      this.cookie.set('user', cookieUser, 1);
+      this.currentUser.next(user);
     }
   }
 
@@ -57,31 +67,21 @@ export class AuthService {
       return false;
   }
 
-  public getCurrUser(){
-    this.setCurrUser(this.cookie.get('jwt'));
+  public getCurrentUser(){
+    this.setCurrentUser(this.cookie.get('user'));
 
     return this.currentUser.asObservable();
   }
 
-  public getToken(): string{
-    return this.cookie.get('jwt');
-  }
-
   public logOut(){
     this.currentUser.next(null);
-    this.cookie.delete('jwt');
+    this.cookie.delete('user');
   }
 
-  private setCurrUser(jwt: string){
-    if (jwt){
-      let decoded = this.jwtService.decodeToken(jwt.substring(7));
-      const user: User = {
-        id: decoded.userId,
-        username: decoded.sub,
-        userInfo: null
-      };
-
-      this.currentUser.next(user);
+  private setCurrentUser(user: string){
+    if (user){
+      const storedUser: User = JSON.parse(user);
+      this.currentUser.next(storedUser);
     }
   }
 }
