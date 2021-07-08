@@ -31,7 +31,8 @@ public class SecurityConfig {
 				.securityContextRepository(contextRepo)
 				.authorizeExchange(exchange ->
 					exchange.pathMatchers(
-							"/phots/up/api/login", "/phots/up/api/signup", "/phots/up/api/confirm/**").permitAll()
+							"/phots/up/api/login", "/phots/up/api/signup",
+							"/photsup/notifications", "/phots/up/api/confirm/**").permitAll()
 						.anyExchange().authenticated())
 				.build();
 	}

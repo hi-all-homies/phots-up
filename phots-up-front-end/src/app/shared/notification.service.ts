@@ -14,11 +14,9 @@ import { takeWhile } from 'rxjs/operators';
 export class NotificationService {
   private socket: WebSocketSubject<any>;
 
-  private config : WebSocketSubjectConfig<any> = {
-    url: ENV.WS_URL,
-    closeObserver: {next: (event: CloseEvent) => this.socket = null},
-    openObserver: {next: (event: Event) => {}}
-  };
+  private username: string;
+
+  private config : WebSocketSubjectConfig<any>;
 
   private notifications: Subject<Notification> = new Subject();
 
@@ -26,11 +24,17 @@ export class NotificationService {
 
   constructor() {}
 
-  public listen(){
+  public listen(username: string){
+    this.username = username;
     this.connect();
   }
 
   private connect(){
+    this.config = {
+      url: ENV.WS_URL + `?username=${this.username}`,
+      closeObserver: {next: (event: CloseEvent) => this.socket = null},
+      openObserver: {next: (event: Event) => {}}};
+    
     this.socket = new WebSocketSubject(this.config);
 
     this.socket.subscribe(event =>{

@@ -74,8 +74,8 @@ export class AuthService {
   }
 
   public logOut(){
-    this.currentUser.next(null);
     this.cookie.delete('user');
+    this.currentUser.next(null);
   }
 
   private setCurrentUser(user: string){

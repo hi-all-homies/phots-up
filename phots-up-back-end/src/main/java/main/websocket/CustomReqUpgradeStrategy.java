@@ -14,7 +14,6 @@ import org.springframework.web.reactive.socket.adapter.NettyWebSocketSessionSupp
 import org.springframework.web.reactive.socket.adapter.ReactorNettyWebSocketSession;
 import org.springframework.web.reactive.socket.server.RequestUpgradeStrategy;
 import org.springframework.web.server.ServerWebExchange;
-import main.security.TokenProvider;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.server.HttpServerResponse;
 import reactor.netty.http.server.WebsocketServerSpec;
@@ -23,11 +22,6 @@ import reactor.netty.http.websocket.WebsocketOutbound;
 
 @Component
 public class CustomReqUpgradeStrategy implements RequestUpgradeStrategy {
-	private final TokenProvider tokenProvider;
-
-	public CustomReqUpgradeStrategy(TokenProvider tokenProvider) {
-		this.tokenProvider = tokenProvider;
-	}
 
 	@Override
 	public Mono<Void> upgrade(
@@ -41,8 +35,7 @@ public class CustomReqUpgradeStrategy implements RequestUpgradeStrategy {
         HandshakeInfo handshakeInfo = handshakeInfoFactory.get();
         NettyDataBufferFactory bufferFactory = (NettyDataBufferFactory) response.bufferFactory();
         
-        var token = exchange.getRequest().getCookies().getFirst("token").getValue();
-        var username = tokenProvider.getUsernameFromToken(token);
+        var username = exchange.getRequest().getQueryParams().getFirst("username");
         handshakeInfo.getHeaders().add("username", username);
         
         var spec = WebsocketServerSpec.builder()
@@ -76,3 +69,4 @@ public class CustomReqUpgradeStrategy implements RequestUpgradeStrategy {
         }
     }
 }
+

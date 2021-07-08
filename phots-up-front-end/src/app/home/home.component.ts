@@ -33,9 +33,11 @@ export class HomeComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
     this.auth.getCurrentUser()
       .pipe(first())  
-      .subscribe(u => this.initUserAndAvatar(u));
+      .subscribe(u => {
+        this.initUserAndAvatar(u);
+        this.notifyService.listen(u.username);
+      });
       
-    this.notifyService.listen();
     this.notifyService.getNotifications()
       .subscribe(event => this.handleNotifications(event));
   }

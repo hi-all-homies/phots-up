@@ -46,7 +46,8 @@ public class LoginHandler {
 		
 		var cookie = ResponseCookie.from("token", token)
 				.maxAge(Duration.ofDays(1)).httpOnly(true)
-				.path("/").domain("").sameSite("Lax")
+				.sameSite("None").secure(true)
+				.path("/").domain("")
 				.build();
 		
 		var castedUser = (User) user;

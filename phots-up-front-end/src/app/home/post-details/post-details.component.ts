@@ -9,6 +9,7 @@ import { DataTransferService } from 'src/app/shared/data-transfer.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
+import { environment as ENV } from 'src/environments/environment';
 
 @Component({
   selector: 'post-details',
@@ -58,6 +59,11 @@ export class PostDetailsComponent implements OnInit, OnDestroy{
     this.postServive.getPostById(id)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(result => {
+        if (!result.post.author.userInfo)
+          result.post.author.userInfo = { id: -1, aboutMe: '', avatarUrl: ENV.BLANK_AVA };
+        else if (!result.post.author.userInfo.avatarUrl)
+          result.post.author.userInfo.avatarUrl = ENV.BLANK_AVA;
+        
         this.currentPost = result;
         this.loading = false;
       });
