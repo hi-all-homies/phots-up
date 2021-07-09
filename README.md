@@ -1,9 +1,14 @@
-# Phot's up - (spring boot webflux, data jpa, security, cloud aws) + jwt + angular
+# Phot's up - spring boot webflux, data jpa, security, jwt, it uses angular as a client
 
-### https://photsup.herokuapp.com
 
-## How it works
-![schema](demo/app.png)
+## https://phots-up.herokuapp.com
+
+
+### since those apps run on heroku free tier and heroku shuts down idle apps it can takes a while for requesting it a first time
+
+
+## workflow
+![schema](demo/workflow.png)
 
 
 ### authorization
