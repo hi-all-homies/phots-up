@@ -24,7 +24,5 @@
 
 
 ### some others
-![details](demo/details.png)
+![details](demo/details.gif)
 
-
-![profile](demo/profile.png)
