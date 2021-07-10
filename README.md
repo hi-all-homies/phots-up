@@ -4,7 +4,7 @@
 ## https://phots-up.herokuapp.com
 
 
-### since those apps run on heroku free tier and heroku shuts down idle apps it can takes a while for requesting it a first time
+### since those apps run on heroku free tier and heroku shuts down idle apps it can takes a while for requesting it the first time
 
 
 ## workflow
