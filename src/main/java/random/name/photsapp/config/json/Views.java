@@ -7,4 +7,6 @@ public interface Views {
     class FullAuthor extends BaseAuthor {}
 
     class PostView extends BaseAuthor {}
+
+    class NotificationView extends BaseAuthor {}
 }
