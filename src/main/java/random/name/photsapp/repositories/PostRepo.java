@@ -2,9 +2,11 @@ package random.name.photsapp.repositories;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import random.name.photsapp.entities.Author;
 import random.name.photsapp.entities.Post;
 import java.util.List;
 import java.util.Optional;
@@ -39,4 +41,14 @@ public interface PostRepo extends JpaRepository<Post, Long> {
             where p.id = :id
             """)
     Optional<Post> findPostById(@Param("id") long id);
+
+
+    Optional<Post> findByIdAndAuthor(long id, Author author);
+
+
+    @Modifying
+    @Query(nativeQuery = true, value = """
+            delete from post_likes pl where pl.post_id = :postId
+            """)
+    void deletePostLikes(@Param("postId") long postId);
 }

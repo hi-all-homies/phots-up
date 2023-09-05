@@ -15,7 +15,7 @@ public interface AuthorService extends UserDetailsService {
 
     boolean updatePassword(ChangePasswordRequest request);
 
-    Optional<String> updateAvatar(MultipartFile avatar, Author currentAuthor);
+    Optional<String> updateAvatar(MultipartFile avatar, AuthorDetails currentUser);
 
     boolean subscribe(SubscribeRequest request);
 }

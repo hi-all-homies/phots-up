@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-import random.name.photsapp.entities.Author;
+import random.name.photsapp.services.author.AuthorDetails;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -17,5 +17,5 @@ public class ChangePostRequest {
 
     private long postId;
 
-    private Author currentAuthor;
+    private AuthorDetails currentUser;
 }

@@ -55,9 +55,10 @@ public class DefaultAuthorService implements AuthorService {
     }
 
 
+    @Transactional
     @Override
     public boolean updatePassword(ChangePasswordRequest request) {
-        var username = request.getCurrentAuthor().getUsername();
+        var username = request.getCurrentUser().getUsername();
 
         var existed = this.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
@@ -66,20 +67,23 @@ public class DefaultAuthorService implements AuthorService {
                 request.getOldPassword(), existed.getPassword());
 
         if (result){
-            this.authorRepo.setPassword(
-                    this.encoder.encode(request.getPassword()), existed.getId());
+            var newPass = this.encoder.encode(request.getPassword());
+            this.authorRepo.setPassword(newPass, existed.getId());
+            request.getCurrentUser().setPassword(newPass);
         }
         return result;
     }
 
 
+    @Transactional
     @Override
-    public Optional<String> updateAvatar(MultipartFile avatar, Author currentAuthor) {
+    public Optional<String> updateAvatar(MultipartFile avatar, AuthorDetails currentUser) {
 
-        return this.findByUsername(currentAuthor.getUsername())
+        return this.findByUsername(currentUser.getUsername())
                 .map(author -> {
                     var avaUrl = this.imageService.upload(avatar);
                     this.authorRepo.setAvatarUrl(avaUrl, author.getId());
+                    currentUser.setAvatarUrl(avaUrl);
                     this.imageService.delete(author.getAvatarUrl());
                     return avaUrl;
                 });

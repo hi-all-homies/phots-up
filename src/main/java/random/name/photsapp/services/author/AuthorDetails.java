@@ -1,5 +1,7 @@
 package random.name.photsapp.services.author;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,26 +10,20 @@ import java.util.Collection;
 import java.util.List;
 
 
+@Setter
+@Getter
 public class AuthorDetails implements UserDetails {
 
     private final long id;
     private final String username;
-    private final String password;
-    private final String avatarUrl;
+    private String password;
+    private String avatarUrl;
 
     public AuthorDetails(Author author){
         this.id = author.getId();
         this.password = author.getPassword();
         this.username = author.getUsername();
         this.avatarUrl = author.getAvatarUrl();
-    }
-
-    public long getId(){
-        return this.id;
-    }
-
-    public String getAvatarUrl(){
-        return this.avatarUrl;
     }
 
     public Author getAuthor(){
