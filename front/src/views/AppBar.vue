@@ -10,9 +10,15 @@ const appStore = useAppStore()
 <template>
     <v-app-bar elevation="5" scroll-behavior="hide" scroll-threshold="300">
 
-        <v-app-bar-nav-icon @click="appStore.toggleSideBar"></v-app-bar-nav-icon>
-
-        <v-app-bar-title>Actions</v-app-bar-title>
+        <template v-slot:prepend>
+            <v-app-bar-nav-icon @click="appStore.toggleSideBar"></v-app-bar-nav-icon>
+            
+            <v-app-bar-title>Actions</v-app-bar-title>
+                
+            <v-btn to="/" prepend-icon="mdi-home" size="large" variant="plain">
+                Home
+            </v-btn>
+        </template>
 
         <template v-slot:append>
             <UserAvatar/>        

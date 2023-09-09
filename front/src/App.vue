@@ -1,16 +1,12 @@
 <script lang="ts" setup>
 import AppBar from './views/AppBar.vue';
 import AppFooter from './views/AppFooter.vue';
-import { useAppStore } from './store/app';
-import { useTheme } from 'vuetify'
+import SideBar from './views/SideBar.vue';
+import { useAuthorStore } from '@/store/author';
+import { onMounted } from 'vue';
 
-const theme = useTheme()
-
-const appStore = useAppStore()
-
-function toggleTheme () {
-  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
-}
+const { getUser} = useAuthorStore()
+onMounted(getUser)
 
 </script>
 
@@ -19,20 +15,12 @@ function toggleTheme () {
   <v-app>
     <AppBar/>
 
+    <SideBar/>
 
-<v-navigation-drawer v-model="appStore.sideBarOpen">
-  <v-list>
-    <v-list-item title="Navigation drawer">
-      <v-btn @click="toggleTheme">toggle theme</v-btn>
-    </v-list-item>
-  </v-list>
-</v-navigation-drawer>
+    <v-main>
+      <router-view />
+    </v-main>
 
-
-<v-main>
-  <router-view />
-</v-main>
-
-<AppFooter/>
+    <AppFooter/>
   </v-app>
 </template>

@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <v-footer app>
+    <v-footer>
 
       <div class="px-4 py-2 text-center w-100">
         {{ new Date().getFullYear() }} — <strong>PhotsUp</strong>

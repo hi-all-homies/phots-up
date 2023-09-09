@@ -17,7 +17,7 @@ withDefaults(defineProps<{ avatarSize?: string }>(), {
 
         <v-avatar :size="avatarSize" :color="getAvaBackColor">
 
-            <v-img v-if="currentUser.img" alt="avatar" :src="currentUser.img"></v-img>
+            <v-img v-if="currentUser.avatarUrl" alt="avatar" :src="currentUser.avatarUrl"></v-img>
             
             <span v-else>{{ getInitials }}</span>
         </v-avatar>

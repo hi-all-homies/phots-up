@@ -4,7 +4,7 @@ export const useAppStore = defineStore('app', {
   
   state: () => ({
     sideBarOpen: false,
-    page: 0
+    page: 0,
   }),
 
 
