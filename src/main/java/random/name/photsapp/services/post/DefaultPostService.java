@@ -13,6 +13,7 @@ import random.name.photsapp.services.image.ImageService;
 import random.name.photsapp.services.notification.Notification;
 import random.name.photsapp.services.notification.NotificationService;
 import random.name.photsapp.services.notification.NotificationType;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,17 +38,19 @@ public class DefaultPostService implements PostService {
     @Override
     public List<Post> findAll(int page, int size) {
 
-        var ids = this.postRepo.findPostIds(this.createPageRequest(page, size));
+        var ids = this.postRepo.findPostIds(this.createPageRequest(page, size, "id"));
 
-        return this.postRepo.findPostsByIds(ids);
+        var posts = this.postRepo.findPostsByIds(ids);
+        return sortPostsDesc(posts);
     }
 
     @Override
     public List<Post> findLiked(int page, int size, long likerId) {
 
-        var ids = this.postRepo.findLikedPostIds(likerId, this.createPageRequest(page, size));
+        var ids = this.postRepo.findLikedPostIds(likerId, this.createPageRequest(page, size, "post_id"));
 
-        return this.postRepo.findPostsByIds(ids);
+        var posts = this.postRepo.findPostsByIds(ids);
+        return sortPostsDesc(posts);
     }
 
     @Override
@@ -120,8 +123,15 @@ public class DefaultPostService implements PostService {
     }
 
 
-    private PageRequest createPageRequest(int page, int size){
-        return PageRequest.of(page, size, Sort.Direction.DESC, "id");
+    private PageRequest createPageRequest(int page, int size, String sortBy){
+        return PageRequest.of(page, size, Sort.Direction.DESC, sortBy);
+    }
+
+    private List<Post> sortPostsDesc(List<Post> posts){
+        return posts.stream()
+                .sorted((Comparator.comparingLong(Post::getId)
+                        .reversed()))
+                .toList();
     }
 
     private IllegalStateException createNotFound() {

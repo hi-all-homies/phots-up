@@ -20,7 +20,7 @@ public class Author {
     @JsonView(Views.BaseAuthor.class)
     private long id;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 16)
     @JsonView(Views.BaseAuthor.class)
     private String username;
 

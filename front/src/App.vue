@@ -1,12 +1,17 @@
 <script lang="ts" setup>
-import AppBar from './views/AppBar.vue';
-import AppFooter from './views/AppFooter.vue';
-import SideBar from './views/SideBar.vue';
-import { useAuthorStore } from '@/store/author';
+import { useUserStore } from '@/store/user';
+import AppBar from '@/components/AppBar.vue';
+import AppFooter from '@/components/AppFooter.vue';
+import SideBar from '@/components/SideBar.vue';
 import { onMounted } from 'vue';
+import AddPost from './components/AddPost.vue';
 
-const { getUser} = useAuthorStore()
-onMounted(getUser)
+const { getUser } = useUserStore()
+onMounted(() => {
+  getUser()
+    .then(() => console.log('authneticated'))
+    .catch(() => console.log('error'))
+})
 
 </script>
 
@@ -19,6 +24,7 @@ onMounted(getUser)
 
     <v-main>
       <router-view />
+      <AddPost/>
     </v-main>
 
     <AppFooter/>

@@ -1,6 +1,11 @@
 <script setup lang="ts">
-import { useAuthorStore } from '@/store/author';
+import ErrorSnack from '@/components/ErrorSnack.vue';
+import { useUserStore } from '@/store/user';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useLoginRedirect } from '@/composables/loginRedirect';
+
+useLoginRedirect()
 
 const validated = ref(false)
 const visible = ref(false)
@@ -17,22 +22,17 @@ const rules = {
     passMatch: (val: string) => val === password.value || 'Passwords must match'
 }
 
-const authorStore = useAuthorStore()
+const userStore = useUserStore()
+const router = useRouter()
+const errors = ref(false)
 
 function signUp(){
     loading.value = true
-    authorStore.signUp(username.value, password.value)
-        .then(() => {
-            //TODO - on success
-            loading.value = false
-            username.value = ''
-            password.value = ''
-            confirmedPass.value = ''
-        })
+    userStore.signUp(username.value, password.value)
+        .then(() => router.push('/login'))
         .catch(() => {
             loading.value = false
-            //TODO - error handling
-        })
+            errors.value = true })
 }
 </script>
 
@@ -83,7 +83,7 @@ function signUp(){
   
         <v-text-field
             v-model="confirmedPass"
-            :rules="[rules.passMatch]"
+            :rules="[rules.required, rules.passMatch]"
             :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
             :type="visible ? 'text' : 'password'"
             density="compact"
@@ -106,5 +106,7 @@ function signUp(){
         </v-btn>
 
         </v-form>
+
+        <ErrorSnack message="Such username already exists" v-model="errors"/>
       </v-card>
   </template>

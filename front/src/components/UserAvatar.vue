@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useAuthorStore } from '@/store/author';
+import { useUserStore } from '@/store/user';
 import { storeToRefs } from 'pinia';
 
-const { isAuthenticated,currentUser, getAvaBackColor, getInitials } = storeToRefs(useAuthorStore())
+const { currentUser, isAuthenticated, initials, avatarBgColor } = storeToRefs(useUserStore())
 
 withDefaults(defineProps<{ avatarSize?: string }>(), {
     avatarSize: 'x-large'
@@ -13,13 +13,13 @@ withDefaults(defineProps<{ avatarSize?: string }>(), {
 
 <template>
     <div v-if="isAuthenticated">
-        <span class="ma-3">{{ currentUser.username }}</span>
+        <span class="ma-3">{{ currentUser?.username }}</span>
 
-        <v-avatar :size="avatarSize" :color="getAvaBackColor">
+        <v-avatar :size="avatarSize" :color="avatarBgColor">
 
-            <v-img v-if="currentUser.avatarUrl" alt="avatar" :src="currentUser.avatarUrl"></v-img>
+            <v-img v-if="currentUser?.avatarUrl" alt="avatar" :src="currentUser.avatarUrl"></v-img>
             
-            <span v-else>{{ getInitials }}</span>
+            <span v-else>{{ initials }}</span>
         </v-avatar>
     </div>
 </template>

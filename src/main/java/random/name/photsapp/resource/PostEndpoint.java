@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import random.name.photsapp.config.json.Views;
@@ -15,6 +16,7 @@ import random.name.photsapp.services.post.AddPostRequest;
 import random.name.photsapp.services.post.ChangePostRequest;
 import random.name.photsapp.services.post.PostService;
 import java.util.List;
+import static random.name.photsapp.services.author.AuthorDetails.ROLE_USER;
 
 
 @RestController
@@ -41,13 +43,14 @@ public class PostEndpoint {
     }
 
 
+    @Secured(ROLE_USER)
     @JsonView(Views.PostView.class)
-    @GetMapping("/{liker}/liked")
+    @GetMapping("/liked")
     public ResponseEntity<List<Post>> findLiked(
-            @PathVariable("liker") long likerId,
+            @AuthenticationPrincipal AuthorDetails user,
             @RequestParam int page, @RequestParam int size){
 
-        return ResponseEntity.ok(this.postService.findLiked(page, size, likerId));
+        return ResponseEntity.ok(this.postService.findLiked(page, size, user.getId()));
     }
 
 
