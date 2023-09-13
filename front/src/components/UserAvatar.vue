@@ -13,7 +13,7 @@ withDefaults(defineProps<{ avatarSize?: string }>(), {
 
 <template>
     <div v-if="isAuthenticated">
-        <span class="ma-3">{{ currentUser?.username }}</span>
+        <span class="d-none d-md-inline ma-3">{{ currentUser?.username }}</span>
 
         <v-avatar :size="avatarSize" :color="avatarBgColor">
 

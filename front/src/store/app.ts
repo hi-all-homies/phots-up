@@ -6,9 +6,19 @@ export const useAppStore = defineStore('app', {
     sideBarOpen: false,
     page: 0,
     pageSize: 7,
-    postDialog: false
-  }),
+    postDialog: false,
 
+    editDialog: {
+      active: false,
+      postId: -1,
+      content: ''
+    },
+
+    erorrs: {
+      message: '',
+      active: false
+    }
+  }),
   
   actions: {
     toggleSideBar(){

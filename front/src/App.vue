@@ -5,6 +5,8 @@ import AppFooter from '@/components/AppFooter.vue';
 import SideBar from '@/components/SideBar.vue';
 import { onMounted } from 'vue';
 import AddPost from './components/AddPost.vue';
+import ErrorSnack from './components/ErrorSnack.vue';
+import EditPost from './components/EditPost.vue';
 
 const { getUser } = useUserStore()
 onMounted(() => {
@@ -24,7 +26,12 @@ onMounted(() => {
 
     <v-main>
       <router-view />
+      
       <AddPost/>
+
+      <EditPost/>
+
+      <ErrorSnack/>
     </v-main>
 
     <AppFooter/>

@@ -19,11 +19,26 @@ const rules = {
 const validated = ref(false)
 
 
+const loading = ref(false)
 const postStore = usePostStore()
 
+
 function save(){
-    //TODO: handle success and error uploadings
+    loading.value = true
+
     postStore.save(content.value, files.value[0])
+        .then(() => {
+            loading.value = false
+            content.value = ''
+            files.value = []
+        })
+        .catch(() => {
+            loading.value = false
+            appStore.$patch({ erorrs: {
+                active: true,
+                message: 'failed to publish a post'
+            }})
+        })
 }
 </script>
 
@@ -55,9 +70,18 @@ function save(){
             </v-card-text>
             
             <v-card-actions class="d-flex justify-end">
-                <v-btn @click="appStore.togglePostDialog">close</v-btn>
-                <v-btn @click="save" :disabled="!validated" color="primary">save</v-btn>
+                <v-btn @click="appStore.togglePostDialog">
+                    close
+                </v-btn>
+                
+                <v-btn
+                    @click="save"
+                    :disabled="!validated"
+                    color="primary" :loading="loading">
+                    publish
+                </v-btn>
             </v-card-actions>
+
         </v-card>
     </v-dialog>
 </template>

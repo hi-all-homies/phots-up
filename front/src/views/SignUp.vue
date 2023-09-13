@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import ErrorSnack from '@/components/ErrorSnack.vue';
+import { useAppStore } from '@/store/app';
 import { useUserStore } from '@/store/user';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useLoginRedirect } from '@/composables/loginRedirect';
 
-useLoginRedirect()
 
 const validated = ref(false)
 const visible = ref(false)
@@ -24,7 +22,8 @@ const rules = {
 
 const userStore = useUserStore()
 const router = useRouter()
-const errors = ref(false)
+const appStore = useAppStore()
+
 
 function signUp(){
     loading.value = true
@@ -32,7 +31,11 @@ function signUp(){
         .then(() => router.push('/login'))
         .catch(() => {
             loading.value = false
-            errors.value = true })
+            appStore.$patch({ erorrs: {
+                message: 'such username already exists',
+                active: true
+            }})
+        })
 }
 </script>
 
@@ -106,7 +109,5 @@ function signUp(){
         </v-btn>
 
         </v-form>
-
-        <ErrorSnack message="Such username already exists" v-model="errors"/>
       </v-card>
   </template>

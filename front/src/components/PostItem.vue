@@ -3,7 +3,6 @@ import type { Post } from '@/types/Post';
 import PostMenu from './PostMenu.vue';
 import CommentSection from '@/components/CommentSection.vue'
 import { avaUtils } from '@/plugins/avatar-utils';
-import { useDisplay } from 'vuetify/lib/framework.mjs';
 import { usePostStore } from '@/store/post';
 import { useUserStore } from '@/store/user';
 import { storeToRefs } from 'pinia';
@@ -13,7 +12,6 @@ const props = defineProps<{
     post: Post
 }>()
 
-const { mobile } = useDisplay()
 
 const postStore = usePostStore()
 const { meLiked, likeCount, commentCount } = storeToRefs(postStore)
@@ -65,17 +63,15 @@ function addLike(){
          </template>
       </v-card-item>
 
-      <div class="d-flex flex-no-wrap justify-space-between">
-         <v-img v-if="!mobile" class="mx-4 rounded"
-            cover
-            width="65%"
-            :src="post.imageUrl">
-         </v-img>
-         <v-img v-else class="mx-4 rounded"
-            cover min-width="100px"
-            :src="post.imageUrl">
-         </v-img>
-
+      <div class="d-block">
+         <div class="d-flex justify-center">
+            <v-img id="post-img" class="rounded flex-0-1"
+               cover
+               width="70%"
+               :src="post.imageUrl">
+            </v-img>
+         </div>
+         
          <v-card-text class="text-body-1">{{ post.content }}</v-card-text>
       </div>
 
@@ -101,3 +97,11 @@ function addLike(){
 
    </v-card>
 </template>
+
+<style scoped>
+#post-img:hover {
+   border-style: solid;
+   border-color: #9C27B0;
+   cursor: pointer;
+}
+</style>

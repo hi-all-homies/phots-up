@@ -8,7 +8,7 @@ const appStore = useAppStore()
 
 
 <template>
-    <v-app-bar elevation="5" scroll-behavior="hide" scroll-threshold="300">
+    <v-app-bar elevation="5" scroll-behavior="hide" scroll-threshold="150">
 
         <template v-slot:prepend>
             <v-app-bar-nav-icon @click="appStore.toggleSideBar"></v-app-bar-nav-icon>

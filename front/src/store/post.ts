@@ -27,7 +27,7 @@ interface Actions {
 
   addLike(postId: number): Promise<boolean>,
 
-  update(postId: number, content: string): Promise<boolean>,
+  update(postId: number, content: string): Promise<void>,
 
   delete(postId: number): Promise<void>
 }
@@ -120,17 +120,19 @@ export const usePostStore = defineStore<'post', PostState, Getters, Actions>('po
     async update(postId, content) {
       let updRequest = JSON.stringify({ content: content })
 
-      let resp = await http.put(`api/post/${postId}`, updRequest,
-        { headers: { 'Content-Type': 'application/json' }})
+      await http.put(`api/post/${postId}`, updRequest,
+          { headers: { 'Content-Type': 'application/json' }})
 
-      return resp.data
+      let updPost = this.posts.find(p => p.id === postId)
+      
+      if (updPost) updPost.content = content
     },
 
 
     async delete(postId) {
       await http.delete(`api/post/${postId}`)
-
-      this.posts = this.posts.filter(post => post.id !== postId)
+      let ind = this.posts.findIndex(post => post.id === postId)
+      this.posts.splice(ind, 1)
     },
   }
 })

@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import ErrorSnack from '@/components/ErrorSnack.vue';
+import { useAppStore } from '@/store/app';
 import { useUserStore } from '@/store/user';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useLoginRedirect } from '@/composables/loginRedirect';
 
-useLoginRedirect()
 
 const validated = ref(false)
 const visible = ref(false)
@@ -23,7 +21,7 @@ const rules = {
 
 const userStore = useUserStore()
 const router = useRouter()
-const errors = ref(false)
+const appStore = useAppStore()
 
 function login(){
     loading.value = true
@@ -31,7 +29,11 @@ function login(){
         .then(() => router.push('/'))
         .catch(() => {
             loading.value = false
-            errors.value = true })
+            appStore.$patch({erorrs: {
+                message: 'wrong credentials',
+                active: true
+            }})
+        })
 }
 </script>
 
@@ -89,8 +91,6 @@ function login(){
             Log In
         </v-btn>
         </v-form>
-
-        <ErrorSnack message="Wrong credentials" v-model="errors"/>
 
         <v-card-text class="text-center">
             <v-btn

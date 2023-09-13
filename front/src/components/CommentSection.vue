@@ -3,6 +3,7 @@ import { usePostStore } from '@/store/post';
 import type { Post } from '@/types/Post';
 import { ref } from 'vue';
 import { avaUtils } from '@/plugins/avatar-utils';
+import { useAppStore } from '@/store/app';
 
 const props = defineProps<{
     post: Post
@@ -10,21 +11,28 @@ const props = defineProps<{
 
 const comment = ref('')
 const rules = {
-    required: (val: string) => val && val.length > 4 || 'Min 5 length.'
+    required: (val: string) => val && val.length > 4 && val.length <= 200 || 'Min 5 length, max - 200'
 }
 const validated = ref(false)
 const loading = ref(false)
 
 const postStore = usePostStore()
+const appStore = useAppStore()
 
 function addComment(){
     loading.value = true
     postStore.addComment(props.post.id, comment.value)
         .then(() => {
             loading.value = false
-            comment.value = '' })
-        //TODO: error handling
-        .catch(() => console.log('error at comment'))
+            comment.value = ''
+        })
+        .catch(() => {
+            appStore.$patch({erorrs: {
+                active: true,
+                message: 'failed to leave a comment'
+            }})
+            loading.value = false
+        })
 }
 </script>
 
