@@ -6,6 +6,10 @@ import { avaUtils } from '@/plugins/avatar-utils';
 import { usePostStore } from '@/store/post';
 import { useUserStore } from '@/store/user';
 import { storeToRefs } from 'pinia';
+import { ref } from 'vue';
+import { useAppStore } from '@/store/app';
+import ConfirmDialog from './ConfirmDialog.vue';
+import { useRouter } from 'vue-router';
 
 
 const props = defineProps<{
@@ -32,6 +36,24 @@ function addLike(){
       })
    }
 }
+
+const appStore = useAppStore()
+const deleteReq = ref(false)
+
+function remove(){
+    postStore.delete(props.post.id)
+        .catch(() => {
+            appStore.$patch({ erorrs: {
+                message: 'failed to delete a post',
+                active: true
+            }})
+        })
+}
+
+const router = useRouter()
+function showProfile(){
+   router.push(`/profile/${props.post.author.username}`)
+}
 </script>
 
 
@@ -40,14 +62,14 @@ function addLike(){
 
       <v-card-item>
          <v-card-title>
-            <span style="cursor: grabbing;" class="text-body-1">
+            <span @click="showProfile" style="cursor: grabbing;" class="text-body-1">
                {{ post.author.username }}
             </span>
          </v-card-title>
          <v-card-subtitle>{{ post.created }}</v-card-subtitle>
 
          <template v-slot:prepend>
-            <v-avatar size="56" style="cursor: grabbing;" :color="avaUtils.getBgColor(post.author)">
+            <v-avatar @click="showProfile" size="56" style="cursor: grabbing;" :color="avaUtils.getBgColor(post.author)">
                
                <v-img v-if="post.author.avatarUrl" :src="post.author.avatarUrl"></v-img>
                
@@ -59,9 +81,11 @@ function addLike(){
          </template>
 
          <template v-slot:append>
-            <PostMenu :post="post"/>
+            <PostMenu :post="post" @delete="deleteReq = true"/>
          </template>
       </v-card-item>
+
+      <ConfirmDialog v-model="deleteReq" eventName="deletePost" @deletePost="remove"/>
 
       <div class="d-block">
          <div class="d-flex justify-center">

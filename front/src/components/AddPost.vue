@@ -31,6 +31,7 @@ function save(){
             loading.value = false
             content.value = ''
             files.value = []
+            appStore.$patch({ postDialog: false})
         })
         .catch(() => {
             loading.value = false

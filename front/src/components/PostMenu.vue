@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useAppStore } from '@/store/app';
-import { usePostStore } from '@/store/post';
 import { useUserStore } from '@/store/user';
 import type { Post } from '@/types/Post';
 import { computed } from 'vue';
@@ -17,17 +16,6 @@ const isOwner = computed(() =>
 
 
 const appStore = useAppStore()
-const postStore = usePostStore()
-
-function remove(){
-    postStore.delete(props.post.id)
-        .catch(() => {
-            appStore.$patch({ erorrs: {
-                message: 'failed to delete a post',
-                active: true
-            }})
-        })
-}
 
 function openEditDialog(){
     appStore.$patch({ editDialog: {
@@ -36,6 +24,7 @@ function openEditDialog(){
         content: props.post.content
     }})
 }
+
 </script>
 
 
@@ -54,7 +43,7 @@ function openEditDialog(){
                 <v-list-item-title>edit post</v-list-item-title>
             </v-list-item>
 
-            <v-list-item @click="remove" value="delete" :disabled="!isOwner">
+            <v-list-item @click="$emit('delete')" value="delete" :disabled="!isOwner">
                 <v-list-item-title>delete post</v-list-item-title>
 
                 <template v-slot:prepend>
