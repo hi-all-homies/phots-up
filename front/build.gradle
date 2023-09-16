@@ -3,11 +3,19 @@ plugins {
     id "com.github.node-gradle.node" version "6.0.0"
 }
 
-/*
+
 node {
-    download = false
+    download = true
+    version = "18.17.1"
+    distBaseUrl = "https://nodejs.org/dist"
+    allowInsecureProtocol = null
+    workDir = file("${project.projectDir}/.gradle/nodejs")
+    // The Node.js project directory location
+    // This is where the package.json file and node_modules directory are located
+    // By default it is at the root of the current project
+    nodeProjectDir = file("${project.projectDir}")
 }
-*/
+
 
 group = 'random.name'
 version = '0.0.1-SNAPSHOT'
