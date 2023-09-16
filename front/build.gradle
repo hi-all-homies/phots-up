@@ -1,6 +1,28 @@
 plugins {
     id 'java'
+    id "com.github.node-gradle.node" version "6.0.0"
 }
+
+/*
+node {
+    download = false
+}
+*/
 
 group = 'random.name'
 version = '0.0.1-SNAPSHOT'
+
+var npmBuild = tasks.register('buildFrontend', NpmTask) {
+    dependsOn npmInstall
+    args = ['run', 'build']
+}
+
+sourceSets {
+    java {
+        main {
+            resources {
+                srcDir(npmBuild)
+            }
+        }
+    }
+}

@@ -2,7 +2,6 @@
 import type { Post } from '@/types/Post';
 import PostMenu from './PostMenu.vue';
 import CommentSection from '@/components/CommentSection.vue'
-import { avaUtils } from '@/plugins/avatar-utils';
 import { usePostStore } from '@/store/post';
 import { useUserStore } from '@/store/user';
 import { storeToRefs } from 'pinia';
@@ -10,6 +9,7 @@ import { ref } from 'vue';
 import { useAppStore } from '@/store/app';
 import ConfirmDialog from './ConfirmDialog.vue';
 import { useRouter } from 'vue-router';
+import AuthorAvatar from './AuthorAvatar.vue';
 
 
 const props = defineProps<{
@@ -69,15 +69,11 @@ function showProfile(){
          <v-card-subtitle>{{ post.created }}</v-card-subtitle>
 
          <template v-slot:prepend>
-            <v-avatar @click="showProfile" size="56" style="cursor: grabbing;" :color="avaUtils.getBgColor(post.author)">
-               
-               <v-img v-if="post.author.avatarUrl" :src="post.author.avatarUrl"></v-img>
-               
-               <span v-else>
-                  {{ avaUtils.getInitials(post.author) }}
-               </span>
-            </v-avatar>
-
+            <AuthorAvatar
+               :author="post.author"
+               @click="showProfile"
+               size="56" style="cursor: grabbing;"
+            />
          </template>
 
          <template v-slot:append>

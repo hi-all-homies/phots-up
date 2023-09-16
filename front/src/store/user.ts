@@ -1,7 +1,7 @@
 import { _GettersTree, defineStore } from 'pinia'
 import { http } from '@/plugins/http'
 import type { Author } from '@/types/Author'
-import { avaUtils } from '@/plugins/avatar-utils'
+import { useAvatarUtils } from '@/composables/avatarUtils'
 
 interface UserState {
   currentUser: Author | undefined
@@ -18,8 +18,8 @@ interface Actions {
   changeAvatar(avatar: File): Promise<void>,
   login(username: string, password: string): Promise<void>,
   signUp(username: string, password: string): Promise<void>,
-  logout(): Promise<void>
-
+  logout(): Promise<void>,
+  subscribe(username: string): Promise<boolean>
 }
 
 export const useUserStore = defineStore<'user', UserState, Getters, Actions>('user', {
@@ -39,14 +39,15 @@ export const useUserStore = defineStore<'user', UserState, Getters, Actions>('us
     },  
     
     initials(){
-      return avaUtils.getInitials(this.currentUser)
+      const { initials } = useAvatarUtils(this.currentUser)
+      return initials.value
     },  
     
     avatarBgColor(){
-      return avaUtils.getBgColor(this.currentUser)
+      const { bgColor } = useAvatarUtils(this.currentUser)
+      return bgColor.value
     }
-  },
-  
+  }, 
   
   actions: {
     async getUser(){
@@ -95,6 +96,15 @@ export const useUserStore = defineStore<'user', UserState, Getters, Actions>('us
       await http.post('logout')
       this.currentUser = undefined
       localStorage.removeItem('user')
+    },
+
+    async subscribe(username) {
+        let subscribeRequest = JSON.stringify({subscription: username})
+
+        let resp = await http.post('api/author', subscribeRequest, {headers:
+          {'Content-Type': 'application/json'} })
+        
+        return resp.data
     },
   }
 })

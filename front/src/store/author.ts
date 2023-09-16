@@ -1,7 +1,7 @@
 import { _GettersTree, defineStore } from 'pinia'
 import type { Author } from '@/types/Author'
 import { http } from '@/plugins/http'
-import { avaUtils } from '@/plugins/avatar-utils'
+import { useAvatarUtils } from '@/composables/avatarUtils'
 
 interface AuthorState {
   author: Author | undefined
@@ -9,7 +9,9 @@ interface AuthorState {
 
 interface Getters extends _GettersTree<AuthorState>{
     initials(): string | undefined,
-    avatarBgColor(): string | undefined
+    avatarBgColor(): string | undefined,
+
+    hasSubscriber: (state: AuthorState) => (username: string | undefined) => boolean
 }
 
 interface Actions {
@@ -23,12 +25,19 @@ export const useAuthorStore = defineStore<'author', AuthorState, Getters, Action
 
     getters: {
         initials(){
-            return avaUtils.getInitials(this.author)
+            const { initials } = useAvatarUtils(this.author)
+            return initials.value
         },
 
         avatarBgColor(){
-            return avaUtils.getBgColor(this.author)
-        }
+            const { bgColor } = useAvatarUtils(this.author)
+            return bgColor.value
+        },
+
+        hasSubscriber(state) {
+            return username =>
+                state.author?.subscribers.find(a => a.username === username) ? true : false
+        },
     },
 
     actions: {

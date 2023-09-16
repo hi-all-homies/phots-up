@@ -2,8 +2,8 @@
 import { usePostStore } from '@/store/post';
 import type { Post } from '@/types/Post';
 import { ref } from 'vue';
-import { avaUtils } from '@/plugins/avatar-utils';
 import { useAppStore } from '@/store/app';
+import AuthorAvatar from './AuthorAvatar.vue';
 
 const props = defineProps<{
     post: Post
@@ -57,14 +57,12 @@ function addComment(){
                     <span class="text-body-2">{{ item.content }}</span>
 
                     <template v-slot:prepend>
-                        <v-avatar color="warning">
-                            {{ avaUtils.getInitials(undefined, item.author) }}
-                        </v-avatar>
+                        <AuthorAvatar :username="item.author"/>    
                     </template>
 
                     <template v-slot:append>
                         <v-btn color="#C62828" size="small"
-                            @click=""
+                            :to="`/profile/${item.author}`"
                             icon="mdi-open-in-new">
                         </v-btn>
                     </template>

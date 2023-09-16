@@ -59,7 +59,7 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.withObjectPostProcessor(basicObjectPostProcessor()))
                 .authenticationProvider(authProvider())
                 .authorizeHttpRequests(customizer -> customizer
-                        .requestMatchers("/", "index.html", "/js/**", "/css/**").permitAll()
+                        .requestMatchers("/", "index.html", "/assets/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/csrf").permitAll()
                         .requestMatchers(HttpMethod.POST, "/signup").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
