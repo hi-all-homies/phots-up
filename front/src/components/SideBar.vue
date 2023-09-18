@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ws } from '@/plugins/ws';
 import { useAppStore } from '@/store/app';
 import { useUserStore } from '@/store/user';
 import { storeToRefs } from 'pinia';
@@ -13,6 +14,11 @@ function toggleTheme () {
 }
 const userStore = useUserStore()
 const { isAuthenticated, currentUser } = storeToRefs(userStore)
+
+function logOut(){
+  userStore.logout()
+    .then(() => ws.disconnect())
+}
 </script>
 
 
@@ -37,7 +43,7 @@ const { isAuthenticated, currentUser } = storeToRefs(userStore)
     </v-list-item>
 
     <v-list-item v-else prepend-icon="mdi-logout-variant" title="log out"
-      @click="userStore.logout" value="logout">
+      @click="logOut" value="logout">
     </v-list-item>
     
     <v-list-item prepend-icon="mdi-invert-colors" title="toggle theme"

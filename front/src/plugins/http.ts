@@ -12,6 +12,6 @@ export const http = axios.create({
             'X-Requested-With': 'XMLHttpRequest'
         }
     },
-    timeout: 3500,
+    timeout: 10000,
     timeoutErrorMessage: 'failed get a response'
 })

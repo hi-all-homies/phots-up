@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
+    "@stomp/stompjs": "^7.0.0",
     "axios": "^1.5.0",
     "core-js": "^3.29.0",
     "pinia": "^2.0.0",
     "roboto-fontface": "*",
+    "sockjs-client": "^1.6.1",
     "vue": "^3.2.0",
     "vue-router": "^4.0.0",
     "vuetify": "^3.0.0",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@babel/types": "^7.21.4",
     "@types/node": "^18.15.0",
+    "@types/sockjs-client": "^1.5.1",
     "@types/webfontloader": "^1.6.35",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-typescript": "^11.0.0",

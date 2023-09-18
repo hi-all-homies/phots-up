@@ -41,7 +41,10 @@ const userStore = useUserStore()
 const { currentUser, isAuthenticated } = storeToRefs(userStore)
 const appStore = useAppStore()
 
+const loading = ref(false)
+
 function subscribe(){
+    loading.value = true
     userStore.subscribe(author.value?.username as string)
         .then(val => {
             if (author.value && currentUser.value){
@@ -56,12 +59,14 @@ function subscribe(){
                     author.value?.subscribers.splice(ind, 1)
                 }
             }
+            loading.value = false
         })
         .catch(() => {
             appStore.$patch({ erorrs: {
                 active: true,
                 message: 'failed to subscribe'
             }})
+            loading.value = false
         })
 }
 
@@ -77,6 +82,7 @@ const subscriptionsDialog = ref(false)
                 {{ author?.username }}
             </span>
             <v-btn v-if="isAuthenticated" :disabled="author?.id === currentUser?.id" size="small"
+                :loading="loading"
                 @click="subscribe" color="primary" append-icon="mdi-progress-star">
                 {{ hasSubscriber(currentUser?.username) ? 'unsubscribe' : 'subscribe' }}
             </v-btn>

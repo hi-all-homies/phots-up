@@ -4,17 +4,20 @@ import AppBar from '@/components/AppBar.vue';
 import AppFooter from '@/components/AppFooter.vue';
 import SideBar from '@/components/SideBar.vue';
 import { onMounted } from 'vue';
-import AddPost from './components/AddPost.vue';
-import ErrorSnack from './components/ErrorSnack.vue';
-import EditPost from './components/EditPost.vue';
+import AddPost from '@/components/AddPost.vue';
+import ErrorSnack from '@/components/ErrorSnack.vue';
+import EditPost from '@/components/EditPost.vue';
+import NotificationHolder from '@/components/notifications/NotificationHolder.vue';
+import { ws } from '@/plugins/ws';
 
-const { getUser } = useUserStore()
+
+const userStore = useUserStore()
+
 onMounted(() => {
-  getUser()
-    .then(() => console.log('authneticated'))
-    .catch(() => console.log('error'))
+  userStore.getUser()
+    .then(() => ws.connect(userStore.currentUser?.username))
+    .catch(() => ws.disconnect())
 })
-
 </script>
 
 
@@ -30,9 +33,10 @@ onMounted(() => {
       <AddPost/>
 
       <EditPost/>
-
-      <ErrorSnack/>
     </v-main>
+    
+    <NotificationHolder/>
+    <ErrorSnack/>
 
     <AppFooter/>
   </v-app>

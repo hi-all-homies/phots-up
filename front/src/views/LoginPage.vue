@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ws } from '@/plugins/ws';
 import { useAppStore } from '@/store/app';
 import { useUserStore } from '@/store/user';
 import { ref } from 'vue';
@@ -26,7 +27,10 @@ const appStore = useAppStore()
 function login(){
     loading.value = true
     userStore.login(username.value, password.value)
-        .then(() => router.push('/'))
+        .then(() => {
+            ws.connect(username.value)
+            router.push('/')
+        })
         .catch(() => {
             loading.value = false
             appStore.$patch({erorrs: {

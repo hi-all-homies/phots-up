@@ -103,13 +103,15 @@ public class DefaultAuthorService implements AuthorService {
             result = !subscriber.getSubscriptions().remove(subscription);
 
             this.notificationService.sendNotification(new Notification(
-                    NotificationType.USER_UNSUBSCRIBED, subscription, subscriber, "someone has unsubscribed."));
+                    NotificationType.USER_UNSUBSCRIBED, subscription, subscriber,
+                    String.format("%s unsubscribed from you", subscriber.getUsername())));
         }
         else {
             result = subscriber.getSubscriptions().add(subscription);
 
             this.notificationService.sendNotification(new Notification(
-                    NotificationType.USER_SUBSCRIBED, subscription, subscriber, "new subscriber!"));
+                    NotificationType.USER_SUBSCRIBED, subscription, subscriber,
+                    String.format("%s just subscribed!", subscriber.getUsername())));
         }
         return result;
     }
