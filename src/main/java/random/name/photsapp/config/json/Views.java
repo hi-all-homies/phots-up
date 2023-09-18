@@ -9,4 +9,6 @@ public interface Views {
     class PostView extends BaseAuthor {}
 
     class NotificationView extends BaseAuthor {}
+
+    class ChatView extends BaseAuthor{}
 }

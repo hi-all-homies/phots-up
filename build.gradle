@@ -33,7 +33,7 @@ processResources {
 
 
 dependencies {
-	implementation project(':front')
+	//implementation project(':front')
 
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
