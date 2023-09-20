@@ -20,5 +20,13 @@ public interface ChatRepo extends JpaRepository<Chat, Long> {
             """)
     List<Chat> findBySender(@Param("sender") Author sender);
 
-    Optional<Chat> findBySenderAndReceiver(Author sender, Author receiver);
+
+    @Query("""
+            from Chat c
+            left join fetch c.sender
+            left join fetch c.receiver
+            where c.sender = :sender and c.receiver = :receiver
+            """)
+    Optional<Chat> findBySenderAndReceiver(
+            @Param("sender")Author sender, @Param("receiver") Author receiver);
 }

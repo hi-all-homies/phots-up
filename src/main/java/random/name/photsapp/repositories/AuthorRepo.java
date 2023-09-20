@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import random.name.photsapp.entities.Author;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Repository
 public interface AuthorRepo extends JpaRepository<Author, Long> {
@@ -28,4 +29,7 @@ public interface AuthorRepo extends JpaRepository<Author, Long> {
             where a.username = :username
             """)
     Author findFullByUsername(@Param("username") String username);
+
+
+    Stream<Author> findByUsernameStartsWith(String username);
 }

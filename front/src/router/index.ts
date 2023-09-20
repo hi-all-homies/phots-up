@@ -29,6 +29,12 @@ const routes = [
     path: '/liked',
     component: () => import('@/views/LikedPosts.vue'),
     name: 'Liked'
+  },
+
+  {
+    path: '/messages',
+    component: () => import('@/views/UserChats.vue'),
+    name: 'Messages'
   }
 ]
 
@@ -44,7 +50,7 @@ router.beforeEach((to, from) => {
     return '/'
   }
 
-  else if (to.name === 'Liked' && !userStore.isAuthenticated){
+  else if ((to.name === 'Liked' || to.name === 'Messages') && !userStore.isAuthenticated){
     return '/login'
   }
 })

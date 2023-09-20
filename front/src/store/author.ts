@@ -15,7 +15,8 @@ interface Getters extends _GettersTree<AuthorState>{
 }
 
 interface Actions {
-    findByUsername(username: string): Promise<void>
+    findByUsername(username: string): Promise<void>,
+    findByUsernameLike(username: string): Promise<Author[]>
 }
 
 export const useAuthorStore = defineStore<'author', AuthorState, Getters, Actions>('author',{
@@ -41,9 +42,14 @@ export const useAuthorStore = defineStore<'author', AuthorState, Getters, Action
     },
 
     actions: {
-        async findByUsername(username: string){
+        async findByUsername(username){
             let resp = await http.get(`api/author/${username}`)
             this.author = resp.data
-        }
+        },
+
+        async findByUsernameLike(username) {
+            let resp = await http.get(`api/author/like/${username}`)
+            return resp.data
+        },
     }
 })

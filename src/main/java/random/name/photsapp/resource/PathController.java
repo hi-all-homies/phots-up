@@ -8,7 +8,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @Controller
 public class PathController {
 
-    @RequestMapping( method = { GET }, path = { "/login", "/signup", "/profile/**", "/liked" } )
+    @RequestMapping( method = { GET }, path = { "/login", "/signup", "/profile/**", "/liked", "/messages" } )
     public String forwardToSPA() {
         return "forward:/";
     }

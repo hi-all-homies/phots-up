@@ -17,6 +17,8 @@ import random.name.photsapp.services.author.AuthorService;
 import random.name.photsapp.services.author.ChangePasswordRequest;
 import random.name.photsapp.services.author.SubscribeRequest;
 import random.name.photsapp.validation.MultipartFileConstraint;
+
+import java.util.List;
 import java.util.Objects;
 import static random.name.photsapp.services.author.AuthorDetails.ROLE_USER;
 
@@ -80,5 +82,17 @@ public class AuthorEndpoint {
 
         return ResponseEntity.ok(
                 this.authorService.subscribe(request));
+    }
+
+
+    @Secured(ROLE_USER)
+    @JsonView(Views.BaseAuthor.class)
+    @GetMapping("/like/{username}")
+    public ResponseEntity<List<Author>> findByUsernameLike(
+            @AuthenticationPrincipal AuthorDetails user,
+            @PathVariable("username") String username){
+
+        return ResponseEntity.ok(
+                this.authorService.findByUsernameLike(username, user));
     }
 }

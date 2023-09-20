@@ -13,6 +13,7 @@ import random.name.photsapp.services.image.ImageService;
 import random.name.photsapp.services.notification.Notification;
 import random.name.photsapp.services.notification.NotificationService;
 import random.name.photsapp.services.notification.NotificationType;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -123,5 +124,14 @@ public class DefaultAuthorService implements AuthorService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
         return new AuthorDetails(author);
+    }
+
+
+    @Transactional
+    @Override
+    public List<Author> findByUsernameLike(String username, AuthorDetails user){
+        return this.authorRepo.findByUsernameStartsWith(username)
+                .filter(author -> !author.equals(user.getAuthor()))
+                .toList();
     }
 }

@@ -34,6 +34,10 @@ function logOut(){
       to="/liked" value="liked_posts" :disabled="!isAuthenticated">
     </v-list-item>
 
+    <v-list-item prepend-icon="mdi-forum" title="messages"
+      to="/messages" value="messages" :disabled="!isAuthenticated">
+    </v-list-item>
+
     <v-list-item prepend-icon="mdi-cog-box" title="profile"
       :to="`/profile/${currentUser?.username}`" value="profile" :disabled="!isAuthenticated">
     </v-list-item>
