@@ -11,7 +11,7 @@ import random.name.photsapp.config.json.Views;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonView(Views.ChatView.class)
+@JsonView(Views.WebSocketMessage.class)
 public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

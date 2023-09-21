@@ -6,7 +6,8 @@ import type { ChatMessages } from '@/types/ChatMessages'
 
 interface ChatState {
     chats: Chat[],
-    openedChat: ChatMessages | undefined 
+    openedChat: ChatMessages | undefined,
+    chatDialog: boolean
 }
 
 interface Actions {
@@ -17,7 +18,8 @@ interface Actions {
 export const useChatStore = defineStore<'chats', ChatState, {}, Actions>('chats', {
     state: () => ({
         chats: [],
-        openedChat: undefined
+        openedChat: undefined,
+        chatDialog: false
     }),
 
     actions: {

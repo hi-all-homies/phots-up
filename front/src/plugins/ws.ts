@@ -1,6 +1,6 @@
-import { Client, Message } from "@stomp/stompjs"
+import { Client, Message, messageCallbackType } from "@stomp/stompjs"
 import SockJS  from 'sockjs-client/dist/sockjs.min.js';
-
+import type { Message as ChatMessage } from "@/types/Message";
 
 const wsBaseUrl = (): string =>
     import.meta.env.DEV ? 'http://localhost:8080/ws' : '/ws'
@@ -30,8 +30,13 @@ export const ws = {
         client.activate()
     },
 
-    // TODO: 
-    sendMessage: () => {},
+    sendMessage: (message: ChatMessage) => {
+        client.publish({ destination: '/app/chat', body: JSON.stringify(message)})
+    },
+
+    subscribeToChat: (callback: messageCallbackType, chatId?: string) => {
+        return client.subscribe(`/user/${chatId}/messages`, callback)
+    },
 
     disconnect: () => client.deactivate(),
 

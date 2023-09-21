@@ -39,24 +39,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         DefaultContentTypeResolver resolver = new DefaultContentTypeResolver();
         resolver.setDefaultMimeType(MimeTypeUtils.APPLICATION_JSON);
 
-        var notificationMapper = new ObjectMapper();
-        notificationMapper.setConfig(notificationMapper
-                .getSerializationConfig().withView(Views.NotificationView.class));
+        var socketMessageMapper = new ObjectMapper();
+        socketMessageMapper.setConfig(socketMessageMapper
+                .getSerializationConfig().withView(Views.WebSocketMessage.class));
 
-        MappingJackson2MessageConverter notificationConverter = new MappingJackson2MessageConverter();
-        notificationConverter.setObjectMapper(notificationMapper);
-        notificationConverter.setContentTypeResolver(resolver);
+        MappingJackson2MessageConverter messageConverter = new MappingJackson2MessageConverter();
+        messageConverter.setObjectMapper(socketMessageMapper);
+        messageConverter.setContentTypeResolver(resolver);
 
-        var chatMapper = new ObjectMapper();
-        chatMapper.setConfig(chatMapper
-                .getSerializationConfig().withView(Views.ChatView.class));
-
-        MappingJackson2MessageConverter chatConverter = new MappingJackson2MessageConverter();
-        chatConverter.setObjectMapper(chatMapper);
-        chatConverter.setContentTypeResolver(resolver);
-
-        messageConverters.add(notificationConverter);
-        messageConverters.add(chatConverter);
+        messageConverters.add(messageConverter);
         return false;
     }
 }

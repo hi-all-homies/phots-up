@@ -47,7 +47,8 @@ const openChat = (username: string) => {
     foundUsers.value = []
     chatStore.getChatWith(username)
         .then(() => {
-            console.log(JSON.stringify(chatStore.openedChat))
+            search.value=''
+            chatStore.$patch({ chatDialog: true })
         })
         .catch(() => {
             appStore.$patch({erorrs: {
@@ -65,14 +66,16 @@ const openChat = (username: string) => {
         <v-spacer></v-spacer>
         <v-text-field v-model="search" placeholder="Find new chats by username"
             density="compact" variant="outlined">
+
+            <template v-slot:append>
+                <v-btn @click="findChats"
+                    :disabled="!isDisabled"
+                    :loading="loading"
+                    icon="mdi-account-search" flat>
+                </v-btn>
+            </template>
         </v-text-field>
         
-        <v-btn @click="findChats"
-            :disabled="!isDisabled"
-            :loading="loading"
-            icon="mdi-account-search" flat
-            class="mx-2">
-        </v-btn>
         <v-spacer></v-spacer>
     </v-row>
 

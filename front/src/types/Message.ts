@@ -1,7 +1,7 @@
 export interface Message {
-    id: number,
-    chatIndentity: string,
-    created: string,
+    id: number | null,
+    chatIdentity: string,
+    created: string | null,
     sender: string,
     receiver: string,
     payload: string

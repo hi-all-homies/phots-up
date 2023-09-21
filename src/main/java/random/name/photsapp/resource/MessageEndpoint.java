@@ -8,6 +8,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import random.name.photsapp.entities.Message;
 import random.name.photsapp.services.author.AuthorDetails;
 import random.name.photsapp.services.message.ChatMessages;
 import random.name.photsapp.services.message.MessageService;
+import java.security.Principal;
 import java.util.List;
 import static random.name.photsapp.services.author.AuthorDetails.ROLE_USER;
 
@@ -32,10 +34,12 @@ public class MessageEndpoint {
 
 
     @MessageMapping("/chat")
-    public void sendMessage(@Payload @Valid Message message,
-                            @AuthenticationPrincipal AuthorDetails user){
+    public void sendMessage(@Payload @Valid Message message, Principal principal){
 
-        var saved = this.messageService.saveMessage(user.getAuthor(), message);
+        var authToken = (UsernamePasswordAuthenticationToken) principal;
+        var authorDetails = (AuthorDetails) authToken.getPrincipal();
+
+        var saved = this.messageService.saveMessage(authorDetails.getAuthor(), message);
 
         this.messaging.convertAndSendToUser(
                 saved.getChatIdentity(),
@@ -46,7 +50,7 @@ public class MessageEndpoint {
 
 
     @Secured(ROLE_USER)
-    @JsonView(Views.ChatView.class)
+    @JsonView(Views.WebSocketMessage.class)
     @GetMapping("/chats")
     public ResponseEntity<List<Chat>> getUserChats(@AuthenticationPrincipal AuthorDetails user){
         return ResponseEntity.ok(
@@ -55,7 +59,7 @@ public class MessageEndpoint {
 
 
     @Secured(ROLE_USER)
-    @JsonView(Views.ChatView.class)
+    @JsonView(Views.WebSocketMessage.class)
     @GetMapping("/chats/{username}")
     public ResponseEntity<ChatMessages> getChatMessages(
             @AuthenticationPrincipal AuthorDetails user,

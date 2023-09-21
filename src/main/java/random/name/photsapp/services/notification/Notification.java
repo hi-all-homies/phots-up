@@ -6,7 +6,7 @@ import random.name.photsapp.entities.Author;
 import java.io.Serializable;
 
 
-@JsonView(Views.NotificationView.class)
+@JsonView(Views.WebSocketMessage.class)
 public record Notification(
 
         NotificationType type, Author receiver,
