@@ -30,12 +30,7 @@ export const useUserStore = defineStore<'user', UserState, Getters, Actions>('us
   
   getters: {
     isAuthenticated(){
-      let strUser = localStorage.getItem('user')
-      let localUser: Author | undefined
-      if (strUser){
-        localUser = JSON.parse(strUser)
-      }
-      return this.currentUser !== undefined || localUser !== undefined
+      return this.currentUser !== undefined
     },  
     
     initials(){
@@ -51,14 +46,8 @@ export const useUserStore = defineStore<'user', UserState, Getters, Actions>('us
   
   actions: {
     async getUser(){
-      try {
-        let resp = await http.get('api/author')
-        this.currentUser = resp.data
-      }
-      catch(err){
-        localStorage.removeItem('user')
-        throw err
-      }
+      let resp = await http.get('api/author')
+      this.currentUser = resp.data
     },
 
     async changeAvatar(avatar: File){
@@ -77,7 +66,6 @@ export const useUserStore = defineStore<'user', UserState, Getters, Actions>('us
 
       let resp = await http.get('api/author', { headers: { Authorization: header } })
       this.currentUser = resp.data
-      localStorage.setItem('user', JSON.stringify(this.currentUser))
 
       await http.get('csrf')
     },
@@ -95,7 +83,6 @@ export const useUserStore = defineStore<'user', UserState, Getters, Actions>('us
     async logout() {
       await http.post('logout')
       this.currentUser = undefined
-      localStorage.removeItem('user')
     },
 
     async subscribe(username) {

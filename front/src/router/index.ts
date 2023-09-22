@@ -5,7 +5,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    component: () => import('@/views/Home.vue')
+    component: () => import('@/views/Home.vue'),
+    name: 'Home'
   },
 
   {
@@ -43,15 +44,30 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from) => {
+
+const isLoggedIn = async () => {
   const userStore = useUserStore()
+  
+  return userStore.isAuthenticated ? true :
+    await userStore.getUser()
+      .then(() => true)
+      .catch(() => false)
+}
 
-  if ((to.name === 'Login' || to.name === 'Signup') && userStore.isAuthenticated){
-    return '/'
-  }
+const pathSet: Set<string> = new Set(['Login', 'Signup', 'Liked', 'Messages'])
 
-  else if ((to.name === 'Liked' || to.name === 'Messages') && !userStore.isAuthenticated){
-    return '/login'
+router.beforeEach(async (to, from) => {
+  const name = to.name?.toString()
+  if (name && pathSet.has(name)){
+    
+    let canAccess = await isLoggedIn()
+
+    if ((to.name === 'Login' || to.name === 'Signup') && canAccess)
+      return '/'
+
+    else if ((to.name === 'Liked' || to.name === 'Messages') && !canAccess)
+      return '/login'
+
   }
 })
 

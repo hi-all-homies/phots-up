@@ -71,31 +71,23 @@ function addComment(){
             </v-virtual-scroll>
             </v-row>
 
-            <v-row class="my-3">
-                <v-divider></v-divider>
-            </v-row>
+            <v-form v-model="validated" @submit.prevent class="mt-7">
+                <v-row>
+                    <v-text-field v-model="comment"
+                        :rules="[rules.required]"
+                        placeholder="write a comment"
+                        variant="outlined" density="compact">
 
-            <v-form v-model="validated" @submit.prevent>
-                <v-row justify-lg="end" align="center" justify-sm="center">
-                    <v-col cols="6">
+                        <template v-slot:append>
+                            <v-btn @click="addComment"
+                                :disabled="!validated"
+                                :loading="loading"
+                                variant="text" color="primary">
+                                Submit
+                            </v-btn>
+                        </template>
+                    </v-text-field>
 
-                        <v-text-field v-model="comment"
-                            :rules="[rules.required]"
-                            placeholder="write a comment"
-                            variant="outlined" density="compact">
-                        </v-text-field>
-
-                    </v-col>
-                    <v-col cols="1">
-
-                        <v-btn @click="addComment"
-                            :disabled="!validated"
-                            :loading="loading"
-                            variant="text" color="primary">
-                            Submit
-                        </v-btn>
-
-                    </v-col>
                 </v-row>
             </v-form>
             </v-container>

@@ -2,6 +2,7 @@
 import { useAppStore } from '@/store/app';
 import { usePostStore } from '@/store/post';
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { useDisplay } from 'vuetify'
 
 const { mobile } = useDisplay()
@@ -22,11 +23,12 @@ const validated = ref(false)
 const loading = ref(false)
 const postStore = usePostStore()
 
+const route = useRoute()
 
 function save(){
     loading.value = true
 
-    postStore.save(content.value, files.value[0])
+    postStore.save(content.value, files.value[0], route.name === 'Home')
         .then(() => {
             loading.value = false
             content.value = ''

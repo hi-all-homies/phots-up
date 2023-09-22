@@ -21,7 +21,7 @@ interface Actions {
 
   findLiked(page: number, size: number): Promise<void>,
 
-  save(content: string, image: File): Promise<void>,
+  save(content: string, image: File, shouldInsert?: boolean): Promise<void>,
 
   addComment(postId: number, content: string): Promise<void>,
 
@@ -91,13 +91,15 @@ export const usePostStore = defineStore<'post', PostState, Getters, Actions>('po
     },
 
 
-    async save(content, image) {
+    async save(content, image, shouldInsert) {
         let formData = new FormData()
         formData.append('content', content)
         formData.append('image', image)
 
         let resp = await http.post('api/post', formData)
-        this.posts.unshift(resp.data)
+
+        if (shouldInsert)
+          this.posts.unshift(resp.data)
     },
 
 

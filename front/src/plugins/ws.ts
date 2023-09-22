@@ -17,8 +17,7 @@ export const ws = {
 
     connect: (username?: string) => {
 
-        client.onConnect = (frame) => {
-            console.log(frame)
+        client.onConnect = () => {
             const onMessage = (message: Message) =>
                 subscribers.forEach(sub => sub.handleMessage(message))
 

@@ -10,7 +10,10 @@ import MessageList from './MessageList.vue';
 
 
 const payload = ref('')
-const disabled = computed(() => payload.value.length > 2)
+const rules = {
+    length: (val: string) => val.length > 2 && val.length < 301 || 'Min length - 3, max - 300'
+}
+const disabled = computed(() => payload.value.length > 2 && payload.value.length < 301)
 const loading = ref(false)
 
 const chatStore = useChatStore()
@@ -44,8 +47,7 @@ onMounted(() => {
         if (result){
             if (result.chatDialog){
                 const chatId = openedChat.value?.chat.chatIdentity
-                let chatSubscr = ws.subscribeToChat(msgHandler, chatId)
-                subscription.value = chatSubscr
+                subscription.value = ws.subscribeToChat(msgHandler, chatId)
                 scrollToBottom()
             }
             else {
@@ -95,6 +97,7 @@ const sendMessage = () => {
             <v-card-actions>
                 <v-text-field v-model="payload"
                     @keyup.enter="sendMessage"
+                    :rules="[rules.length]"
                     placeholder="type your message"
                     density="compact"
                     variant="outlined">
