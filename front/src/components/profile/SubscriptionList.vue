@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Author } from '@/types/Author';
 import { useRouter } from 'vue-router';
-import AuthorAvatar from './AuthorAvatar.vue';
+import AuthorAvatar from '@/components/AuthorAvatar.vue';
 
 
 defineProps<{

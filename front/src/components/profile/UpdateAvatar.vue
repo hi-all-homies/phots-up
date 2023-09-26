@@ -16,7 +16,6 @@ const loading = ref(false)
 const appStore = useAppStore()
 
 const authorStore = useAuthorStore()
-const { author } = storeToRefs(authorStore)
 
 const userStore = useUserStore()
 const { currentUser } = storeToRefs(userStore)
@@ -43,25 +42,22 @@ function update(){
 
 
 <template>
-    <v-row v-if="currentUser?.id === author?.id">
-        <v-col class="d-flex justify-center py-2">
-            <v-form v-model="validated" class="w-50">
+    <v-row class="d-flex justify-center py-2">
+       <v-form v-model="validated" class="w-75">
+            <v-file-input variant="outlined" density="compact" label="avatar image"
+                v-model="avatar"
+                :rules="[rules.required]"
+                prepend-icon="mdi-account-circle"
+                accept="image/png, image/jpeg, image/bmp" show-size>
 
-                <v-file-input variant="outlined" density="compact" label="avatar image"
-                    v-model="avatar"
-                    :rules="[rules.required]"
-                    prepend-icon="mdi-account-circle"
-                    accept="image/png, image/jpeg, image/bmp" show-size>
-                </v-file-input>
-
-                <div class="d-flex justify-end">
-                    <v-btn color="primary" icon="mdi-cloud-upload" size="large" variant="outlined"
+                <template v-slot:append>
+                    <v-btn color="primary" icon="mdi-cloud-upload" variant="outlined"
                         @click="update"
                         :disabled="!validated"
                         :loading="loading">
                     </v-btn>
-                </div>
-            </v-form>
-        </v-col>
+                </template>
+            </v-file-input>
+        </v-form>
     </v-row>
 </template>

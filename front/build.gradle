@@ -22,7 +22,6 @@ var npmBuild = tasks.register('buildFrontend', NpmTask) {
     args = ['run', 'build']
 }
 
-/*
 sourceSets {
     java {
         main {
@@ -31,4 +30,4 @@ sourceSets {
             }
         }
     }
-}*/
+}

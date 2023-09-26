@@ -3,18 +3,18 @@ import { useAuthorStore } from '@/store/author';
 import { storeToRefs } from 'pinia';
 import { onBeforeMount } from 'vue';
 import { useRoute, onBeforeRouteUpdate } from 'vue-router';
-import UpdateAvatar from '@/components/UpdateAvatar.vue';
+import UpdateAvatar from '@/components/profile/UpdateAvatar.vue';
 import { useDisplay } from 'vuetify/lib/framework.mjs';
 import { computed } from 'vue';
 import { useUserStore } from '@/store/user';
-import { useAppStore } from '@/store/app';
-import SubscriptionList from '@/components/SubscriptionList.vue';
+import SubscriptionList from '@/components/profile/SubscriptionList.vue';
 import { ref } from 'vue';
+import ProfileActions from '@/components/profile/ProfileActions.vue';
 
 const route = useRoute()
 
 const authorStore = useAuthorStore()
-const { author, initials, avatarBgColor, hasSubscriber } = storeToRefs(authorStore)
+const { author, initials, avatarBgColor } = storeToRefs(authorStore)
 
 
 onBeforeMount(() => {
@@ -38,37 +38,8 @@ const avaSize = computed(() => {
 
 
 const userStore = useUserStore()
-const { currentUser, isAuthenticated } = storeToRefs(userStore)
-const appStore = useAppStore()
+const { currentUser } = storeToRefs(userStore)
 
-const loading = ref(false)
-
-function subscribe(){
-    loading.value = true
-    userStore.subscribe(author.value?.username as string)
-        .then(val => {
-            if (author.value && currentUser.value){
-
-                if (val){
-                    author.value?.subscribers.push(currentUser.value)
-                }
-                else {
-                    let ind = author.value?.subscribers
-                        .findIndex(s => s.id === currentUser.value?.id)
-                
-                    author.value?.subscribers.splice(ind, 1)
-                }
-            }
-            loading.value = false
-        })
-        .catch(() => {
-            appStore.$patch({ erorrs: {
-                active: true,
-                message: 'failed to subscribe'
-            }})
-            loading.value = false
-        })
-}
 
 const subscribersDialog = ref(false)
 const subscriptionsDialog = ref(false)
@@ -77,15 +48,8 @@ const subscriptionsDialog = ref(false)
 
 <template>
     <v-container>
-        <v-row class="d-flex justify-center py-2">
-            <span class="text-h6 mx-4">
-                {{ author?.username }}
-            </span>
-            <v-btn v-if="isAuthenticated" :disabled="author?.id === currentUser?.id" size="small"
-                :loading="loading"
-                @click="subscribe" color="primary" append-icon="mdi-progress-star">
-                {{ hasSubscriber(currentUser?.username) ? 'unsubscribe' : 'subscribe' }}
-            </v-btn>
+        <v-row>
+            <ProfileActions :disabled-btn="currentUser?.id === author?.id"/>
         </v-row>
 
         <v-row class="d-flex justify-center py-2">
@@ -95,7 +59,7 @@ const subscriptionsDialog = ref(false)
             </v-avatar>
         </v-row>
 
-        <UpdateAvatar/>
+        <UpdateAvatar v-if="author?.id === currentUser?.id"/>
 
         <v-row class="py-2">
 

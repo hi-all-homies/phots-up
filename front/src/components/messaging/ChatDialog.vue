@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useChatStore } from '@/store/chats';
-import { storeToRefs } from 'pinia';
+import { MutationType, storeToRefs } from 'pinia';
 import AuthorAvatar from '../AuthorAvatar.vue';
 import { computed, ref, onMounted, ComponentPublicInstance, nextTick} from 'vue';
 import { ws } from '@/plugins/ws';
@@ -29,7 +29,7 @@ const messageList = ref<ComponentPublicInstance | null>(null)
 const scrollToBottom = () => {
     nextTick(() => {
         let el = messageList.value?.$el.lastElementChild
-        el.scrollIntoView({behavior: 'smooth'})
+        el?.scrollIntoView({behavior: 'smooth'})
     })
 }
 
@@ -41,11 +41,10 @@ const msgHandler: messageCallbackType = msg => {
 const subscription = ref<StompSubscription>()
 
 onMounted(() => {
-    chatStore.$subscribe((mutation) => {
-        let result = (mutation as any).payload
+    chatStore.$subscribe(mutation => {
+        if (mutation.type === MutationType.patchObject){
 
-        if (result){
-            if (result.chatDialog){
+            if (mutation.payload.chatDialog){
                 const chatId = openedChat.value?.chat.chatIdentity
                 subscription.value = ws.subscribeToChat(msgHandler, chatId)
                 scrollToBottom()
